@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_content_blocks_articles",
+  "info": {
+    "displayName": "Article",
+    "icon": "link",
+    "description": "Links out to an external article."
+  },
+  "options": {},
+  "attributes": {
+    "external_link": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

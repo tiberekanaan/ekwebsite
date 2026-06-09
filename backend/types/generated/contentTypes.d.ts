@@ -527,6 +527,43 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiResourceResource extends Struct.CollectionTypeSchema {
+  collectionName: 'resources';
+  info: {
+    description: 'A resource entry (title, description) composed of video/download/article content blocks.';
+    displayName: 'Resource';
+    pluralName: 'resources';
+    singularName: 'resource';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    content_blocks: Schema.Attribute.DynamicZone<
+      [
+        'content-blocks.video',
+        'content-blocks.download',
+        'content-blocks.article',
+      ]
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::resource.resource'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiWebFormWebForm extends Struct.CollectionTypeSchema {
   collectionName: 'web_forms';
   info: {
@@ -1072,6 +1109,7 @@ declare module '@strapi/strapi' {
       'api::basic-page.basic-page': ApiBasicPageBasicPage;
       'api::blog.blog': ApiBlogBlog;
       'api::event.event': ApiEventEvent;
+      'api::resource.resource': ApiResourceResource;
       'api::web-form.web-form': ApiWebFormWebForm;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

@@ -74,6 +74,55 @@ const events = defineCollection({
   }),
 });
 
+const contentBlock = z.discriminatedUnion('__component', [
+  z.object({
+    __component: z.literal('content-blocks.video'),
+    id: z.number(),
+    url: z.string(),
+  }),
+  z.object({
+    __component: z.literal('content-blocks.download'),
+    id: z.number(),
+    file: z
+      .object({
+        url: z.string(),
+        name: z.string().nullable().optional(),
+        mime: z.string().nullable().optional(),
+        ext: z.string().nullable().optional(),
+        size: z.number().optional(),
+        alternativeText: z.string().nullable().optional(),
+      })
+      .nullable()
+      .optional(),
+  }),
+  z.object({
+    __component: z.literal('content-blocks.article'),
+    id: z.number(),
+    external_link: z.string(),
+  }),
+]);
+
+export type ContentBlock = z.infer<typeof contentBlock>;
+
+const resources = defineCollection({
+  loader: async () => {
+    const entries = await fetchStrapi('/api/resources?populate[content_blocks][populate]=*');
+    return entries.map(({ documentId, id: _strapiNumericId, ...rest }) => ({
+      id: documentId,
+      ...rest,
+    }));
+  },
+  schema: z.object({
+    title: z.string(),
+    description: z.string().nullable().optional(),
+    content_blocks: z.array(contentBlock).default([]),
+    publishedAt: z.coerce.date().nullable().optional(),
+    createdAt: z.coerce.date().optional(),
+    updatedAt: z.coerce.date().optional(),
+    locale: z.string().optional(),
+  }),
+});
+
 // Local Markdown/JSON collections shipped with the Velocity boilerplate
 const blog = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
@@ -134,6 +183,7 @@ const faqs = defineCollection({
 export const collections = {
   blogs,
   events,
+  resources,
   blog,
   pages,
   authors,

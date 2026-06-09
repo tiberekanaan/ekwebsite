@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_content_blocks_downloads",
+  "info": {
+    "displayName": "Download",
+    "icon": "download",
+    "description": "A downloadable file (PDF, doc, etc.)."
+  },
+  "options": {},
+  "attributes": {
+    "file": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["files", "images", "videos", "audios"]
+    }
+  }
+}
