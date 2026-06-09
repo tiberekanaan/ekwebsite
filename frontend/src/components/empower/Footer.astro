@@ -1,4 +1,7 @@
 ---
+import { Image } from 'astro:assets';
+import logoWhite from '@/assets/branding/empower-logo-white.webp';
+
 interface NavItem {
   label: string;
   href: string;
@@ -38,9 +41,20 @@ const year = new Date().getFullYear();
   <div class="mx-auto max-w-7xl px-6 py-12">
     <div class="grid gap-10 lg:grid-cols-[1.2fr_1fr_1.3fr] lg:items-start">
       <div class="max-w-sm">
-        <a href="/" class="flex items-baseline gap-2" aria-label="Empower Kiribati home">
-          <span class="text-2xl font-extrabold tracking-tight text-white">EMPOWER</span>
-          <span class="font-serif italic text-lg text-lime-300">Kiribati</span>
+        <a
+          href="/"
+          class="inline-flex items-center transition-transform duration-300 hover:scale-[1.03]"
+          aria-label="Empower Kiribati home"
+        >
+          <Image
+            src={logoWhite}
+            alt="Empower Kiribati"
+            height={56}
+            widths={[140, 200, 260]}
+            sizes="(min-width: 1024px) 200px, 160px"
+            class="h-12 w-auto sm:h-14"
+            loading="lazy"
+          />
         </a>
         <p class="mt-4 text-sm text-slate-400">
           A Kiribati-led NGO building a self-sustaining ecosystem of digital trust and economic
