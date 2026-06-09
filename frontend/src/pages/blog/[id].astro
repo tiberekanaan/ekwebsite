@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import Layout from '@/layouts/Layout.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { marked } from 'marked';
 
@@ -26,8 +26,8 @@ const formattedDate = displayDate
 const contentHtml = content ? marked.parse(content) : '';
 ---
 
-<BaseLayout title={title} description={`${title} — Blog`}>
-  <main class="mx-auto max-w-3xl px-6 py-16">
+<Layout title={title} description={`${title} — Blog`}>
+  <div class="mx-auto max-w-3xl px-6 py-16">
     <a
       href="/blog"
       class="text-foreground-muted hover:text-brand-500 mb-8 inline-block text-sm transition-colors"
@@ -50,5 +50,5 @@ const contentHtml = content ? marked.parse(content) : '';
       class="text-foreground prose prose-neutral dark:prose-invert max-w-none leading-relaxed"
       set:html={contentHtml}
     />
-  </main>
-</BaseLayout>
+  </div>
+</Layout>

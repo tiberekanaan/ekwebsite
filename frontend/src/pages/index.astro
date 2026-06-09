@@ -1,6 +1,5 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import Header from '@/components/empower/Header.astro';
+import Layout from '@/layouts/Layout.astro';
 import Hero from '@/components/empower/Hero.astro';
 import OurWork from '@/components/empower/OurWork.astro';
 import Impact from '@/components/empower/Impact.astro';
@@ -8,15 +7,13 @@ import LatestEvents from '@/components/empower/LatestEvents.astro';
 import LatestNews from '@/components/empower/LatestNews.astro';
 ---
 
-<BaseLayout
+<Layout
   title="Empower Kiribati"
   description="A Kiribati-led NGO building a self-sustaining ecosystem of digital trust and economic opportunity by 2030, built by I-Kiribati, for I-Kiribati."
 >
-  <Header slot="header" />
-
   <Hero />
   <OurWork />
   <Impact />
   <LatestEvents />
   <LatestNews />
-</BaseLayout>
+</Layout>

@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import Layout from '@/layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import { STRAPI_URL } from 'astro:env/server';
 
@@ -16,8 +16,8 @@ const absoluteImageUrl = (url?: string | null) => {
 };
 ---
 
-<BaseLayout title="Events" description="Upcoming and recent events">
-  <main class="mx-auto max-w-5xl px-6 py-16">
+<Layout title="Events" description="Upcoming and recent events">
+  <div class="mx-auto max-w-5xl px-6 py-16">
     <header class="mb-12">
       <h1 class="font-display text-foreground mb-3 text-4xl font-bold">Events</h1>
       <p class="text-foreground-muted">Workshops, gatherings, and community programs.</p>
@@ -58,5 +58,5 @@ const absoluteImageUrl = (url?: string | null) => {
         </div>
       )
     }
-  </main>
-</BaseLayout>
+  </div>
+</Layout>

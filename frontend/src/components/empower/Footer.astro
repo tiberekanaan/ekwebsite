@@ -1,0 +1,54 @@
+---
+interface NavItem {
+  label: string;
+  href: string;
+}
+
+const primaryNav: NavItem[] = [
+  { label: 'About', href: '/about' },
+  { label: 'Our Work', href: '/#our-work' },
+  { label: 'Resources', href: '/resources' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Events', href: '/events' },
+  { label: 'Contact', href: '/contact' },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-slate-200 bg-slate-900 text-slate-200">
+  <div class="mx-auto max-w-7xl px-6 py-12">
+    <div class="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
+      <div class="max-w-sm">
+        <a href="/" class="flex items-baseline gap-2" aria-label="Empower Kiribati home">
+          <span class="text-2xl font-extrabold tracking-tight text-white">EMPOWER</span>
+          <span class="font-serif italic text-lg text-lime-300">Kiribati</span>
+        </a>
+        <p class="mt-4 text-sm text-slate-400">
+          A Kiribati-led NGO building a self-sustaining ecosystem of digital trust and economic
+          opportunity by 2030 — built by I-Kiribati, for I-Kiribati.
+        </p>
+      </div>
+
+      <nav class="grid grid-cols-2 gap-x-10 gap-y-3 sm:grid-cols-3" aria-label="Footer">
+        {
+          primaryNav.map((item) => (
+            <a
+              href={item.href}
+              class="text-sm font-medium text-slate-300 transition-colors hover:text-lime-300"
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+    </div>
+
+    <div
+      class="mt-10 flex flex-col gap-3 border-t border-slate-700 pt-6 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p>&copy; {year} Empower Kiribati. All rights reserved.</p>
+      <p class="font-medium uppercase tracking-widest text-teal-300">Mauri from Kiribati</p>
+    </div>
+  </div>
+</footer>

@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import Layout from '@/layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const resources = (await getCollection('resources')).sort((a, b) => {
@@ -9,11 +9,11 @@ const resources = (await getCollection('resources')).sort((a, b) => {
 });
 ---
 
-<BaseLayout
+<Layout
   title="Community Resources"
   description="Guides, downloads, videos and links empowering Kiribati through shared knowledge."
 >
-  <main class="mx-auto max-w-6xl px-6 py-16 lg:py-24">
+  <div class="mx-auto max-w-6xl px-6 py-16 lg:py-24">
     <header class="mb-12 max-w-2xl">
       <p class="mb-3 text-xs font-bold uppercase tracking-widest text-slate-500">Resources</p>
       <h1 class="font-display text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
@@ -52,5 +52,5 @@ const resources = (await getCollection('resources')).sort((a, b) => {
         </ul>
       )
     }
-  </main>
-</BaseLayout>
+  </div>
+</Layout>

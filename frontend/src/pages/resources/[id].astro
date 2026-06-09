@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import Layout from '@/layouts/Layout.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { STRAPI_URL } from 'astro:env/server';
 
@@ -54,8 +54,8 @@ const formatBytes = (bytes?: number) => {
 };
 ---
 
-<BaseLayout title={title} description={description ?? `${title} — Community Resource`}>
-  <main class="mx-auto max-w-3xl px-6 py-16">
+<Layout title={title} description={description ?? `${title} — Community Resource`}>
+  <div class="mx-auto max-w-3xl px-6 py-16">
     <a
       href="/resources"
       class="mb-8 inline-block text-sm text-slate-500 transition-colors hover:text-teal-700"
@@ -204,5 +204,5 @@ const formatBytes = (bytes?: number) => {
         </section>
       )
     }
-  </main>
-</BaseLayout>
+  </div>
+</Layout>

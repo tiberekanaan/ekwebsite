@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import Layout from '@/layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blogs')).sort((a, b) => {
@@ -14,8 +14,8 @@ const formatDate = (d?: Date | null) =>
     : '';
 ---
 
-<BaseLayout title="Blog" description="Latest articles and updates">
-  <main class="mx-auto max-w-4xl px-6 py-16">
+<Layout title="Blog" description="Latest articles and updates">
+  <div class="mx-auto max-w-4xl px-6 py-16">
     <header class="mb-12">
       <h1 class="font-display text-foreground mb-3 text-4xl font-bold">Blog</h1>
       <p class="text-foreground-muted">Latest articles and updates from the team.</p>
@@ -44,5 +44,5 @@ const formatDate = (d?: Date | null) =>
         </ul>
       )
     }
-  </main>
-</BaseLayout>
+  </div>
+</Layout>

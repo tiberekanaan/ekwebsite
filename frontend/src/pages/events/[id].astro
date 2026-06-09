@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import Layout from '@/layouts/Layout.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { STRAPI_URL } from 'astro:env/server';
 import { marked } from 'marked';
@@ -35,11 +35,11 @@ const imageUrl = image?.url
   : null;
 ---
 
-<BaseLayout
+<Layout
   title={`Event in ${location}`}
   description={`${location} — ${formattedDate}`}
 >
-  <main class="mx-auto max-w-3xl px-6 py-16">
+  <div class="mx-auto max-w-3xl px-6 py-16">
     <a
       href="/events"
       class="text-foreground-muted hover:text-brand-500 mb-8 inline-block text-sm transition-colors"
@@ -72,5 +72,5 @@ const imageUrl = image?.url
         />
       )
     }
-  </main>
-</BaseLayout>
+  </div>
+</Layout>
