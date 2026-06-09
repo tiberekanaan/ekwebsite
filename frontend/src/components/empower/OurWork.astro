@@ -1,0 +1,109 @@
+---
+interface Pillar {
+  title: string;
+  description: string;
+  link: { label: string; href: string };
+  /** Tailwind utility classes for the card's bottom band */
+  band: string;
+  /** Background gradient class for the placeholder image */
+  imageBg: string;
+  /** Icon path data */
+  icon: string;
+}
+
+const pillars: Pillar[] = [
+  {
+    title: 'Empowering Leaders & Communities',
+    description:
+      'We strengthen local capability and leadership pathways so communities can lead change on their own terms.',
+    link: { label: 'PROGRAMS', href: '/our-work/programs' },
+    band: 'bg-lime-50 text-lime-900',
+    imageBg: 'from-emerald-700 via-emerald-600 to-emerald-800',
+    icon: 'M17 20h5v-2a4 4 0 0 0-3-3.87M9 20H4v-2a4 4 0 0 1 3-3.87m6-5.13a4 4 0 1 1-8 0 4 4 0 0 1 8 0Zm6 0a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
+  },
+  {
+    title: 'Building Partnership for Impact',
+    description:
+      'We build trusted relationships with ministries, councils, and NGOs to coordinate and sustain investment.',
+    link: { label: 'OUR PARTNERS', href: '/our-work/partners' },
+    band: 'bg-sky-50 text-sky-900',
+    imageBg: 'from-sky-700 via-sky-600 to-sky-800',
+    icon: 'M8 11V8a4 4 0 0 1 8 0v3M5 11h14l-1 9H6Z',
+  },
+  {
+    title: 'Creating Conditions for Innovation',
+    description:
+      'We back experimentation and support entrepreneurs to develop locally relevant business models.',
+    link: { label: 'INNOVATION HUB', href: '/our-work/innovation' },
+    band: 'bg-amber-50 text-amber-900',
+    imageBg: 'from-amber-600 via-orange-500 to-amber-700',
+    icon: 'M12 2a7 7 0 0 0-4 12.7V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.3A7 7 0 0 0 12 2ZM10 21h4',
+  },
+  {
+    title: 'Enabling Digital Participation',
+    description:
+      'We grow trust in the digital world by strengthening safety, standards, and digital confidence on every atoll.',
+    link: { label: 'DIGITAL TRUST', href: '/our-work/digital-trust' },
+    band: 'bg-violet-50 text-violet-900',
+    imageBg: 'from-violet-700 via-purple-600 to-violet-800',
+    icon: 'M4 7h16M4 12h16M4 17h10M18 17l2 2 4-4',
+  },
+];
+---
+
+<section id="our-work" class="bg-white">
+  <div class="mx-auto max-w-7xl px-6 py-16 lg:py-24">
+    <div class="grid gap-8 lg:grid-cols-2 lg:items-end">
+      <div>
+        <p class="mb-3 text-xs font-bold uppercase tracking-widest text-slate-500">Our Work</p>
+        <h2 class="font-display text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl">
+          FOUR PILLARS,<br />ONE <span class="text-teal-700">ISLAND</span><br />ECOSYSTEM.
+        </h2>
+      </div>
+      <p class="max-w-lg text-base text-slate-600 lg:pb-2">
+        We don't run isolated programmes. Each pillar is a different way of caring for the same outcome
+        — communities that can author their own future, on their own atolls, in their own language.
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        pillars.map((p) => (
+          <article class="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div
+              class:list={[
+                'relative aspect-[5/3] w-full bg-gradient-to-br',
+                p.imageBg,
+              ]}
+              aria-hidden="true"
+            >
+              <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.12),transparent_60%)]" />
+            </div>
+            <div class:list={['flex flex-1 flex-col gap-3 p-5', p.band]}>
+              <svg
+                class="h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="1.75"
+                aria-hidden="true"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d={p.icon} />
+              </svg>
+              <h3 class="text-sm font-bold uppercase tracking-wider">{p.title}</h3>
+              <p class="text-sm leading-relaxed opacity-90">{p.description}</p>
+              <a
+                href={p.link.href}
+                class="mt-auto inline-flex items-center gap-1 pt-2 text-xs font-bold uppercase tracking-wider hover:underline"
+              >
+                {p.link.label}
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

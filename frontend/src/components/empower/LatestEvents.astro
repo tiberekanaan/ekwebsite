@@ -1,0 +1,72 @@
+---
+import { getCollection } from 'astro:content';
+import { STRAPI_URL } from 'astro:env/server';
+
+const events = (await getCollection('events'))
+  .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf())
+  .slice(0, 3);
+
+const formatDate = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+const absoluteImageUrl = (url?: string | null) => {
+  if (!url) return null;
+  return url.startsWith('http') ? url : `${STRAPI_URL}${url}`;
+};
+---
+
+<section class="bg-slate-50">
+  <div class="mx-auto max-w-7xl px-6 py-16 lg:py-20">
+    <div class="mb-10 flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="mb-2 text-xs font-bold uppercase tracking-widest text-slate-500">Latest</p>
+        <h2 class="font-display text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+          Upcoming <span class="text-teal-700">Events</span>
+        </h2>
+      </div>
+      <a
+        href="/events"
+        class="inline-flex items-center gap-1 text-sm font-bold uppercase tracking-wider text-slate-900 hover:underline"
+      >
+        All events
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    {
+      events.length === 0 ? (
+        <p class="py-12 text-center text-slate-500">No events scheduled.</p>
+      ) : (
+        <div class="grid gap-6 md:grid-cols-3">
+          {events.map((event) => {
+            const img = absoluteImageUrl(event.data.image?.url);
+            const alt = event.data.image?.alternativeText ?? '';
+            return (
+              <a
+                href={`/events/${event.id}`}
+                class="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white transition-colors hover:border-teal-500"
+              >
+                <div class="aspect-video w-full overflow-hidden bg-gradient-to-br from-slate-700 to-slate-900">
+                  {img && (
+                    <img
+                      src={img}
+                      alt={alt}
+                      loading="lazy"
+                      class="h-full w-full object-cover transition-transform group-hover:scale-[1.02]"
+                    />
+                  )}
+                </div>
+                <div class="flex flex-1 flex-col gap-2 p-5">
+                  <time class="text-xs font-bold uppercase tracking-wider text-teal-700">
+                    {formatDate(event.data.date)}
+                  </time>
+                  <h3 class="text-lg font-bold text-slate-900">{event.data.location}</h3>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      )
+    }
+  </div>
+</section>

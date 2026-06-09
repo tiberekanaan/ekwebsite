@@ -1,18 +1,26 @@
 ## Current Feature
 
-None
+Empower Kiribati landing page (`/`) — bespoke marketing layout that replaces the Velocity demo home.
 
 ## Status
 
-—
+Implemented locally on `main` (no branch yet). `npm run build` passes. Not committed.
 
 ## Goals
 
-—
+- New brand-aligned Header (logo "EMPOWER Kiribati", nav: About / Our Work / Resources / Blog / Events / Contact, CTA "Build Your Skills").
+- "The Future" hero with 2x2 values grid, image placeholder + 3 overlay stat boxes.
+- "Our Work" four-pillar card grid.
+- "Our Impact" three-stat card grid.
+- Latest Events + Latest News (from Strapi via `getCollection`, up to 3 each).
+- Responsive (single column on mobile).
 
 ## Notes
 
-—
+- New components live under `src/components/empower/` to keep them separate from Velocity's reusable library.
+- Brand palette uses standard Tailwind utilities (slate / teal / lime) rather than Velocity's semantic tokens — the existing design tokens didn't match the design.
+- Image placeholders are gradient `<div>`s; replace with real `<img>` / `<Image>` once assets are available.
+- Mobile hamburger toggle uses a small inline script (no extra framework component needed).
 
 ## History
 

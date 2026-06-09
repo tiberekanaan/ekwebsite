@@ -1,0 +1,84 @@
+---
+interface Stat {
+  value: string;
+  label: string;
+  caption: string;
+  accent: string;
+  icon: string;
+}
+
+const stats: Stat[] = [
+  {
+    value: '47+',
+    label: 'Programs Delivered',
+    caption: 'Across leadership, enterprise, digital and youth pillars since 2022.',
+    accent: 'border-l-lime-400',
+    icon: 'M3 12h3l2-7 4 14 2-7h7',
+  },
+  {
+    value: '11,400+',
+    label: 'Community Members Reached',
+    caption: 'I-Kiribati participants engaged across 32 atolls and outer islands.',
+    accent: 'border-l-teal-500',
+    icon: 'M17 20h5v-2a4 4 0 0 0-3-3.87M9 20H4v-2a4 4 0 0 1 3-3.87m6-5.13a4 4 0 1 1-8 0 4 4 0 0 1 8 0Zm6 0a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
+  },
+  {
+    value: '$4.2M',
+    label: 'Total Project Value',
+    caption: 'Mobilised in grants, partner co-investment and community contribution.',
+    accent: 'border-l-amber-400',
+    icon: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 0v20M2 12h20',
+  },
+];
+---
+
+<section class="bg-white">
+  <div class="mx-auto max-w-7xl px-6 py-16 lg:py-24">
+    <div class="grid gap-8 lg:grid-cols-2 lg:items-end">
+      <div>
+        <p class="mb-3 text-xs font-bold uppercase tracking-widest text-slate-500">Our Impact</p>
+        <h2 class="font-display text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl">
+          THE NUMBERS<br />BEHIND <span class="text-teal-700">THE</span><br />MISSION.
+        </h2>
+      </div>
+      <p class="max-w-lg text-base text-slate-600 lg:pb-2">
+        Impact, in our work, is measured one community at a time — but the aggregate tells a story of
+        trust, scale and steady progress.
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-6 md:grid-cols-3">
+      {
+        stats.map((s) => (
+          <article
+            class:list={[
+              'rounded-xl border border-slate-200 border-l-4 bg-white p-6 shadow-sm',
+              s.accent,
+            ]}
+          >
+            <div class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-lime-300">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="1.75"
+                aria-hidden="true"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d={s.icon} />
+              </svg>
+            </div>
+            <div class="font-display text-5xl font-extrabold tracking-tight text-slate-900">
+              {s.value}
+            </div>
+            <div class="mt-2 text-sm font-bold uppercase tracking-wider text-teal-700">
+              {s.label}
+            </div>
+            <p class="mt-3 text-sm text-slate-600">{s.caption}</p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
