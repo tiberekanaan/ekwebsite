@@ -1,0 +1,47 @@
+# Developer Knowledge Hub
+
+A developer knowledge hub for snippets, commands, prompts, notes, files, images, links and custom types for our Astro 6 + Strapi 5 project.
+
+## Context Files
+
+Read the following to get the full context of the project:
+
+- @./context/project-overview.md
+- @./context/coding-standards.md
+- @./context/ai-interaction.md
+- @./context/current-feature.md
+
+## Commands
+
+### Frontend (Astro 6)
+```bash
+npm run dev      # start Astro dev server locally
+npm run build    # build the Astro project for production
+npm run preview  # preview the production build locally
+npx astro add    # add new Astro integrations (e.g., npx astro add react)
+```
+
+### Backend (Strapi 5)
+```bash
+npm run strapi develop  # start Strapi dev server with auto-reloading
+npm run strapi build    # build the Strapi admin panel
+npm run strapi start    # start the Strapi server in production mode
+npm run strapi generate # interactively scaffold new APIs, controllers, and content-types
+```
+
+## Astro 6 Coding Standards & Rules
+When generating or modifying frontend code, adhere to the following Astro 6 standards:
+- **Routing & Transitions:** Use the `<ClientRouter />` component for view transitions; the old `<ViewTransitions />` component has been removed in v6.0.
+- **Data Fetching:** Fetch CMS data using the Content Loader API (`src/content.config.ts`) instead of legacy collections.
+- **Dynamic Content:** Use Server Islands with the `server:defer` directive for dynamic user-specific components.
+- **File Imports:** Use Vite's `import.meta.glob()` or `getCollection()` to load files; `Astro.glob()` has been completely removed in Astro 6.
+- **Schemas:** We are using Zod 4. Format validations like `z.string().email()` should now be written directly as `z.email()`.
+- **Environment Variables:** Access environment variables inline using `import.meta.env` (e.g., `import.meta.env.SITE`) as it is strictly inlined in v6.
+
+## Strapi 5 Coding Standards & Rules
+When generating or modifying backend code, adhere to the following Strapi 5 standards:
+- **Document Service API:** Always use the new Document Service API (`strapi.documents`) for CRUD operations instead of the deprecated Entity Service API.
+- **Identifiers:** Query and reference entries using the 24-character alphanumeric `documentId` rather than the legacy numeric `id`.
+- **Draft & Publish:** Utilize the Document API's new methods like `publish()`, `unpublish()`, and `discardDraft()` to manage content states programmatically.
+- **Responses:** Expect flattened API responses by default (no need to heavily map through `.attributes` wrappers like in v4).
+```
