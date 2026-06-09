@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "web_forms",
+  "info": {
+    "singularName": "web-form",
+    "pluralName": "web-forms",
+    "displayName": "Web Form",
+    "description": "Submissions captured from frontend web-forms (inquiries, registrations, etc.)."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "message": {
+      "type": "text",
+      "required": true
+    }
+  }
+}

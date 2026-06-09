@@ -1,0 +1,23 @@
+{
+  "kind": "singleType",
+  "collectionName": "basic_pages",
+  "info": {
+    "singularName": "basic-page",
+    "pluralName": "basic-pages",
+    "displayName": "Basic Page",
+    "description": "Static informational pages such as About Us or Terms of Service."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "content": {
+      "type": "richtext"
+    }
+  }
+}
