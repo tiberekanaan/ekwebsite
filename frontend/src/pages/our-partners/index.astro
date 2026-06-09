@@ -1,0 +1,71 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { STRAPI_URL } from 'astro:env/server';
+
+const partners = (await getCollection('partners')).sort((a, b) =>
+  a.data.name.localeCompare(b.data.name),
+);
+
+const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
+---
+
+<Layout
+  title="Our Partners"
+  description="Organizations and institutions collaborating with Empower Kiribati."
+>
+  <div class="mx-auto max-w-6xl px-6 py-16 lg:py-24">
+    <header class="mb-12 max-w-2xl">
+      <p class="mb-3 text-xs font-bold uppercase tracking-widest text-slate-500">Partners</p>
+      <h1 class="font-display text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+        Our <span class="text-teal-700">Partners</span>
+      </h1>
+      <p class="mt-4 text-base text-slate-600">
+        The organizations and institutions standing alongside Empower Kiribati to build a
+        self-sustaining future for our atolls.
+      </p>
+    </header>
+
+    {
+      partners.length === 0 ? (
+        <p class="py-16 text-center text-slate-500">No partners published yet.</p>
+      ) : (
+        <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {partners.map((partner) => {
+            const { name, logo, projects: linked } = partner.data;
+            return (
+              <li>
+                <a
+                  href={`/our-partners/${partner.id}`}
+                  class="group flex h-full flex-col items-start gap-4 rounded-xl border border-slate-200 bg-white p-6 transition-colors hover:border-teal-500"
+                >
+                  <div class="flex h-20 w-full items-center justify-center rounded-lg bg-slate-50">
+                    {logo ? (
+                      <img
+                        src={absoluteUrl(logo.url)}
+                        alt={logo.alternativeText ?? `${name} logo`}
+                        class="max-h-16 max-w-[80%] object-contain"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span class="text-xs font-bold uppercase tracking-widest text-slate-400">
+                        {name}
+                      </span>
+                    )}
+                  </div>
+                  <h2 class="text-lg font-bold leading-snug text-slate-900 group-hover:text-teal-700">
+                    {name}
+                  </h2>
+                  <span class="mt-auto inline-flex items-center gap-1 pt-2 text-xs font-bold uppercase tracking-wider text-slate-900">
+                    {linked.length} {linked.length === 1 ? 'project' : 'projects'}
+                    <span aria-hidden="true">→</span>
+                  </span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      )
+    }
+  </div>
+</Layout>

@@ -104,6 +104,59 @@ const contentBlock = z.discriminatedUnion('__component', [
 
 export type ContentBlock = z.infer<typeof contentBlock>;
 
+const partnerRef = z.object({
+  documentId: z.string(),
+  id: z.number().optional(),
+  name: z.string(),
+});
+
+const projectRef = z.object({
+  documentId: z.string(),
+  id: z.number().optional(),
+  title: z.string(),
+  description: z.string().nullable().optional(),
+});
+
+const partners = defineCollection({
+  loader: async () => {
+    const entries = await fetchStrapi('/api/partners?populate=*');
+    return entries.map(({ documentId, id: _strapiNumericId, ...rest }) => ({
+      id: documentId,
+      ...rest,
+    }));
+  },
+  schema: z.object({
+    name: z.string(),
+    website_url: z.string().nullable().optional(),
+    logo: strapiImage,
+    projects: z.array(projectRef).default([]),
+    publishedAt: z.coerce.date().nullable().optional(),
+    createdAt: z.coerce.date().optional(),
+    updatedAt: z.coerce.date().optional(),
+    locale: z.string().optional(),
+  }),
+});
+
+const projects = defineCollection({
+  loader: async () => {
+    const entries = await fetchStrapi('/api/projects?populate=*');
+    return entries.map(({ documentId, id: _strapiNumericId, ...rest }) => ({
+      id: documentId,
+      ...rest,
+    }));
+  },
+  schema: z.object({
+    title: z.string(),
+    description: z.string().nullable().optional(),
+    image: strapiImage,
+    partners: z.array(partnerRef).default([]),
+    publishedAt: z.coerce.date().nullable().optional(),
+    createdAt: z.coerce.date().optional(),
+    updatedAt: z.coerce.date().optional(),
+    locale: z.string().optional(),
+  }),
+});
+
 const resources = defineCollection({
   loader: async () => {
     const entries = await fetchStrapi('/api/resources?populate[content_blocks][populate]=*');
@@ -184,6 +237,8 @@ export const collections = {
   blogs,
   events,
   resources,
+  partners,
+  projects,
   blog,
   pages,
   authors,

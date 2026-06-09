@@ -1,0 +1,92 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { STRAPI_URL } from 'astro:env/server';
+
+export async function getStaticPaths() {
+  const partners = await getCollection('partners');
+  return partners.map((partner) => ({
+    params: { id: String(partner.id) },
+    props: { partner },
+  }));
+}
+
+interface Props {
+  partner: CollectionEntry<'partners'>;
+}
+
+const { partner } = Astro.props;
+const { name, logo, website_url, projects: linked } = partner.data;
+
+const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
+---
+
+<Layout title={name} description={`${name} — Empower Kiribati partner`}>
+  <div class="mx-auto max-w-3xl px-6 py-16">
+    <a
+      href="/our-partners"
+      class="mb-8 inline-block text-sm text-slate-500 transition-colors hover:text-teal-700"
+    >
+      ← Back to partners
+    </a>
+
+    <header class="mb-12 flex flex-col gap-6 sm:flex-row sm:items-center">
+      <div class="flex h-28 w-28 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50">
+        {
+          logo ? (
+            <img
+              src={absoluteUrl(logo.url)}
+              alt={logo.alternativeText ?? `${name} logo`}
+              class="max-h-24 max-w-[85%] object-contain"
+            />
+          ) : (
+            <span class="text-xs font-bold uppercase tracking-widest text-slate-400">{name}</span>
+          )
+        }
+      </div>
+      <div>
+        <p class="mb-2 text-xs font-bold uppercase tracking-widest text-slate-500">Partner</p>
+        <h1 class="font-display text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+          {name}
+        </h1>
+        {
+          website_url && (
+            <a
+              href={website_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-teal-700 hover:text-teal-900"
+            >
+              Visit website
+              <span aria-hidden="true">↗</span>
+            </a>
+          )
+        }
+      </div>
+    </header>
+
+    <section>
+      <h2 class="mb-6 text-xs font-bold uppercase tracking-widest text-slate-500">
+        Associated Projects
+      </h2>
+      {
+        linked.length === 0 ? (
+          <p class="rounded-xl border border-dashed border-slate-200 p-6 text-sm text-slate-500">
+            No projects linked to this partner yet.
+          </p>
+        ) : (
+          <ul class="flex flex-col gap-4">
+            {linked.map((project) => (
+              <li class="rounded-xl border border-slate-200 bg-white p-5">
+                <h3 class="text-lg font-bold text-slate-900">{project.title}</h3>
+                {project.description && (
+                  <p class="mt-2 line-clamp-3 text-sm text-slate-600">{project.description}</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </section>
+  </div>
+</Layout>
