@@ -18,17 +18,14 @@
 @import '@fontsource/khand/700.css';
 @import '@fontsource-variable/jetbrains-mono';
 
-/* Buffalo — brand-kit accent face. Drop .woff2/.ttf into
-   src/assets/fonts/buffalo/ then uncomment + adjust the src paths below.
+/* Buffalo — brand-kit accent face (self-hosted .ttf, CSP-safe) */
 @font-face {
   font-family: 'Buffalo';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/src/assets/fonts/buffalo/Buffalo-Regular.woff2') format('woff2'),
-       url('/src/assets/fonts/buffalo/Buffalo-Regular.ttf') format('truetype');
+  src: url('../assets/fonts/buffalo/Buffalo Regular 400.ttf') format('truetype');
 }
-*/
 
 /* Dark mode variant */
 @custom-variant dark (&:where(.dark, .dark *));

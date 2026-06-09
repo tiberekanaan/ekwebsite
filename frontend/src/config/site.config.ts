@@ -27,7 +27,7 @@ export interface SiteConfig {
   /**
    * Branding configuration
    * Logo files: Replace SVGs in src/assets/branding/
-   * Favicon: Replace in public/favicon.svg
+   * Favicon: Replace in public/favicon.webp
    */
   branding: {
     /** Logo alt text for accessibility */
@@ -36,7 +36,8 @@ export interface SiteConfig {
     };
     /** Favicon path (lives in public/) */
     favicon: {
-      svg: string;
+      href: string;
+      type: string;
     };
     /** Theme colors for manifest and browser UI */
     colors: {
@@ -83,7 +84,8 @@ const siteConfig: SiteConfig = {
       alt: 'Velocity',
     },
     favicon: {
-      svg: '/favicon.svg',
+      href: '/favicon.webp',
+      type: 'image/webp',
     },
     colors: {
       themeColor: '#F94C10',
