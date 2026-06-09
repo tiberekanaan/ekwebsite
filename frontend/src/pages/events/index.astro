@@ -1,0 +1,62 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { STRAPI_URL } from 'astro:env/server';
+
+const events = (await getCollection('events')).sort(
+  (a, b) => a.data.date.valueOf() - b.data.date.valueOf(),
+);
+
+const formatDate = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+const absoluteImageUrl = (url?: string | null) => {
+  if (!url) return null;
+  return url.startsWith('http') ? url : `${STRAPI_URL}${url}`;
+};
+---
+
+<BaseLayout title="Events" description="Upcoming and recent events">
+  <main class="mx-auto max-w-5xl px-6 py-16">
+    <header class="mb-12">
+      <h1 class="font-display text-foreground mb-3 text-4xl font-bold">Events</h1>
+      <p class="text-foreground-muted">Workshops, gatherings, and community programs.</p>
+    </header>
+
+    {
+      events.length === 0 ? (
+        <p class="text-foreground-muted py-16 text-center">No events scheduled.</p>
+      ) : (
+        <div class="grid gap-6 md:grid-cols-2">
+          {events.map((event) => {
+            const img = absoluteImageUrl(event.data.image?.url);
+            const alt = event.data.image?.alternativeText ?? '';
+            return (
+              <a
+                href={`/events/${event.id}`}
+                class="border-border bg-surface-secondary hover:border-brand-500 group flex flex-col overflow-hidden rounded-xl border transition-colors"
+              >
+                {img && (
+                  <img
+                    src={img}
+                    alt={alt}
+                    class="aspect-video w-full object-cover"
+                    loading="lazy"
+                  />
+                )}
+                <div class="flex flex-col gap-2 p-6">
+                  <time class="text-brand-500 text-sm font-medium">
+                    {formatDate(event.data.date)}
+                  </time>
+                  <h2 class="text-foreground text-xl font-semibold">
+                    {event.data.location}
+                  </h2>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      )
+    }
+  </main>
+</BaseLayout>

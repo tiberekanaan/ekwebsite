@@ -1,0 +1,76 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { STRAPI_URL } from 'astro:env/server';
+import { marked } from 'marked';
+
+export async function getStaticPaths() {
+  const events = await getCollection('events');
+  return events.map((event) => ({
+    params: { id: event.id },
+    props: { event },
+  }));
+}
+
+interface Props {
+  event: CollectionEntry<'events'>;
+}
+
+const { event } = Astro.props;
+const { date, location, details, image } = event.data;
+
+const formattedDate = date.toLocaleDateString('en-US', {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const detailsHtml = details ? marked.parse(details) : '';
+
+const imageUrl = image?.url
+  ? image.url.startsWith('http')
+    ? image.url
+    : `${STRAPI_URL}${image.url}`
+  : null;
+---
+
+<BaseLayout
+  title={`Event in ${location}`}
+  description={`${location} — ${formattedDate}`}
+>
+  <main class="mx-auto max-w-3xl px-6 py-16">
+    <a
+      href="/events"
+      class="text-foreground-muted hover:text-brand-500 mb-8 inline-block text-sm transition-colors"
+    >
+      ← Back to events
+    </a>
+
+    {
+      imageUrl && (
+        <img
+          src={imageUrl}
+          alt={image?.alternativeText ?? location}
+          class="mb-8 aspect-video w-full rounded-xl object-cover"
+        />
+      )
+    }
+
+    <header class="mb-10">
+      <p class="text-brand-500 mb-2 text-sm font-medium">{formattedDate}</p>
+      <h1 class="font-display text-foreground text-4xl font-bold leading-tight">
+        {location}
+      </h1>
+    </header>
+
+    {
+      detailsHtml && (
+        <article
+          class="text-foreground prose prose-neutral dark:prose-invert max-w-none leading-relaxed"
+          set:html={detailsHtml}
+        />
+      )
+    }
+  </main>
+</BaseLayout>

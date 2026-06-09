@@ -1,0 +1,48 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blogs')).sort((a, b) => {
+  const aDate = a.data.publish_date?.valueOf() ?? a.data.publishedAt?.valueOf() ?? 0;
+  const bDate = b.data.publish_date?.valueOf() ?? b.data.publishedAt?.valueOf() ?? 0;
+  return bDate - aDate;
+});
+
+const formatDate = (d?: Date | null) =>
+  d
+    ? d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    : '';
+---
+
+<BaseLayout title="Blog" description="Latest articles and updates">
+  <main class="mx-auto max-w-4xl px-6 py-16">
+    <header class="mb-12">
+      <h1 class="font-display text-foreground mb-3 text-4xl font-bold">Blog</h1>
+      <p class="text-foreground-muted">Latest articles and updates from the team.</p>
+    </header>
+
+    {
+      posts.length === 0 ? (
+        <p class="text-foreground-muted py-16 text-center">No posts yet.</p>
+      ) : (
+        <ul class="divide-border divide-y">
+          {posts.map((post) => (
+            <li class="py-6">
+              <a
+                href={`/blog/${post.id}`}
+                class="group flex flex-col gap-2 transition-colors"
+              >
+                <time class="text-foreground-muted text-sm">
+                  {formatDate(post.data.publish_date ?? post.data.publishedAt)}
+                </time>
+                <h2 class="text-foreground group-hover:text-brand-500 text-2xl font-semibold transition-colors">
+                  {post.data.title}
+                </h2>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </main>
+</BaseLayout>
