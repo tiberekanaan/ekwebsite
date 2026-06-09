@@ -1,18 +1,27 @@
 ## Current Feature
 
-**Feature:** Build "Our Partners" and "Our Programs" Relational Architecture
+**Feature:** Refine Global Structure and Landing Page UI
 
 ## Status
-
-Completed
+- Core backend schemas (Events, Blogs, Basic Pages, Web-forms, Resources, Partners, Projects) are mapped.
+- Need to implement Testimonials backend and update the global frontend layout.
 
 ## Goals
-1. **Backend (Strapi):** Create two new collection types: `Partner` and `Project`. Create a many-to-many relation between them so a Partner can have many Projects, and a Project can have many Partners. 
-2. **Frontend (Astro):** Update `src/content.config.ts` to fetch both `partners` and `projects` collections. Ensure the fetch URL includes `?populate=*` so Strapi 5 returns the linked relational data.
-3. **UI (Astro):** 
-   - Build `src/pages/our-partners/index.astro` to display a custom grid of partners.
-   - Build a dynamic route `src/pages/our-partners/[id].astro` that displays the partner's details and lists their associated projects.
-   - Build `src/pages/our-programs/index.astro` to display a list of all projects.
+1. **Backend (Strapi):** Create a new Collection Type for `Testimonial` with fields: `quote` (text), `author` (string), `role` (string), and `image` (media).
+2. **Global UI (Astro):** 
+   - Update the global `Navbar` with links: About, Our work, Resources, Blog, Events, Contact, and a "Build Your Skills" button.
+   - Create a `Footer` component with a newsletter subscribe form and social media logos (Facebook, YouTube, LinkedIn).
+3. **Landing Page UI (Astro):** Update `src/pages/index.astro` to include the full refined flow:
+   - Hero (with "Support Us" and "Strategy 2026-2030" CTAs).
+   - Major Challenges section (custom UI with placeholders for data/visuals on Climate Change, Unemployment, Low Skills, and Family Struggles).
+   - Four Pillars (Empowering Leaders & Communities, Building Partnership for Impact, Creating Conditions for Innovation, Enabling Digital Participation).
+   - Our Impact (Numbers: Programs, Community Members Reached, Project Value).
+   - Testimonials (Carousel fetching from Strapi).
+   - We are building together (Future vision).
+   - Our Partners (Moving logo carousel fetching from Strapi).
+
+   Refer to sample image in the @screenshots/landing-page.png. Try to implement that kind of vibes.
+
 
 ## Notes
 
@@ -31,3 +40,4 @@ Completed
 - 2026-06-09 — **Resource content type + frontend pages**. Strapi: three components under `backend/src/components/content-blocks/` (`video.url`, `download.file`, `article.external_link`) and a new `resource` collection (`title`, `description`, `content_blocks` dynamic zone, Draft & Publish on) under `backend/src/api/resource/`. Frontend: `resources` collection in `content.config.ts` (Zod 4 discriminated union over `__component`), populate via `?populate[content_blocks][populate]=*`. Pages: `src/pages/resources/index.astro` (card grid) and `src/pages/resources/[id].astro` (getStaticPaths with string ids, switch over `__component` to render iframe/Watch Video, Download File, and Read External Article cards). Branch `feature/resource-content-type` ff-merged to `main` (commit `b416eb3`) and deleted.
 - 2026-06-09 — **Shared `Layout` wrapper (Header + Footer)**. Added `src/layouts/Layout.astro` (thin wrapper around `BaseLayout` that plugs the empower `Header` into `slot="header"` and a new `Footer` into `slot="footer"`) and `src/components/empower/Footer.astro` (slate/teal/lime brand). Switched `BaseLayout` body to `flex-col` so the footer hugs the viewport bottom on short pages. Migrated `index`, `blog/index`, `blog/[id]`, `events/index`, `events/[id]`, `resources/index`, `resources/[id]` from `BaseLayout` → `Layout`; dropped the local `<Header slot="header" />` from `index.astro`. Static `about`/`contact`/`404` intentionally stayed on `BaseLayout`. Branch `feature/layout-wrapper` ff-merged to `main` (commit `c752555`) and deleted.
 - 2026-06-09 — **Partner + Project content types with relational frontend pages**. Strapi: two new collection types under `backend/src/api/` — `partner` (`name`, `logo`, `website_url`) and `project` (`title`, `description` richtext, `image`) — with a many-to-many relation declared on `partner.projects` (owning, `inversedBy: "partners"`) and mirrored on `project.partners` (`mappedBy: "projects"`). Both Draft & Publish. Frontend: added `partners` and `projects` collections to `content.config.ts` (fetched with `?populate=*`, Zod 4 schemas with lightweight `partnerRef`/`projectRef` for the M2M). Pages: `our-partners/index.astro` (alphabetical card grid with logo + project count), `our-partners/[id].astro` (`getStaticPaths` over `documentId`; shows logo, website link, and associated project cards), `our-programs/index.astro` (date-sorted grid with image, description excerpt, clickable partner badges linking back to `/our-partners/[id]`). Updated `OurWork.astro` landing pillars so PROGRAMS → `/our-programs` and OUR PARTNERS → `/our-partners`. Branch `feature/partners-projects` ff-merged to `main` and deleted.
+- 2026-06-09 — **Refined global structure, landing page, typography, and motion**. Strapi: new `testimonial` collection (`quote` text, `author`, `role`, single `image`, Draft & Publish) under `backend/src/api/testimonial/`. Frontend chrome: Header nav locked to About / Our Work / Resources / Blog / Events / Contact with a lime "Build your skills" CTA and an animated lime underline on hover; Footer rebuilt with newsletter subscribe form, Facebook/YouTube/LinkedIn icon links, and primary nav. Landing assembly in `index.astro`: Hero → Challenges → OurWork → Impact → TestimonialCarousel → Future → PartnerCarousel. New empower components: `Challenges.astro` (four-card grid for Climate Change / Unemployment / Low Skills / Family Struggles with stat + striped placeholder for future visuals), `TestimonialCarousel.astro` (auto-rotating carousel with prev/next + dots, graceful empty state), `PartnerCarousel.astro` (CSS-keyframe marquee with edge mask, pause-on-hover, reduced-motion fallback), `Future.astro` (the prior "We are building together" content, freed up so `Hero.astro` could be rewritten with Support Us + Strategy 2026–2030 CTAs and a stats strip). `content.config.ts` gained a `testimonials` loader plus a `softFetchStrapi` helper that returns `[]` on 403/404 so the build survives until the Public role is granted `find`/`findOne` on Testimonial. Typography swapped at the theme-token level: `--theme-font-sans` → Plus Jakarta Sans Variable, `--theme-font-display` → Bricolage Grotesque Variable (Fontsource-variable imports in `styles/global.css`, applied to both `themes/default.css` and `themes/midnight.css`). Motion layer: new `Motion.astro` mounted once via `Layout.astro` powers `data-reveal` (IntersectionObserver fade-up, one-shot) and `data-countup` (eased number tween that preserves prefix formatting + suffixes like `+`, `K`, `M`, `$`); honors `prefers-reduced-motion`. Hover micro-interactions applied across Challenges, OurWork pillars, Impact stat cards, Hero image card + CTAs, Future values, Testimonial avatars, Header links, Footer socials. Branch `feature/global-refine`.

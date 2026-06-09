@@ -54,7 +54,7 @@ const pillars: Pillar[] = [
 <section id="our-work" class="bg-white">
   <div class="mx-auto max-w-7xl px-6 py-16 lg:py-24">
     <div class="grid gap-8 lg:grid-cols-2 lg:items-end">
-      <div>
+      <div data-reveal>
         <p class="mb-3 text-xs font-bold uppercase tracking-widest text-slate-500">Our Work</p>
         <h2 class="font-display text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl">
           FOUR PILLARS,<br />ONE <span class="text-teal-700">ISLAND</span><br />ECOSYSTEM.
@@ -69,15 +69,18 @@ const pillars: Pillar[] = [
     <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {
         pillars.map((p) => (
-          <article class="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+          <article
+            data-reveal
+            class="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-teal-300 hover:shadow-2xl hover:shadow-slate-900/10"
+          >
             <div
               class:list={[
-                'relative aspect-[5/3] w-full bg-gradient-to-br',
+                'relative aspect-[5/3] w-full overflow-hidden bg-gradient-to-br',
                 p.imageBg,
               ]}
               aria-hidden="true"
             >
-              <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.12),transparent_60%)]" />
+              <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.12),transparent_60%)] transition-transform duration-700 group-hover:scale-110" />
             </div>
             <div class:list={['flex flex-1 flex-col gap-3 p-5', p.band]}>
               <svg
@@ -98,7 +101,7 @@ const pillars: Pillar[] = [
                 class="mt-auto inline-flex items-center gap-1 pt-2 text-xs font-bold uppercase tracking-wider hover:underline"
               >
                 {p.link.label}
-                <span aria-hidden="true">→</span>
+                <span aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-1">→</span>
               </a>
             </div>
           </article>

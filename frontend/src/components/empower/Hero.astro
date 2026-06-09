@@ -1,107 +1,99 @@
 ---
-interface Value {
-  icon: string;
-  title: string;
-  description: string;
-}
-
-const values: Value[] = [
-  {
-    icon: 'M12 2 9 7l-5 .7 3.6 3.6L6.8 17 12 14.3 17.2 17l-.8-5.7L20 7.7 15 7Z',
-    title: 'Resilience',
-    description: 'Climate-adaptive strategies in every community we work with.',
-  },
-  {
-    icon: 'M3 12h18M12 3v18',
-    title: 'Opportunity',
-    description: 'Thriving local entrepreneurs and new island-based markets.',
-  },
-  {
-    icon: 'M5 12c0-3 2-5 5-5s5 2 5 5-2 5-5 5-5-2-5-5Zm14 0c0 3-2 5-5 5',
-    title: 'Sustaining',
-    description: 'An ecosystem that grows independently of any single donor.',
-  },
-  {
-    icon: 'M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6Z',
-    title: 'Digital Trust',
-    description: 'Safe and confident digital participation for every atoll.',
-  },
-];
-
-const stats = [
-  { value: '2030', label: 'HORIZON' },
-  { value: '52', label: 'COMMUNITIES' },
-  { value: '$4.2M', label: 'MOBILISED' },
+const highlights = [
+  { value: '32', label: 'Atolls reached' },
+  { value: '47+', label: 'Programmes' },
+  { value: '11.4K', label: 'Lives touched' },
 ];
 ---
 
-<section class="bg-white">
-  <div class="mx-auto grid max-w-7xl gap-12 px-6 py-16 lg:grid-cols-2 lg:items-center lg:py-24">
+<section class="relative overflow-hidden bg-slate-900 text-white">
+  <div
+    class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(45,212,191,0.25),transparent_55%),radial-gradient(ellipse_at_bottom_right,rgba(190,242,100,0.18),transparent_55%)]"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div
+    class="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(180deg,transparent,rgba(15,23,42,0.85))]"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="relative mx-auto grid max-w-7xl gap-12 px-6 py-20 lg:grid-cols-2 lg:items-center lg:py-28">
     <div>
-      <p class="mb-3 font-serif italic text-2xl text-teal-700">The Future</p>
-
-      <h1 class="font-display text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
-        WE ARE <span class="text-teal-700">BUILDING</span><br />TOGETHER.
-      </h1>
-
-      <p class="mt-6 max-w-xl text-base text-slate-600">
-        By 2030, our goal is a self-sustaining ecosystem where digital trust and economic opportunity
-        reach every citizen of Kiribati — built by I-Kiribati, for I-Kiribati.
+      <p
+        class="inline-flex items-center gap-2 rounded-full border border-lime-300/30 bg-lime-300/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-lime-200"
+      >
+        <span class="h-1.5 w-1.5 rounded-full bg-lime-300" aria-hidden="true"></span>
+        Empower Kiribati
       </p>
 
-      <div class="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2">
+      <h1
+        class="mt-6 font-display text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl"
+      >
+        IMPACT THROUGH<br /><span class="text-lime-300 italic font-serif">kindness</span>,<br />
+        BUILT WITH <span class="text-teal-300">community</span>.
+      </h1>
+
+      <p class="mt-6 max-w-xl text-base text-slate-300 sm:text-lg">
+        A Kiribati-led NGO weaving climate resilience, digital trust, and economic opportunity
+        across every atoll — built by I-Kiribati, for I-Kiribati.
+      </p>
+
+      <div class="mt-10 flex flex-wrap items-center gap-4">
+        <a
+          href="/support-us"
+          class="group inline-flex items-center gap-2 rounded-full bg-lime-300 px-6 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-lime-300/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-lime-400 hover:shadow-xl hover:shadow-lime-300/30"
+        >
+          Support Us
+          <span aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-1">→</span>
+        </a>
+        <a
+          href="/strategy-2026-2030"
+          class="inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/10"
+        >
+          Strategy 2026–2030
+        </a>
+      </div>
+
+      <dl class="mt-12 grid max-w-md grid-cols-3 gap-6">
         {
-          values.map((v) => (
-            <div class="flex flex-col gap-2">
-              <svg
-                class="h-6 w-6 text-teal-700"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="1.75"
-                aria-hidden="true"
+          highlights.map((h) => (
+            <div data-reveal>
+              <dt
+                class="font-display text-3xl font-extrabold text-white"
+                data-countup
+                data-target={h.value}
               >
-                <path stroke-linecap="round" stroke-linejoin="round" d={v.icon} />
-              </svg>
-              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-900">{v.title}</h3>
-              <p class="text-sm text-slate-600">{v.description}</p>
+                {h.value}
+              </dt>
+              <dd class="mt-1 text-[11px] font-semibold uppercase tracking-widest text-slate-400">
+                {h.label}
+              </dd>
             </div>
           ))
         }
-      </div>
-
-      <a
-        href="/strategy"
-        class="mt-10 inline-flex items-center gap-2 rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-slate-800"
-      >
-        Read the 2030 strategy
-        <span aria-hidden="true">→</span>
-      </a>
+      </dl>
     </div>
 
     <div class="relative">
       <div
-        class="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-gradient-to-br from-slate-700 via-slate-600 to-slate-800 sm:aspect-[5/4] lg:aspect-[4/5]"
+        class="group relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-gradient-to-br from-teal-700 via-teal-600 to-emerald-700 shadow-2xl shadow-teal-900/40 transition-all duration-500 hover:-translate-y-1 hover:shadow-teal-900/60 sm:aspect-[5/4] lg:aspect-[4/5]"
         role="img"
-        aria-label="Aerial view of a Kiribati island"
+        aria-label="Community gathering on a Kiribati atoll"
       >
-        <div
-          class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.15),transparent_60%)]"
-        >
-        </div>
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.25),transparent_60%)] transition-transform duration-700 group-hover:scale-110"></div>
 
-        <div class="absolute inset-x-4 bottom-4 grid grid-cols-3 gap-2 sm:inset-x-6 sm:bottom-6 sm:gap-3">
-          {
-            stats.map((s) => (
-              <div class="rounded-lg bg-slate-900/70 px-3 py-3 text-white backdrop-blur-sm sm:px-4">
-                <div class="text-xl font-extrabold sm:text-2xl">{s.value}</div>
-                <div class="text-[10px] font-semibold uppercase tracking-wider text-slate-300 sm:text-xs">
-                  {s.label}
-                </div>
-              </div>
-            ))
-          }
+        <div class="absolute inset-x-5 bottom-5 rounded-2xl bg-slate-900/70 p-5 backdrop-blur transition-all duration-500 group-hover:bg-slate-900/80 group-hover:translate-y-[-2px]">
+          <p class="text-xs font-semibold uppercase tracking-widest text-lime-300">
+            Featured initiative
+          </p>
+          <p class="mt-2 text-base font-bold text-white">
+            Digital Trust on the Outer Islands
+          </p>
+          <p class="mt-1 text-xs text-slate-300">
+            Bringing safe, confident internet skills to families across 12 atolls in 2026.
+          </p>
         </div>
       </div>
     </div>

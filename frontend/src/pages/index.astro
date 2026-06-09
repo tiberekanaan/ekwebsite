@@ -1,10 +1,12 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import Hero from '@/components/empower/Hero.astro';
+import Challenges from '@/components/empower/Challenges.astro';
 import OurWork from '@/components/empower/OurWork.astro';
 import Impact from '@/components/empower/Impact.astro';
-import LatestEvents from '@/components/empower/LatestEvents.astro';
-import LatestNews from '@/components/empower/LatestNews.astro';
+import TestimonialCarousel from '@/components/empower/TestimonialCarousel.astro';
+import Future from '@/components/empower/Future.astro';
+import PartnerCarousel from '@/components/empower/PartnerCarousel.astro';
 ---
 
 <Layout
@@ -12,8 +14,10 @@ import LatestNews from '@/components/empower/LatestNews.astro';
   description="A Kiribati-led NGO building a self-sustaining ecosystem of digital trust and economic opportunity by 2030, built by I-Kiribati, for I-Kiribati."
 >
   <Hero />
+  <Challenges />
   <OurWork />
   <Impact />
-  <LatestEvents />
-  <LatestNews />
+  <TestimonialCarousel />
+  <Future />
+  <PartnerCarousel />
 </Layout>

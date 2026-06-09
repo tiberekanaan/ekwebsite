@@ -35,7 +35,7 @@ const stats: Stat[] = [
 <section class="bg-white">
   <div class="mx-auto max-w-7xl px-6 py-16 lg:py-24">
     <div class="grid gap-8 lg:grid-cols-2 lg:items-end">
-      <div>
+      <div data-reveal>
         <p class="mb-3 text-xs font-bold uppercase tracking-widest text-slate-500">Our Impact</p>
         <h2 class="font-display text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl">
           THE NUMBERS<br />BEHIND <span class="text-teal-700">THE</span><br />MISSION.
@@ -51,12 +51,13 @@ const stats: Stat[] = [
       {
         stats.map((s) => (
           <article
+            data-reveal
             class:list={[
-              'rounded-xl border border-slate-200 border-l-4 bg-white p-6 shadow-sm',
+              'group rounded-xl border border-slate-200 border-l-4 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10',
               s.accent,
             ]}
           >
-            <div class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-lime-300">
+            <div class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-lime-300 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5"
@@ -69,7 +70,11 @@ const stats: Stat[] = [
                 <path stroke-linecap="round" stroke-linejoin="round" d={s.icon} />
               </svg>
             </div>
-            <div class="font-display text-5xl font-extrabold tracking-tight text-slate-900">
+            <div
+              class="font-display text-5xl font-extrabold tracking-tight text-slate-900"
+              data-countup
+              data-target={s.value}
+            >
               {s.value}
             </div>
             <div class="mt-2 text-sm font-bold uppercase tracking-wider text-teal-700">

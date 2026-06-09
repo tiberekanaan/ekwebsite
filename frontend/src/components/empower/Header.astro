@@ -6,7 +6,7 @@ interface NavItem {
 
 const nav: NavItem[] = [
   { label: 'About', href: '/about' },
-  { label: 'Our Work', href: '#our-work' },
+  { label: 'Our Work', href: '/#our-work' },
   { label: 'Resources', href: '/resources' },
   { label: 'Blog', href: '/blog' },
   { label: 'Events', href: '/events' },
@@ -16,7 +16,7 @@ const nav: NavItem[] = [
 const currentPath = Astro.url.pathname;
 
 const isActive = (href: string) => {
-  if (href.startsWith('#')) return false;
+  if (href.startsWith('#') || href.startsWith('/#')) return false;
   if (href === '/') return currentPath === '/';
   return currentPath === href || currentPath.startsWith(`${href}/`);
 };
@@ -36,9 +36,9 @@ const isActive = (href: string) => {
             href={item.href}
             aria-current={isActive(item.href) ? 'page' : undefined}
             class:list={[
-              'text-sm font-medium transition-colors',
+              'relative text-sm font-medium transition-colors after:absolute after:inset-x-0 after:-bottom-1 after:h-0.5 after:origin-left after:scale-x-0 after:bg-lime-400 after:transition-transform after:duration-300 hover:after:scale-x-100',
               isActive(item.href)
-                ? 'text-slate-900 underline decoration-lime-400 decoration-2 underline-offset-8'
+                ? 'text-slate-900 after:scale-x-100'
                 : 'text-slate-700 hover:text-slate-900',
             ]}
           >
@@ -50,10 +50,10 @@ const isActive = (href: string) => {
 
     <div class="flex items-center gap-3">
       <a
-        href="#build-your-skills"
-        class="hidden rounded-full bg-lime-300 px-5 py-2.5 text-sm font-semibold text-slate-900 transition-colors hover:bg-lime-400 sm:inline-flex"
+        href="/#build-your-skills"
+        class="hidden rounded-full bg-lime-300 px-5 py-2.5 text-sm font-semibold text-slate-900 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-lime-400 hover:shadow-md hover:shadow-lime-400/40 sm:inline-flex"
       >
-        Build Your Skills
+        Build your skills
       </a>
 
       <button
@@ -92,10 +92,10 @@ const isActive = (href: string) => {
         ))
       }
       <a
-        href="#build-your-skills"
+        href="/#build-your-skills"
         class="mt-2 inline-flex w-full items-center justify-center rounded-full bg-lime-300 px-5 py-2.5 text-sm font-semibold text-slate-900 hover:bg-lime-400 sm:hidden"
       >
-        Build Your Skills
+        Build your skills
       </a>
     </nav>
   </div>

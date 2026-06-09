@@ -23,6 +23,21 @@ async function fetchStrapi<T extends StrapiEntry>(path: string): Promise<T[]> {
   return data;
 }
 
+async function softFetchStrapi<T extends StrapiEntry>(path: string): Promise<T[]> {
+  const res = await fetch(`${STRAPI_URL}${path}`);
+  if (res.status === 403 || res.status === 404) {
+    console.warn(
+      `Strapi ${path} returned ${res.status} — falling back to []. Check the collection exists and the Public role has 'find' permission.`,
+    );
+    return [];
+  }
+  if (!res.ok) {
+    throw new Error(`Strapi request failed: ${path} → ${res.status} ${res.statusText}`);
+  }
+  const { data } = (await res.json()) as StrapiResponse<T>;
+  return data;
+}
+
 const strapiImage = z
   .object({
     url: z.string(),
@@ -157,6 +172,26 @@ const projects = defineCollection({
   }),
 });
 
+const testimonials = defineCollection({
+  loader: async () => {
+    const entries = await softFetchStrapi('/api/testimonials?populate=*');
+    return entries.map(({ documentId, id: _strapiNumericId, ...rest }) => ({
+      id: documentId,
+      ...rest,
+    }));
+  },
+  schema: z.object({
+    quote: z.string(),
+    author: z.string(),
+    role: z.string().nullable().optional(),
+    image: strapiImage,
+    publishedAt: z.coerce.date().nullable().optional(),
+    createdAt: z.coerce.date().optional(),
+    updatedAt: z.coerce.date().optional(),
+    locale: z.string().optional(),
+  }),
+});
+
 const resources = defineCollection({
   loader: async () => {
     const entries = await fetchStrapi('/api/resources?populate[content_blocks][populate]=*');
@@ -239,6 +274,7 @@ export const collections = {
   resources,
   partners,
   projects,
+  testimonials,
   blog,
   pages,
   authors,

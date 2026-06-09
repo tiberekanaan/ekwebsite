@@ -1,0 +1,105 @@
+---
+/**
+ * Drop this once at the bottom of the layout. It powers two opt-in behaviours:
+ *   - data-reveal      → fade + slide up the first time the element scrolls into view
+ *   - data-countup     → animate the numeric prefix of `data-target` up from 0 on reveal
+ */
+---
+
+<style is:global>
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  [data-reveal].is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal] {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const init = () => {
+    const reveals = document.querySelectorAll<HTMLElement>('[data-reveal]');
+    if (!reveals.length) return;
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const parseTarget = (raw: string) => {
+      const match = raw.match(/^([\d,.]+)(.*)$/);
+      if (!match) return null;
+      const numeric = parseFloat(match[1].replace(/,/g, ''));
+      if (Number.isNaN(numeric)) return null;
+      return { value: numeric, suffix: match[2], raw };
+    };
+
+    const formatNumber = (n: number, target: number) => {
+      if (Number.isInteger(target) && target >= 1000) {
+        return Math.round(n).toLocaleString('en-US');
+      }
+      if (Number.isInteger(target)) return Math.round(n).toString();
+      return n.toFixed(1);
+    };
+
+    const countUp = (el: HTMLElement) => {
+      if (el.dataset.countupRan === 'true') return;
+      const target = parseTarget(el.dataset.target ?? el.textContent ?? '');
+      if (!target) return;
+      el.dataset.countupRan = 'true';
+      if (prefersReduced) {
+        el.textContent = target.raw;
+        return;
+      }
+      const duration = 1400;
+      const start = performance.now();
+      const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+      const tick = (now: number) => {
+        const progress = Math.min(1, (now - start) / duration);
+        const current = target.value * ease(progress);
+        el.textContent = `${formatNumber(current, target.value)}${target.suffix}`;
+        if (progress < 1) requestAnimationFrame(tick);
+        else el.textContent = target.raw;
+      };
+      requestAnimationFrame(tick);
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target as HTMLElement;
+          el.classList.add('is-visible');
+          el.querySelectorAll<HTMLElement>('[data-countup]').forEach(countUp);
+          if (el.matches('[data-countup]')) countUp(el);
+          observer.unobserve(el);
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' },
+    );
+
+    reveals.forEach((el) => observer.observe(el));
+
+    document.querySelectorAll<HTMLElement>('[data-countup]:not([data-reveal])').forEach((el) => {
+      observer.observe(el);
+      el.classList.add('is-visible');
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>
