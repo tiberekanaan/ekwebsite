@@ -2,6 +2,7 @@ import { defineConfig, envField } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import react from '@astrojs/react';
+import node from '@astrojs/node';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
@@ -14,6 +15,11 @@ export default defineConfig({
         context: 'server',
         access: 'public',
         default: 'http://localhost:1337',
+      }),
+      STRAPI_TOKEN: envField.string({
+        context: 'server',
+        access: 'secret',
+        optional: true,
       }),
       PUBLIC_GA_MEASUREMENT_ID: envField.string({ context: 'client', access: 'public', optional: true }),
       PUBLIC_GTM_ID: envField.string({ context: 'client', access: 'public', optional: true }),
@@ -30,6 +36,8 @@ export default defineConfig({
   image: {
     layout: 'constrained',
   },
+
+  adapter: node({ mode: 'standalone' }),
 
   integrations: [
     react(),
