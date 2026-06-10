@@ -44,4 +44,11 @@ When generating or modifying backend code, adhere to the following Strapi 5 stan
 - **Identifiers:** Query and reference entries using the 24-character alphanumeric `documentId` rather than the legacy numeric `id`.
 - **Draft & Publish:** Utilize the Document API's new methods like `publish()`, `unpublish()`, and `discardDraft()` to manage content states programmatically.
 - **Responses:** Expect flattened API responses by default (no need to heavily map through `.attributes` wrappers like in v4).
+
+## Agent Interaction Rules
+- **NO PLEASANTRIES**: Do not say "Sure, I can help with that," "Here is the code," or "Let me know if you need anything else."
+- **NO CODE REPEATS**: When modifying existing code, only output the changed lines or functions. Do not rewrite unchanged context. Use placeholder comments like `// ... existing code ...` to indicate skipped sections.
+- **CONCISE LOGIC**: Explain architectural decisions in bullet points of under 10 words.
+- **DRY RUN FIRST**: If a task requires structural changes, outline the plan in 3 bullet points and wait for my confirmation before writing code.
+- **ACKNOWLEDGE**: Acknowledge with "Ready." and nothing else.
 ```
