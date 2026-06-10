@@ -21,6 +21,16 @@ export default defineConfig({
         access: 'secret',
         optional: true,
       }),
+      STRAPI_API_TOKEN: envField.string({
+        context: 'server',
+        access: 'secret',
+        optional: true,
+      }),
+      EMAIL_API_KEY: envField.string({
+        context: 'server',
+        access: 'secret',
+        optional: true,
+      }),
       PUBLIC_GA_MEASUREMENT_ID: envField.string({ context: 'client', access: 'public', optional: true }),
       PUBLIC_GTM_ID: envField.string({ context: 'client', access: 'public', optional: true }),
       CONTACT_FORM_ENDPOINT: envField.string({ context: 'server', access: 'secret', optional: true }),

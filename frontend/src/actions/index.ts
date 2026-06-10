@@ -1,59 +1,113 @@
 import { defineAction, ActionError } from 'astro:actions';
 import { z } from 'astro/zod';
-import { STRAPI_URL, STRAPI_TOKEN } from 'astro:env/server';
+import { Resend } from 'resend';
+import {
+  STRAPI_URL,
+  STRAPI_TOKEN,
+  STRAPI_API_TOKEN,
+  EMAIL_API_KEY,
+} from 'astro:env/server';
+
+const NOTIFY_FROM = 'onboarding@resend.dev';
+const NOTIFY_TO = 'kanaan.ngutu@gmail.com';
+
+async function sendNotificationEmail(input: {
+  name: string;
+  email: string;
+  message: string;
+}) {
+  if (!EMAIL_API_KEY) return;
+
+  const resend = new Resend(EMAIL_API_KEY);
+
+  const subject = `New contact form submission from ${input.name}`;
+  const text = `Name: ${input.name}\nEmail: ${input.email}\n\nMessage:\n${input.message}`;
+  const html = `
+    <h2>New contact form submission</h2>
+    <p><strong>Name:</strong> ${escapeHtml(input.name)}</p>
+    <p><strong>Email:</strong> <a href="mailto:${escapeHtml(input.email)}">${escapeHtml(input.email)}</a></p>
+    <p><strong>Message:</strong></p>
+    <p>${escapeHtml(input.message).replace(/\n/g, '<br/>')}</p>
+  `;
+
+  try {
+    const { error } = await resend.emails.send({
+      from: NOTIFY_FROM,
+      to: NOTIFY_TO,
+      replyTo: input.email,
+      subject,
+      text,
+      html,
+    });
+    if (error) {
+      console.error('Resend notification failed:', error);
+    }
+  } catch (err) {
+    console.error('Resend notification threw:', err);
+  }
+}
+
+function escapeHtml(s: string) {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
 export const server = {
-  contact: {
-    submit: defineAction({
-      accept: 'form',
-      input: z.object({
-        name: z
-          .string()
-          .min(2, 'Name must be at least 2 characters')
-          .max(100, 'Name is too long'),
-        email: z.email('Please enter a valid email address'),
-        message: z
-          .string()
-          .min(10, 'Message must be at least 10 characters')
-          .max(5000, 'Message is too long'),
-        honeypot: z.string().max(0).optional(),
-      }),
-      handler: async ({ name, email, message, honeypot }) => {
-        if (honeypot) {
-          return { documentId: null, swallowed: true as const };
-        }
+  submitContact: defineAction({
+    accept: 'form',
+    input: z.object({
+      name: z
+        .string()
+        .min(2, 'Name must be at least 2 characters')
+        .max(100, 'Name is too long'),
+      email: z.email('Please enter a valid email address'),
+      message: z
+        .string()
+        .min(10, 'Message must be at least 10 characters')
+        .max(5000, 'Message is too long'),
+      honeypot: z.string().max(0).optional(),
+    }),
+    handler: async ({ name, email, message, honeypot }) => {
+      if (honeypot) {
+        return { documentId: null, swallowed: true as const };
+      }
 
-        const headers: Record<string, string> = {
-          'Content-Type': 'application/json',
-        };
-        if (STRAPI_TOKEN) {
-          headers['Authorization'] = `Bearer ${STRAPI_TOKEN}`;
-        }
+      const bearer = STRAPI_API_TOKEN ?? STRAPI_TOKEN;
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      if (bearer) headers['Authorization'] = `Bearer ${bearer}`;
 
-        const res = await fetch(`${STRAPI_URL}/api/web-forms`, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({ data: { name, email, message } }),
-        });
+      const res = await fetch(`${STRAPI_URL}/api/web-forms`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ data: { name, email, message } }),
+      });
 
-        if (!res.ok) {
-          const body = await res.text().catch(() => '');
-          if (res.status === 403 || res.status === 401) {
-            throw new ActionError({
-              code: 'FORBIDDEN',
-              message:
-                'Submissions are not currently accepted. Grant the Public role `create` on web-form in Strapi, or set STRAPI_TOKEN.',
-            });
-          }
+      if (!res.ok) {
+        const body = await res.text().catch(() => '');
+        if (res.status === 401 || res.status === 403) {
           throw new ActionError({
-            code: 'INTERNAL_SERVER_ERROR',
-            message: `Strapi rejected the submission (${res.status} ${res.statusText})${body ? `: ${body}` : ''}`,
+            code: 'FORBIDDEN',
+            message:
+              'Submissions are not currently accepted. Grant the Public role `create` on web-form in Strapi, or set STRAPI_API_TOKEN.',
           });
         }
+        throw new ActionError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: `Strapi rejected the submission (${res.status} ${res.statusText})${body ? `: ${body}` : ''}`,
+        });
+      }
 
-        const json = (await res.json()) as { data: { documentId: string } };
-        return { documentId: json.data.documentId, swallowed: false as const };
-      },
-    }),
-  },
+      const json = (await res.json()) as { data: { documentId: string } };
+
+      await sendNotificationEmail({ name, email, message });
+
+      return { documentId: json.data.documentId, swallowed: false as const };
+    },
+  }),
 };

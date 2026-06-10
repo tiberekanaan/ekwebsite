@@ -1,23 +1,10 @@
 ---
-/**
- * Contact page
- * URL: /contact
- */
 export const prerender = false;
 
-import PageLayout from '@/layouts/PageLayout.astro';
-import Icon from '@/components/ui/primitives/Icon/Icon.astro';
-import Badge from '@/components/ui/data-display/Badge/Badge.astro';
-import Button from '@/components/ui/form/Button/Button.astro';
-import Input from '@/components/ui/form/Input/Input.astro';
-import Textarea from '@/components/ui/form/Textarea/Textarea.astro';
-import Card from '@/components/ui/data-display/Card/Card.astro';
-import { Hero } from '@/components/hero';
-import GoogleMap from '@/components/ui/data-display/GoogleMap/GoogleMap.astro';
-import siteConfig from '@/config/site.config';
+import Layout from '@/layouts/Layout.astro';
 import { actions, isInputError } from 'astro:actions';
 
-const result = Astro.getActionResult(actions.contact.submit);
+const result = Astro.getActionResult(actions.submitContact);
 
 const fieldErrors =
   result?.error && isInputError(result.error) ? result.error.fields : {};
@@ -26,175 +13,152 @@ const formError =
 const success = result && !result.error;
 ---
 
-<PageLayout
-  title="Contact Us"
-  description="Get in touch with the Velocity team."
+<Layout
+  title="Contact"
+  description="Get in touch with the Empower Kiribati team."
 >
-  <Hero layout="centered" size="sm" showGrid>
-    <Badge slot="badge" pill pulse>Get in Touch</Badge>
+  <section class="bg-slate-50">
+    <div class="mx-auto max-w-6xl px-6 py-20 lg:py-24">
+      <div class="grid gap-12 lg:grid-cols-5">
+        <header class="lg:col-span-2" data-reveal>
+          <p class="font-accent text-3xl leading-none text-teal-700">
+            Get in touch
+          </p>
+          <h1 class="font-display mt-3 text-4xl font-semibold text-slate-900 sm:text-5xl">
+            Let's <span class="text-teal-700">connect</span>.
+          </h1>
+          <p class="mt-5 text-base leading-relaxed text-slate-600">
+            Questions, partnerships, or ideas — drop us a note and we'll get back to you.
+          </p>
 
-    <h1 slot="title">
-      Let's <span class="text-brand-500">connect.</span>
-    </h1>
-
-    <p slot="description">
-      Have a question, suggestion, or just want to say hello? We'd love to hear from you.
-    </p>
-  </Hero>
-
-  <!-- Contact Section -->
-  <section class="bg-surface-secondary py-20">
-    <div class="mx-auto max-w-6xl px-6">
-      <div class="grid gap-12 lg:grid-cols-2">
-        <!-- Form -->
-        <Card padding="lg">
-          <h2 class="font-display text-foreground mb-6 text-2xl font-bold">Send us a message</h2>
-
-          {
-            success ? (
-              <div class="border-success/30 bg-success/10 text-success rounded-lg border p-4">
-                <p class="font-semibold">Message sent.</p>
-                <p class="text-sm">Thanks — we'll get back to you soon.</p>
-              </div>
-            ) : (
-              <form method="POST" action={actions.contact.submit} class="space-y-6">
-                <div>
-                  <Input
-                    label="Your Name"
-                    name="name"
-                    type="text"
-                    placeholder="John Doe"
-                    required
-                    autocomplete="name"
-                  />
-                  {fieldErrors.name && (
-                    <p class="text-destructive mt-1 text-sm">{fieldErrors.name[0]}</p>
-                  )}
-                </div>
-
-                <div>
-                  <Input
-                    label="Email Address"
-                    name="email"
-                    type="email"
-                    placeholder="john@example.com"
-                    required
-                    autocomplete="email"
-                  />
-                  {fieldErrors.email && (
-                    <p class="text-destructive mt-1 text-sm">{fieldErrors.email[0]}</p>
-                  )}
-                </div>
-
-                <div>
-                  <Textarea
-                    label="Message"
-                    name="message"
-                    placeholder="Tell us more about your project or question..."
-                    rows={5}
-                    required
-                  />
-                  {fieldErrors.message && (
-                    <p class="text-destructive mt-1 text-sm">{fieldErrors.message[0]}</p>
-                  )}
-                </div>
-
-                <!-- Honeypot field for spam protection -->
-                <div class="hidden" aria-hidden="true">
-                  <input type="text" name="honeypot" tabindex="-1" autocomplete="off" />
-                </div>
-
-                {formError && (
-                  <div class="border-destructive/30 bg-destructive/10 text-destructive rounded-lg border p-3 text-sm">
-                    {formError}
-                  </div>
-                )}
-
-                <Button type="submit" class="w-full">
-                  <Icon name="mail" size="sm" />
-                  Send Message
-                </Button>
-              </form>
-            )
-          }
-        </Card>
-
-        <!-- Right column: Map + Contact Info -->
-        <div class="flex flex-col gap-8">
-          {/* Map */}
-          <GoogleMap
-            size="sm"
-            ariaLabel={`Map showing ${siteConfig.name} location`}
-            placeholderTitle="Our Location"
-          />
-
-          {/* Contact Info */}
-          <div>
-            <h2 class="font-display text-foreground mb-6 text-2xl font-bold">
-              Other ways to reach us
-            </h2>
-
-            <div class="space-y-4">
-              <!-- Email -->
-              <a href={`mailto:${siteConfig.email}`} class="block">
-                <Card hover padding="sm">
-                  <div class="flex items-center gap-4">
-                    <div class="from-brand-500/20 to-brand-500/5 text-brand-500 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br">
-                      <Icon name="mail" size="md" />
-                    </div>
-                    <div>
-                      <p class="text-foreground-muted text-sm">Email</p>
-                      <p class="text-foreground font-medium">{siteConfig.email}</p>
-                    </div>
-                  </div>
-                </Card>
-              </a>
-
-              <!-- GitHub -->
-              <a
-                href="https://github.com/southwellmedia/velocity"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="block"
-              >
-                <Card hover padding="sm">
-                  <div class="flex items-center gap-4">
-                    <div class="from-brand-500/20 to-brand-500/5 text-brand-500 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br">
-                      <Icon name="github" size="md" />
-                    </div>
-                    <div>
-                      <p class="text-foreground-muted text-sm">GitHub</p>
-                      <p class="text-foreground font-medium">velocity</p>
-                    </div>
-                  </div>
-                </Card>
-              </a>
-
-              <!-- Twitter -->
-              {siteConfig.twitter && (
-                <a
-                  href={`https://twitter.com/${siteConfig.twitter.site.replace('@', '')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="block"
-                >
-                  <Card hover padding="sm">
-                    <div class="flex items-center gap-4">
-                      <div class="from-brand-500/20 to-brand-500/5 text-brand-500 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br">
-                        <Icon name="twitter" size="md" />
-                      </div>
-                      <div>
-                        <p class="text-foreground-muted text-sm">Twitter</p>
-                        <p class="text-foreground font-medium">{siteConfig.twitter.site}</p>
-                      </div>
-                    </div>
-                  </Card>
+          <dl class="mt-10 space-y-5">
+            <div>
+              <dt class="text-xs font-semibold uppercase tracking-wider text-slate-500">Email</dt>
+              <dd class="mt-1 text-base text-slate-800">
+                <a class="hover:text-teal-700" href="mailto:inquiry@empower.org.ki">
+                  inquiry@empower.org.ki
                 </a>
-              )}
+              </dd>
             </div>
+            <div>
+              <dt class="text-xs font-semibold uppercase tracking-wider text-slate-500">Based in</dt>
+              <dd class="mt-1 text-base text-slate-800">Bikenibeu, Tarawa, Kiribati</dd>
+            </div>
+          </dl>
+        </header>
+
+        <div class="lg:col-span-3" data-reveal>
+          <div class="rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200 sm:p-10">
+            {
+              success ? (
+                <div class="rounded-xl border border-teal-200 bg-teal-50 p-5">
+                  <p class="font-semibold text-teal-900">Message sent.</p>
+                  <p class="mt-1 text-sm text-teal-800">
+                    Thanks for reaching out — we'll get back to you shortly.
+                  </p>
+                </div>
+              ) : (
+                <form
+                  method="POST"
+                  action={actions.submitContact}
+                  class="space-y-6"
+                  novalidate
+                >
+                  <div>
+                    <label for="name" class="block text-sm font-medium text-slate-700">
+                      Your name
+                    </label>
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      required
+                      autocomplete="name"
+                      placeholder="Jane Doe"
+                      class="mt-2 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/30"
+                    />
+                    {fieldErrors.name && (
+                      <p class="mt-1.5 text-sm text-rose-600">{fieldErrors.name[0]}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label for="email" class="block text-sm font-medium text-slate-700">
+                      Email address
+                    </label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      autocomplete="email"
+                      placeholder="jane@example.com"
+                      class="mt-2 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/30"
+                    />
+                    {fieldErrors.email && (
+                      <p class="mt-1.5 text-sm text-rose-600">{fieldErrors.email[0]}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label for="message" class="block text-sm font-medium text-slate-700">
+                      Message
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      rows="6"
+                      required
+                      placeholder="Tell us a bit about why you're reaching out…"
+                      class="mt-2 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/30"
+                    />
+                    {fieldErrors.message && (
+                      <p class="mt-1.5 text-sm text-rose-600">{fieldErrors.message[0]}</p>
+                    )}
+                  </div>
+
+                  <div class="hidden" aria-hidden="true">
+                    <label>
+                      Leave this empty
+                      <input
+                        type="text"
+                        name="honeypot"
+                        tabindex="-1"
+                        autocomplete="off"
+                      />
+                    </label>
+                  </div>
+
+                  {formError && (
+                    <div class="rounded-lg border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+                      {formError}
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-teal-700 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-600/40 focus:ring-offset-2 sm:w-auto"
+                  >
+                    Send message
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="h-4 w-4"
+                    >
+                      <path d="M5 12h14M13 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </form>
+              )
+            }
           </div>
         </div>
       </div>
     </div>
   </section>
-</PageLayout>
+</Layout>

@@ -1,20 +1,15 @@
 ## Current Feature
 
-**Feature:** Update Pillar UI and Many-to-Many Project Relations — ✅ Completed 2026-06-10 (merged to `main` in `8aafc5c`).
+**Feature:** Contact Form and Email Integration
 
 ## Status
-- Pillar↔Project relation switched to many-to-many (`project.pillars mappedBy projects`).
-- Strapi bootstrap seeds the four default Pillars and Public read perms on `api::pillar`.
-- `pillars` collection in `content.config.ts` derives a URL-safe `slug` from title; projects schema carries `pillars[]`.
-- `OurWork.astro` cards route to `/pillars/{slug}` with a unified "Read more →" CTA.
-- Dynamic route renamed `/pillars/[id].astro` → `/pillars/[slug].astro`; filters projects whose `pillars[]` includes the current pillar.
-- Branch `feature/pillars` ff-merged to `main` and deleted (local + origin).
+- Global layout and static pages are complete.
+- Need to build the Contact page, wire it to an Astro Action, and configure email delivery.
 
 ## Goals
-1. **Backend (Strapi):** Update the relation between the `Pillar` and `Project` collections to be a **many-to-many** relation, so a program can be tagged to multiple pillars.
-2. **Frontend (Landing Page UI):** Update `src/components/OurWork.astro`. Change the individual call-to-action text on the four cards (e.g., "PROGRAMS ->", "OUR PARTNERS ->") to simply "Read more ->". Ensure they still route dynamically to `/pillars/[id]`.
-3. **Frontend (Pillar Pages):** Update `src/pages/pillars/[id].astro`. Since a project can now belong to multiple pillars, update the filtering logic to check if the project's `pillars` array includes the current page's pillar `id`. Render these filtered projects as cards below the pillar description.
-
+1. **Backend (Strapi):** Ensure the `Web-form` collection type exists with fields: `name` (string), `email` (email), and `message` (text). 
+2. **Frontend Logic (Astro Actions):** Create `src/actions/index.ts`. Define a `submitContact` action using `accept: 'form'` and Zod validation. The action must securely POST the data to Strapi's `/api/web-forms` endpoint and trigger an email notification API.
+3. **Frontend UI (Astro):** Create `src/pages/contact.astro` with a Tailwind CSS v4 form. Use `action={actions.submitContact}` on the form and `Astro.getActionResult()` to display success or error messages.
 
 ## Notes
 
