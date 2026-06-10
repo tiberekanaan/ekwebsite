@@ -7,6 +7,8 @@ const PUBLIC_READ_ACTIONS = [
   'api::news-update.news-update.findOne',
   'api::pillar.pillar.find',
   'api::pillar.pillar.findOne',
+  'api::basic-page.basic-page.find',
+  'api::basic-page.basic-page.findOne',
 ];
 
 const DEFAULT_PILLARS: Array<{ title: string; description: string }> = [
