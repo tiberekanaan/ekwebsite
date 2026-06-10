@@ -30,6 +30,12 @@
       "relation": "manyToMany",
       "target": "api::partner.partner",
       "mappedBy": "projects"
+    },
+    "pillars": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::pillar.pillar",
+      "mappedBy": "projects"
     }
   }
 }

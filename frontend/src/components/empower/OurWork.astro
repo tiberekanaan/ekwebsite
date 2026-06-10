@@ -1,8 +1,9 @@
 ---
+import { getCollection } from 'astro:content';
+
 interface Pillar {
   title: string;
   description: string;
-  link: { label: string; href: string };
   /** Tailwind utility classes for the card's bottom band */
   band: string;
   /** Background gradient class for the placeholder image */
@@ -11,12 +12,21 @@ interface Pillar {
   icon: string;
 }
 
+const pillarEntries = await getCollection('pillars');
+const pillarSlugByTitle = new Map(
+  pillarEntries.map((entry) => [entry.data.title.trim().toLowerCase(), entry.data.slug]),
+);
+
+const resolvePillarHref = (title: string) => {
+  const slug = pillarSlugByTitle.get(title.trim().toLowerCase());
+  return slug ? `/pillars/${slug}` : '/#our-work';
+};
+
 const pillars: Pillar[] = [
   {
     title: 'Empowering Leaders & Communities',
     description:
       'We strengthen local capability and leadership pathways so communities can lead change on their own terms.',
-    link: { label: 'PROGRAMS', href: '/our-programs' },
     band: 'bg-lime-50 text-lime-900',
     imageBg: 'from-emerald-700 via-emerald-600 to-emerald-800',
     icon: 'M17 20h5v-2a4 4 0 0 0-3-3.87M9 20H4v-2a4 4 0 0 1 3-3.87m6-5.13a4 4 0 1 1-8 0 4 4 0 0 1 8 0Zm6 0a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
@@ -25,7 +35,6 @@ const pillars: Pillar[] = [
     title: 'Building Partnership for Impact',
     description:
       'We build trusted relationships with ministries, councils, and NGOs to coordinate and sustain investment.',
-    link: { label: 'OUR PARTNERS', href: '/our-partners' },
     band: 'bg-sky-50 text-sky-900',
     imageBg: 'from-sky-700 via-sky-600 to-sky-800',
     icon: 'M8 11V8a4 4 0 0 1 8 0v3M5 11h14l-1 9H6Z',
@@ -34,7 +43,6 @@ const pillars: Pillar[] = [
     title: 'Creating Conditions for Innovation',
     description:
       'We back experimentation and support entrepreneurs to develop locally relevant business models.',
-    link: { label: 'INNOVATION HUB', href: '/our-work/innovation' },
     band: 'bg-amber-50 text-amber-900',
     imageBg: 'from-amber-600 via-orange-500 to-amber-700',
     icon: 'M12 2a7 7 0 0 0-4 12.7V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.3A7 7 0 0 0 12 2ZM10 21h4',
@@ -43,7 +51,6 @@ const pillars: Pillar[] = [
     title: 'Enabling Digital Participation',
     description:
       'We grow trust in the digital world by strengthening safety, standards, and digital confidence on every atoll.',
-    link: { label: 'DIGITAL TRUST', href: '/our-work/digital-trust' },
     band: 'bg-violet-50 text-violet-900',
     imageBg: 'from-violet-700 via-purple-600 to-violet-800',
     icon: 'M4 7h16M4 12h16M4 17h10M18 17l2 2 4-4',
@@ -97,10 +104,10 @@ const pillars: Pillar[] = [
               <h3 class="text-sm font-bold uppercase tracking-wider">{p.title}</h3>
               <p class="text-sm leading-relaxed opacity-90">{p.description}</p>
               <a
-                href={p.link.href}
+                href={resolvePillarHref(p.title)}
                 class="mt-auto inline-flex items-center gap-1 pt-2 text-xs font-bold uppercase tracking-wider hover:underline"
               >
-                {p.link.label}
+                Read more
                 <span aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-1">→</span>
               </a>
             </div>

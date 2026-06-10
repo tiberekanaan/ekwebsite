@@ -592,6 +592,37 @@ export interface ApiPartnerPartner extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiPillarPillar extends Struct.CollectionTypeSchema {
+  collectionName: 'pillars';
+  info: {
+    description: "A strategic pillar of Empower Kiribati's work. Each Pillar groups related Projects (the 'PROGRAMS' surface on the landing page).";
+    displayName: 'Pillar';
+    pluralName: 'pillars';
+    singularName: 'pillar';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.RichText;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::pillar.pillar'
+    > &
+      Schema.Attribute.Private;
+    projects: Schema.Attribute.Relation<'manyToMany', 'api::project.project'>;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiProjectProject extends Struct.CollectionTypeSchema {
   collectionName: 'projects';
   info: {
@@ -616,6 +647,7 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     partners: Schema.Attribute.Relation<'manyToMany', 'api::partner.partner'>;
+    pillars: Schema.Attribute.Relation<'manyToMany', 'api::pillar.pillar'>;
     publishedAt: Schema.Attribute.DateTime;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
@@ -1240,6 +1272,7 @@ declare module '@strapi/strapi' {
       'api::event.event': ApiEventEvent;
       'api::news-update.news-update': ApiNewsUpdateNewsUpdate;
       'api::partner.partner': ApiPartnerPartner;
+      'api::pillar.pillar': ApiPillarPillar;
       'api::project.project': ApiProjectProject;
       'api::resource.resource': ApiResourceResource;
       'api::testimonial.testimonial': ApiTestimonialTestimonial;

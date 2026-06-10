@@ -132,6 +132,12 @@ const projectRef = z.object({
   description: z.string().nullable().optional(),
 });
 
+const pillarRef = z.object({
+  documentId: z.string(),
+  id: z.number().optional(),
+  title: z.string(),
+});
+
 const partners = defineCollection({
   loader: async () => {
     const entries = await fetchStrapi('/api/partners?populate=*');
@@ -165,6 +171,36 @@ const projects = defineCollection({
     description: z.string().nullable().optional(),
     image: strapiImage,
     partners: z.array(partnerRef).default([]),
+    pillars: z.array(pillarRef).default([]),
+    publishedAt: z.coerce.date().nullable().optional(),
+    createdAt: z.coerce.date().optional(),
+    updatedAt: z.coerce.date().optional(),
+    locale: z.string().optional(),
+  }),
+});
+
+const slugify = (value: string) =>
+  value
+    .normalize('NFKD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+const pillars = defineCollection({
+  loader: async () => {
+    const entries = await softFetchStrapi<StrapiEntry & { title: string }>('/api/pillars');
+    return entries.map(({ documentId, id: _strapiNumericId, ...rest }) => ({
+      id: documentId,
+      slug: slugify(rest.title),
+      ...rest,
+    }));
+  },
+  schema: z.object({
+    title: z.string(),
+    slug: z.string(),
+    description: z.string().nullable().optional(),
     publishedAt: z.coerce.date().nullable().optional(),
     createdAt: z.coerce.date().optional(),
     updatedAt: z.coerce.date().optional(),
@@ -295,6 +331,7 @@ export const collections = {
   resources,
   partners,
   projects,
+  pillars,
   testimonials,
   news,
   blog,

@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pillars",
+  "info": {
+    "singularName": "pillar",
+    "pluralName": "pillars",
+    "displayName": "Pillar",
+    "description": "A strategic pillar of Empower Kiribati's work. Each Pillar groups related Projects (the 'PROGRAMS' surface on the landing page)."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "projects": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::project.project",
+      "inversedBy": "pillars"
+    }
+  }
+}
