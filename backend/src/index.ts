@@ -3,6 +3,8 @@ import type { Core } from '@strapi/strapi';
 const PUBLIC_READ_ACTIONS = [
   'api::testimonial.testimonial.find',
   'api::testimonial.testimonial.findOne',
+  'api::news-update.news-update.find',
+  'api::news-update.news-update.findOne',
 ];
 
 async function ensurePublicReadPermissions(strapi: Core.Strapi) {

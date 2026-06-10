@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "news_updates",
+  "info": {
+    "singularName": "news-update",
+    "pluralName": "news-updates",
+    "displayName": "News Update",
+    "description": "Short-form news posts surfaced in the landing-page hero and on a dedicated detail route."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "summary": {
+      "type": "text"
+    },
+    "content": {
+      "type": "richtext"
+    },
+    "date": {
+      "type": "date",
+      "required": true
+    },
+    "photo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    }
+  }
+}

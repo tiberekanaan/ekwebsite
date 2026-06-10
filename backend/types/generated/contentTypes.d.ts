@@ -527,6 +527,39 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiNewsUpdateNewsUpdate extends Struct.CollectionTypeSchema {
+  collectionName: 'news_updates';
+  info: {
+    description: 'Short-form news posts surfaced in the landing-page hero and on a dedicated detail route.';
+    displayName: 'News Update';
+    pluralName: 'news-updates';
+    singularName: 'news-update';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    content: Schema.Attribute.RichText;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    date: Schema.Attribute.Date & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::news-update.news-update'
+    > &
+      Schema.Attribute.Private;
+    photo: Schema.Attribute.Media<'images'>;
+    publishedAt: Schema.Attribute.DateTime;
+    summary: Schema.Attribute.Text;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiPartnerPartner extends Struct.CollectionTypeSchema {
   collectionName: 'partners';
   info: {
@@ -1205,6 +1238,7 @@ declare module '@strapi/strapi' {
       'api::basic-page.basic-page': ApiBasicPageBasicPage;
       'api::blog.blog': ApiBlogBlog;
       'api::event.event': ApiEventEvent;
+      'api::news-update.news-update': ApiNewsUpdateNewsUpdate;
       'api::partner.partner': ApiPartnerPartner;
       'api::project.project': ApiProjectProject;
       'api::resource.resource': ApiResourceResource;

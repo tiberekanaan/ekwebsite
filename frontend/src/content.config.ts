@@ -192,6 +192,27 @@ const testimonials = defineCollection({
   }),
 });
 
+const news = defineCollection({
+  loader: async () => {
+    const entries = await softFetchStrapi('/api/news-updates?populate=*');
+    return entries.map(({ documentId, id: _strapiNumericId, ...rest }) => ({
+      id: documentId,
+      ...rest,
+    }));
+  },
+  schema: z.object({
+    title: z.string(),
+    summary: z.string().nullable().optional(),
+    content: z.string().nullable().optional(),
+    date: z.coerce.date(),
+    photo: strapiImage,
+    publishedAt: z.coerce.date().nullable().optional(),
+    createdAt: z.coerce.date().optional(),
+    updatedAt: z.coerce.date().optional(),
+    locale: z.string().optional(),
+  }),
+});
+
 const resources = defineCollection({
   loader: async () => {
     const entries = await fetchStrapi('/api/resources?populate[content_blocks][populate]=*');
@@ -275,6 +296,7 @@ export const collections = {
   partners,
   projects,
   testimonials,
+  news,
   blog,
   pages,
   authors,

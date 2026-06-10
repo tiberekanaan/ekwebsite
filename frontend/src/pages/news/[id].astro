@@ -1,0 +1,88 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { marked } from 'marked';
+import { STRAPI_URL } from 'astro:env/server';
+
+export async function getStaticPaths() {
+  const items = await getCollection('news');
+  return items.map((item) => ({
+    params: { id: String(item.id) },
+    props: { item },
+  }));
+}
+
+interface Props {
+  item: CollectionEntry<'news'>;
+}
+
+const { item } = Astro.props;
+const { title, summary, content, date, photo } = item.data;
+
+const formattedDate = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const contentHtml = content ? marked.parse(content) : '';
+
+const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
+---
+
+<Layout title={title} description={summary ?? `${title} — News update from Empower Kiribati`}>
+  <div class="mx-auto max-w-3xl px-6 py-16 lg:py-24">
+    <a
+      href="/"
+      class="mb-8 inline-flex items-center gap-1 text-sm font-semibold text-slate-500 transition-colors hover:text-teal-700"
+    >
+      ← Back to home
+    </a>
+
+    {
+      photo && (
+        <figure class="mb-10 overflow-hidden rounded-2xl shadow-xl shadow-slate-900/10" data-reveal>
+          <img
+            src={absoluteUrl(photo.url)}
+            alt={photo.alternativeText ?? title}
+            class="aspect-[16/9] w-full object-cover"
+            loading="eager"
+          />
+        </figure>
+      )
+    }
+
+    <header class="mb-10" data-reveal>
+      <p class="mb-3 font-accent text-3xl leading-none text-slate-700">News</p>
+      <h1
+        class="font-display text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl"
+      >
+        {title}
+      </h1>
+      <time class="mt-4 block text-sm font-semibold uppercase tracking-widest text-slate-500">
+        {formattedDate}
+      </time>
+    </header>
+
+    {
+      summary && (
+        <p
+          class="mb-10 border-l-4 border-teal-500 pl-5 text-lg leading-relaxed text-slate-700"
+          data-reveal
+        >
+          {summary}
+        </p>
+      )
+    }
+
+    {
+      contentHtml && (
+        <article
+          class="prose prose-slate prose-lg max-w-none prose-headings:font-display prose-a:text-teal-700 hover:prose-a:text-teal-900"
+          set:html={contentHtml}
+          data-reveal
+        />
+      )
+    }
+  </div>
+</Layout>
