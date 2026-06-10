@@ -1,10 +1,13 @@
 ## Current Feature
 
-**Feature:** Add Photos to News Updates
+**Feature:** Add Photos to News Updates — ✅ Completed 2026-06-10 (merged to `main` in `813002a`).
 
 ## Status
-- "News Update" collection is created and displayed in the Hero section.
-- Need to add an image field to the backend and render it on the frontend.
+- Backend `photo` (media, single image) field added to `news-update` and hot-reloaded.
+- Frontend `news` loader updated to `?populate=*` with `photo: strapiImage` on the Zod schema.
+- Hero green box renders the thumbnail (with gradient placeholder fallback).
+- `/news/[id].astro` renders a 16:9 hero figure between the back link and the title.
+- Branch `feature/news-updates` ff-merged to `main` and deleted (local + origin).
 
 ## Goals
 1. **Backend (Strapi):** Add a `photo` (media, single image) field to the existing `News Update` Collection Type.
