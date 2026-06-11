@@ -1,4 +1,4 @@
-import { defineConfig, envField } from 'astro/config';
+import { defineConfig, envField, fontProviders } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import react from '@astrojs/react';
@@ -46,6 +46,21 @@ export default defineConfig({
   image: {
     layout: 'constrained',
   },
+
+  fonts: [
+    {
+      provider: fontProviders.google(),
+      name: 'Ubuntu',
+      cssVariable: '--font-ubuntu',
+      weights: [400, 500, 700],
+    },
+    {
+      provider: fontProviders.google(),
+      name: 'Inter',
+      cssVariable: '--font-inter',
+      weights: [400, 500, 600, 700],
+    },
+  ],
 
   adapter: node({ mode: 'standalone' }),
 

@@ -63,7 +63,7 @@ const pillars: Pillar[] = [
     <div class="grid gap-8 lg:grid-cols-2 lg:items-end">
       <div data-reveal>
         <p class="mb-3 font-accent text-3xl leading-none text-slate-700">Our Work</p>
-        <h2 class="font-display text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl">
+        <h2 class="font-heading text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl">
           FOUR PILLARS,<br />ONE <span class="text-teal-700">ISLAND</span><br />ECOSYSTEM.
         </h2>
       </div>
@@ -101,7 +101,7 @@ const pillars: Pillar[] = [
               >
                 <path stroke-linecap="round" stroke-linejoin="round" d={p.icon} />
               </svg>
-              <h3 class="text-sm font-bold uppercase tracking-wider">{p.title}</h3>
+              <h3 class="font-heading text-sm font-bold uppercase tracking-wider">{p.title}</h3>
               <p class="text-sm leading-relaxed opacity-90">{p.description}</p>
               <a
                 href={resolvePillarHref(p.title)}

@@ -80,7 +80,8 @@
   --color-border-invert-strong: var(--border-invert-strong);
 
   /* Typography - theme-controlled font stacks */
-  --font-sans: var(--theme-font-sans);
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-ubuntu);
   --font-display: var(--theme-font-display);
   --font-accent: var(--theme-font-accent);
   --font-mono: var(--theme-font-mono);
