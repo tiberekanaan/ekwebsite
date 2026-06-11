@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Velocity</title>
+    <description>A modern website built with Astro and Tailwind CSS</description>
+    <link>https://example.com</link>
+    <atom:link href="https://example.com/rss.xml" rel="self" type="application/rss+xml"/>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 11 Jun 2026 21:08:40 GMT</lastBuildDate>
+    <item>
+      <title>Welcome to Velocity</title>
+      <link>https://example.com/blog/welcome-to-velocity/</link>
+      <guid>https://example.com/blog/welcome-to-velocity/</guid>
+      <description>Get started with Velocity, the modern Astro boilerplate with everything you need to build fast, beautiful websites.</description>
+      <pubDate>Wed, 28 Jan 2026 00:00:00 GMT</pubDate>
+      <author>Southwell Media</author>
+      <category>astro</category>
+        <category>tutorial</category>
+        <category>getting-started</category>
+    </item>
+  </channel>
+</rss>
