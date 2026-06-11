@@ -116,10 +116,15 @@ const isActive = (href: string) => {
 </header>
 
 <script>
-  const btn = document.querySelector<HTMLButtonElement>('[data-mobile-toggle]');
-  const panel = document.getElementById('empower-mobile-nav');
-  btn?.addEventListener('click', () => {
-    const open = panel?.classList.toggle('hidden') === false;
-    btn.setAttribute('aria-expanded', String(open));
-  });
+  // re-bind on every ClientRouter swap — the header DOM is replaced on each
+  // navigation, so a once-only listener goes dead after the first page change
+  const init = () => {
+    const btn = document.querySelector<HTMLButtonElement>('[data-mobile-toggle]');
+    const panel = document.getElementById('empower-mobile-nav');
+    btn?.addEventListener('click', () => {
+      const open = panel?.classList.toggle('hidden') === false;
+      btn.setAttribute('aria-expanded', String(open));
+    });
+  };
+  document.addEventListener('astro:page-load', init);
 </script>

@@ -1,0 +1,250 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { marked } from 'marked';
+import { STRAPI_URL } from 'astro:env/server';
+
+export async function getStaticPaths() {
+  const items = await getCollection('projects');
+  return items.map((project) => ({
+    params: { slug: project.data.slug },
+    props: { project },
+  }));
+}
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const {
+  title,
+  description,
+  image,
+  project_status: status,
+  objectives,
+  location,
+  metrics,
+  partners,
+  testimonials,
+} = project.data;
+
+const allPartners = await getCollection('partners');
+const partnerById = new Map(allPartners.map((p) => [p.id, p.data]));
+
+// join heading markers the Strapi editor leaves on their own line ("###\nTitle"),
+// which markdown would otherwise render as an empty heading + plain paragraph
+const fixOrphanHeadings = (md: string) => md.replace(/^(#{1,6})[ \t]*\r?\n+(?=\S)/gm, '$1 ');
+
+const descriptionHtml = description ? marked.parse(fixOrphanHeadings(description)) : '';
+const objectivesHtml = objectives ? marked.parse(fixOrphanHeadings(objectives)) : '';
+const metricsHtml = metrics ? marked.parse(fixOrphanHeadings(metrics)) : '';
+
+const statusStyles =
+  status === 'completed'
+    ? 'border-teal-200 bg-teal-50 text-teal-800'
+    : 'border-lime-300 bg-lime-50 text-lime-800';
+const statusLabel = status === 'completed' ? 'Completed' : 'On-going';
+
+const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
+---
+
+<Layout title={title} description={description ?? `${title} — an Empower Kiribati program.`}>
+  <section class="bg-white">
+    <div class="mx-auto max-w-6xl px-6 py-16 lg:py-24">
+      <a
+        href="/our-programs"
+        class="mb-10 inline-flex items-center gap-1 text-sm font-semibold text-slate-500 transition-colors hover:text-teal-700"
+      >
+        ← Back to Programs
+      </a>
+
+      <!-- Header: title + meta on the left, photo on the right -->
+      <div class="grid grid-cols-1 items-start gap-10 lg:grid-cols-5 lg:gap-14">
+        <div class="lg:col-span-3" data-reveal>
+          <p class="mb-3 font-accent text-3xl leading-none text-slate-700">Program</p>
+          <h1
+            class="font-display text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl"
+          >
+            {title}
+          </h1>
+
+          <div class="mt-6 flex flex-wrap items-center gap-2.5">
+            {
+              status && (
+                <span
+                  class={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider ${statusStyles}`}
+                >
+                  <span aria-hidden="true" class="h-1.5 w-1.5 rounded-full bg-current" />
+                  {statusLabel}
+                </span>
+              )
+            }
+            {
+              location && (
+                <span class="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1.5 text-xs font-semibold text-slate-700">
+                  <svg
+                    aria-hidden="true"
+                    class="h-3.5 w-3.5 text-teal-700"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
+                    />
+                  </svg>
+                  {location}
+                </span>
+              )
+            }
+          </div>
+
+          {
+            descriptionHtml && (
+              <article
+                class="prose prose-slate prose-lg mt-8 max-w-none prose-headings:font-display prose-a:text-teal-700 hover:prose-a:text-teal-900"
+                set:html={descriptionHtml}
+              />
+            )
+          }
+
+          {
+            partners.length > 0 && (
+              <div class="mt-8">
+                <p class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">
+                  In partnership with
+                </p>
+                <div class="flex flex-wrap items-center gap-2">
+                  {partners.map((partnerRef) => {
+                    const fullPartner = partnerById.get(partnerRef.documentId);
+                    return (
+                      <a
+                        href={`/our-partners/${partnerRef.documentId}`}
+                        class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:border-teal-300 hover:bg-teal-50 hover:text-teal-800"
+                      >
+                        {fullPartner?.logo ? (
+                          <img
+                            src={absoluteUrl(fullPartner.logo.url)}
+                            alt={fullPartner.logo.alternativeText ?? partnerRef.name}
+                            class="h-6 w-6 rounded-full object-contain"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <span
+                            aria-hidden="true"
+                            class="h-6 w-6 rounded-full bg-gradient-to-br from-teal-400 to-emerald-500"
+                          />
+                        )}
+                        <span>{partnerRef.name}</span>
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+            )
+          }
+        </div>
+
+        <figure class="lg:col-span-2" data-reveal>
+          {
+            image ? (
+              <img
+                src={absoluteUrl(image.url)}
+                alt={image.alternativeText ?? title}
+                class="aspect-[4/3] w-full rounded-2xl object-cover shadow-xl shadow-slate-900/15 ring-1 ring-slate-900/5"
+                loading="eager"
+              />
+            ) : (
+              <div
+                aria-hidden="true"
+                class="aspect-[4/3] w-full rounded-2xl bg-gradient-to-br from-teal-600 via-teal-500 to-emerald-600"
+              />
+            )
+          }
+        </figure>
+      </div>
+
+      {
+        objectivesHtml && (
+          <section
+            class="mt-16 rounded-2xl border border-teal-100 bg-gradient-to-br from-teal-50/70 to-white p-8 lg:p-12"
+            data-reveal
+          >
+            <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+              <div>
+                <p class="mb-3 font-accent text-3xl leading-none text-slate-700">Objectives</p>
+                <h2 class="font-display text-3xl font-extrabold tracking-tight text-slate-900">
+                  What this program <span class="text-teal-700">sets out to do</span>
+                </h2>
+              </div>
+              <article
+                class="prose prose-slate max-w-none lg:col-span-2 prose-headings:font-display prose-li:marker:text-teal-600 prose-a:text-teal-700 hover:prose-a:text-teal-900"
+                set:html={objectivesHtml}
+              />
+            </div>
+          </section>
+        )
+      }
+    </div>
+  </section>
+
+  {
+    metricsHtml && (
+      <section class="bg-slate-900">
+        <div class="mx-auto max-w-6xl px-6 py-16 lg:py-20" data-reveal>
+          <p class="mb-3 font-accent text-3xl leading-none text-lime-300">Impact</p>
+          <h2 class="font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+            Key metrics &amp; <span class="text-lime-300">results</span>
+          </h2>
+          <article
+            class="prose mt-10 max-w-none columns-1 gap-12 text-slate-300 md:columns-2 [&>*]:break-inside-avoid [&_h2]:font-display [&_h2]:text-lime-300 [&_h3]:font-display [&_h3]:text-lg [&_h3]:uppercase [&_h3]:tracking-wider [&_h3]:text-lime-300 [&_h4]:text-lime-300 [&_p]:text-slate-300 [&_li]:text-slate-300 [&_li::marker]:text-lime-400 [&_strong]:text-white [&_a]:text-lime-300"
+            set:html={metricsHtml}
+          />
+        </div>
+      </section>
+    )
+  }
+
+  {
+    testimonials.length > 0 && (
+      <section class="bg-white">
+        <div class="mx-auto max-w-6xl px-6 py-16 lg:py-20" data-reveal>
+          <p class="mb-3 font-accent text-3xl leading-none text-slate-700">Voices</p>
+          <h2 class="font-display text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+            What people <span class="text-teal-700">are saying</span>
+          </h2>
+          <ul class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
+            {testimonials.map((testimonial) => (
+              <li class="flex h-full flex-col rounded-xl border border-slate-200 bg-slate-50 p-8 transition-all duration-300 hover:-translate-y-1 hover:border-teal-300 hover:shadow-xl hover:shadow-slate-900/10">
+                <svg
+                  aria-hidden="true"
+                  class="h-8 w-8 text-teal-600/40"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M9.983 3v7.391c0 5.704-3.731 9.57-8.983 10.609l-.995-2.151c2.432-.917 3.995-3.638 3.995-5.849h-4v-10h9.983zm14.017 0v7.391c0 5.704-3.748 9.571-9 10.609l-.996-2.151c2.433-.917 3.996-3.638 3.996-5.849h-3.983v-10h9.983z" />
+                </svg>
+                <blockquote class="mt-4 flex-1 text-lg leading-relaxed text-slate-700">
+                  “{testimonial.quote}”
+                </blockquote>
+                <footer class="mt-6">
+                  <p class="font-bold text-slate-900">{testimonial.author}</p>
+                  {testimonial.role && <p class="text-sm text-slate-500">{testimonial.role}</p>}
+                </footer>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+</Layout>

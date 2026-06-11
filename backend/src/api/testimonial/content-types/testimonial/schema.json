@@ -28,6 +28,12 @@
       "multiple": false,
       "required": false,
       "allowedTypes": ["images"]
+    },
+    "project": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::project.project",
+      "inversedBy": "testimonials"
     }
   }
 }

@@ -25,6 +25,19 @@
       "required": false,
       "allowedTypes": ["images"]
     },
+    "project_status": {
+      "type": "enumeration",
+      "enum": ["completed", "on-going"]
+    },
+    "objectives": {
+      "type": "richtext"
+    },
+    "location": {
+      "type": "string"
+    },
+    "metrics": {
+      "type": "richtext"
+    },
     "partners": {
       "type": "relation",
       "relation": "manyToMany",
@@ -36,6 +49,12 @@
       "relation": "manyToMany",
       "target": "api::pillar.pillar",
       "mappedBy": "projects"
+    },
+    "testimonials": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::testimonial.testimonial",
+      "mappedBy": "project"
     }
   }
 }

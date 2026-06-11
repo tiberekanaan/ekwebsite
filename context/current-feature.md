@@ -3,13 +3,17 @@
 **Feature:** Contact Form and Email Integration
 
 ## Status
-- Global layout and static pages are complete.
-- Need to build the Contact page, wire it to an Astro Action, and configure email delivery.
+- `Project` cards are displayed on Pillar pages but are currently unclickable.
+- Need to expand the backend schema and build dynamic project routing.
 
 ## Goals
-1. **Backend (Strapi):** Ensure the `Web-form` collection type exists with fields: `name` (string), `email` (email), and `message` (text). 
-2. **Frontend Logic (Astro Actions):** Create `src/actions/index.ts`. Define a `submitContact` action using `accept: 'form'` and Zod validation. The action must securely POST the data to Strapi's `/api/web-forms` endpoint and trigger an email notification API.
-3. **Frontend UI (Astro):** Create `src/pages/contact.astro` with a Tailwind CSS v4 form. Use `action={actions.submitContact}` on the form and `Astro.getActionResult()` to display success or error messages.
+1. **Backend (Strapi):** 
+   - Create a `Testimonial` collection type with fields: `quote` (text) and `author` (string).
+   - Update the `Project` collection type: add `status` (enumeration: completed, on-going), `objectives` (richtext), `location` (string), and `metrics` (richtext).
+   - Add a relation linking `Project` to `Testimonial`.
+2. **Frontend (Pillar UI):** Update `src/pages/pillars/[id].astro`. Wrap the project cards in `<a>` tags pointing to `/projects/${project.documentId}`.
+3. **Frontend (Project Pages):** Create `src/pages/projects/[id].astro` (using Astro 6 dynamic routing). Fetch the project with `?populate=*`. Render the title, partner/donor logo, status, objectives, location, metrics, and linked testimonials using Tailwind v4.
+Paste this exact prompt into your Claude Code terminal:
 
 ## Notes
 

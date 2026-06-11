@@ -5,6 +5,63 @@ import react from '@astrojs/react';
 import node from '@astrojs/node';
 import tailwindcss from '@tailwindcss/vite';
 
+// Dev only: re-runs the Strapi content loaders when admin edits are detected,
+// so saved entries show up on the next browser refresh without restarting the
+// server. Refreshing unconditionally would force a full page reload in the
+// browser on every tick, so we poll a cheap fingerprint (entry count + latest
+// updatedAt per collection) and only re-sync when it changes.
+const STRAPI_COLLECTIONS = [
+  'blogs',
+  'events',
+  'resources',
+  'partners',
+  'projects',
+  'pillars',
+  'testimonials',
+  'news-updates',
+];
+
+let strapiRefreshTimer;
+
+const strapiAutoRefresh = {
+  name: 'strapi-auto-refresh',
+  hooks: {
+    'astro:server:setup'({ refreshContent }) {
+      const strapiUrl = process.env.STRAPI_URL || 'http://localhost:1337';
+      let lastFingerprint;
+      // clear any timer from a previous in-process config reload — leaked
+      // intervals keep refreshing (and reloading the page) forever
+      clearInterval(strapiRefreshTimer);
+      strapiRefreshTimer = setInterval(async () => {
+        try {
+          const parts = await Promise.all(
+            STRAPI_COLLECTIONS.map(async (name) => {
+              const res = await fetch(
+                `${strapiUrl}/api/${name}?fields[0]=updatedAt&sort[0]=updatedAt:desc&pagination[pageSize]=1`,
+              );
+              if (!res.ok) return `${name}:${res.status}`;
+              const { data, meta } = await res.json();
+              return `${name}:${meta?.pagination?.total}:${data?.[0]?.updatedAt ?? ''}`;
+            }),
+          );
+          const fingerprint = parts.join('|');
+          // skip the refresh on the first tick — startup already synced
+          if (lastFingerprint !== undefined && fingerprint !== lastFingerprint) {
+            await refreshContent?.();
+          }
+          lastFingerprint = fingerprint;
+        } catch {
+          // Strapi may be down or restarting; retry on the next tick
+        }
+      }, 10_000);
+      strapiRefreshTimer.unref?.();
+    },
+    'astro:server:done'() {
+      clearInterval(strapiRefreshTimer);
+    },
+  },
+};
+
 export default defineConfig({
   site: process.env.SITE_URL || 'https://example.com',
 
@@ -68,6 +125,7 @@ export default defineConfig({
     react(),
     mdx(),
     sitemap(),
+    strapiAutoRefresh,
   ],
 
   vite: {

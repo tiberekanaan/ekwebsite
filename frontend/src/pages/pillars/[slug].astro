@@ -84,7 +84,7 @@ const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_U
               return (
                 <li
                   data-reveal
-                  class="flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-teal-300 hover:shadow-xl hover:shadow-slate-900/10"
+                  class="relative flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-teal-300 hover:shadow-xl hover:shadow-slate-900/10"
                 >
                   <div class="aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-slate-100 to-teal-50">
                     {image && (
@@ -97,7 +97,14 @@ const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_U
                     )}
                   </div>
                   <div class="flex flex-1 flex-col gap-3 p-6">
-                    <h3 class="text-xl font-bold leading-snug text-slate-900">{projectTitle}</h3>
+                    <h3 class="text-xl font-bold leading-snug text-slate-900">
+                      <a
+                        href={`/projects/${project.data.slug}`}
+                        class="transition-colors hover:text-teal-700 after:absolute after:inset-0 after:content-['']"
+                      >
+                        {projectTitle}
+                      </a>
+                    </h3>
                     {projectDescription && (
                       <p class="line-clamp-3 text-sm text-slate-600">{projectDescription}</p>
                     )}
@@ -108,7 +115,7 @@ const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_U
                           return (
                             <a
                               href={`/our-partners/${partnerRef.documentId}`}
-                              class="group/donor inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-semibold text-slate-700 transition-colors hover:border-teal-300 hover:bg-teal-50 hover:text-teal-800"
+                              class="group/donor relative z-10 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-semibold text-slate-700 transition-colors hover:border-teal-300 hover:bg-teal-50 hover:text-teal-800"
                             >
                               {fullPartner?.logo ? (
                                 <img

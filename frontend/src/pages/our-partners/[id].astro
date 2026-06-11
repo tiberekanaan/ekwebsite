@@ -18,6 +18,9 @@ interface Props {
 const { partner } = Astro.props;
 const { name, logo, website_url, projects: linked } = partner.data;
 
+const allProjects = await getCollection('projects');
+const projectSlugById = new Map(allProjects.map((p) => [p.id, p.data.slug]));
+
 const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
 ---
 
@@ -76,14 +79,28 @@ const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_U
           </p>
         ) : (
           <ul class="flex flex-col gap-4">
-            {linked.map((project) => (
-              <li class="rounded-xl border border-slate-200 bg-white p-5">
-                <h3 class="text-lg font-bold text-slate-900">{project.title}</h3>
-                {project.description && (
-                  <p class="mt-2 line-clamp-3 text-sm text-slate-600">{project.description}</p>
-                )}
-              </li>
-            ))}
+            {linked.map((project) => {
+              const slug = projectSlugById.get(project.documentId);
+              return (
+                <li class="relative rounded-xl border border-slate-200 bg-white p-5 transition-colors hover:border-teal-300">
+                  <h3 class="text-lg font-bold text-slate-900">
+                    {slug ? (
+                      <a
+                        href={`/projects/${slug}`}
+                        class="transition-colors hover:text-teal-700 after:absolute after:inset-0 after:content-['']"
+                      >
+                        {project.title}
+                      </a>
+                    ) : (
+                      project.title
+                    )}
+                  </h3>
+                  {project.description && (
+                    <p class="mt-2 line-clamp-3 text-sm text-slate-600">{project.description}</p>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         )
       }

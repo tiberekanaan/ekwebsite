@@ -138,6 +138,14 @@ const pillarRef = z.object({
   title: z.string(),
 });
 
+const testimonialRef = z.object({
+  documentId: z.string(),
+  id: z.number().optional(),
+  quote: z.string(),
+  author: z.string(),
+  role: z.string().nullable().optional(),
+});
+
 const partners = defineCollection({
   loader: async () => {
     const entries = await fetchStrapi('/api/partners?populate=*');
@@ -158,27 +166,6 @@ const partners = defineCollection({
   }),
 });
 
-const projects = defineCollection({
-  loader: async () => {
-    const entries = await fetchStrapi('/api/projects?populate=*');
-    return entries.map(({ documentId, id: _strapiNumericId, ...rest }) => ({
-      id: documentId,
-      ...rest,
-    }));
-  },
-  schema: z.object({
-    title: z.string(),
-    description: z.string().nullable().optional(),
-    image: strapiImage,
-    partners: z.array(partnerRef).default([]),
-    pillars: z.array(pillarRef).default([]),
-    publishedAt: z.coerce.date().nullable().optional(),
-    createdAt: z.coerce.date().optional(),
-    updatedAt: z.coerce.date().optional(),
-    locale: z.string().optional(),
-  }),
-});
-
 const slugify = (value: string) =>
   value
     .normalize('NFKD')
@@ -187,6 +174,36 @@ const slugify = (value: string) =>
     .replace(/&/g, ' and ')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
+
+const projects = defineCollection({
+  loader: async () => {
+    const entries = await fetchStrapi<StrapiEntry & { title: string }>(
+      '/api/projects?populate=*',
+    );
+    return entries.map(({ documentId, id: _strapiNumericId, ...rest }) => ({
+      id: documentId,
+      slug: slugify(rest.title),
+      ...rest,
+    }));
+  },
+  schema: z.object({
+    title: z.string(),
+    slug: z.string(),
+    description: z.string().nullable().optional(),
+    image: strapiImage,
+    project_status: z.enum(['completed', 'on-going']).nullable().optional(),
+    objectives: z.string().nullable().optional(),
+    location: z.string().nullable().optional(),
+    metrics: z.string().nullable().optional(),
+    partners: z.array(partnerRef).default([]),
+    pillars: z.array(pillarRef).default([]),
+    testimonials: z.array(testimonialRef).default([]),
+    publishedAt: z.coerce.date().nullable().optional(),
+    createdAt: z.coerce.date().optional(),
+    updatedAt: z.coerce.date().optional(),
+    locale: z.string().optional(),
+  }),
+});
 
 const pillars = defineCollection({
   loader: async () => {

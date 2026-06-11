@@ -646,9 +646,17 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
       'api::project.project'
     > &
       Schema.Attribute.Private;
+    location: Schema.Attribute.String;
+    metrics: Schema.Attribute.RichText;
+    objectives: Schema.Attribute.RichText;
     partners: Schema.Attribute.Relation<'manyToMany', 'api::partner.partner'>;
     pillars: Schema.Attribute.Relation<'manyToMany', 'api::pillar.pillar'>;
+    project_status: Schema.Attribute.Enumeration<['completed', 'on-going']>;
     publishedAt: Schema.Attribute.DateTime;
+    testimonials: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::testimonial.testimonial'
+    >;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -716,6 +724,7 @@ export interface ApiTestimonialTestimonial extends Struct.CollectionTypeSchema {
       'api::testimonial.testimonial'
     > &
       Schema.Attribute.Private;
+    project: Schema.Attribute.Relation<'manyToOne', 'api::project.project'>;
     publishedAt: Schema.Attribute.DateTime;
     quote: Schema.Attribute.Text & Schema.Attribute.Required;
     role: Schema.Attribute.String;
