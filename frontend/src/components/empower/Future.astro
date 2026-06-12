@@ -53,8 +53,8 @@ const stats = [
 
       <div class="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2">
         {
-          values.map((v) => (
-            <div data-reveal class="group flex flex-col gap-2">
+          values.map((v, i) => (
+            <div data-reveal data-reveal-delay={i * 100} class="group flex flex-col gap-2">
               <svg
                 class="h-6 w-6 text-teal-700 transition-transform duration-500 group-hover:scale-125 group-hover:-rotate-6"
                 xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +82,7 @@ const stats = [
       </a>
     </div>
 
-    <div class="relative">
+    <div class="relative" data-reveal data-reveal-delay="150">
       <div
         class="group relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-gradient-to-br from-slate-700 via-slate-600 to-slate-800 shadow-xl transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl sm:aspect-[5/4] lg:aspect-[4/5]"
         role="img"

@@ -67,7 +67,7 @@ const pillars: Pillar[] = [
           FOUR PILLARS,<br />ONE <span class="text-teal-700">ISLAND</span><br />ECOSYSTEM.
         </h2>
       </div>
-      <p class="max-w-lg text-base text-slate-600 lg:pb-2">
+      <p data-reveal data-reveal-delay="120" class="max-w-lg text-base text-slate-600 lg:pb-2">
         We don't run isolated programmes. Each pillar is a different way of caring for the same outcome
         — communities that can author their own future, on their own atolls, in their own language.
       </p>
@@ -75,9 +75,10 @@ const pillars: Pillar[] = [
 
     <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {
-        pillars.map((p) => (
+        pillars.map((p, i) => (
           <article
             data-reveal
+            data-reveal-delay={i * 100}
             class="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-teal-300 hover:shadow-2xl hover:shadow-slate-900/10"
           >
             <div

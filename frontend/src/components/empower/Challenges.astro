@@ -65,7 +65,7 @@ const challenges: Challenge[] = [
           THE PRESSURES<br />OUR <span class="text-teal-700">ISLANDS</span><br />ARE FACING.
         </h2>
       </div>
-      <p class="max-w-lg text-base text-slate-600 lg:pb-2">
+      <p data-reveal data-reveal-delay="120" class="max-w-lg text-base text-slate-600 lg:pb-2">
         Empower Kiribati exists because the headwinds are real. These four challenges shape every
         programme, partnership, and policy conversation we step into.
       </p>
@@ -73,9 +73,10 @@ const challenges: Challenge[] = [
 
     <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {
-        challenges.map((c) => (
+        challenges.map((c, i) => (
           <article
             data-reveal
+            data-reveal-delay={i * 100}
             class="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-teal-300 hover:shadow-xl hover:shadow-teal-900/5"
           >
             <div

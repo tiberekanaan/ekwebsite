@@ -1,8 +1,10 @@
 ---
 /**
  * Drop this once at the bottom of the layout. It powers two opt-in behaviours:
- *   - data-reveal      → fade + slide up the first time the element scrolls into view
- *   - data-countup     → animate the numeric prefix of `data-target` up from 0 on reveal
+ *   - data-reveal        → fade + slide up the first time the element scrolls into view
+ *   - data-reveal-delay  → stagger the reveal by N ms (cleared afterwards so hover
+ *                          transitions on the same element stay snappy)
+ *   - data-countup       → animate the numeric prefix of `data-target` up from 0 on reveal
  */
 ---
 
@@ -80,6 +82,17 @@
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
           const el = entry.target as HTMLElement;
+          const delay = Number(el.dataset.revealDelay ?? 0);
+          if (delay > 0 && !prefersReduced) {
+            el.style.transitionDelay = `${delay}ms`;
+            el.addEventListener(
+              'transitionend',
+              () => {
+                el.style.transitionDelay = '';
+              },
+              { once: true },
+            );
+          }
           el.classList.add('is-visible');
           el.querySelectorAll<HTMLElement>('[data-countup]').forEach(countUp);
           if (el.matches('[data-countup]')) countUp(el);
