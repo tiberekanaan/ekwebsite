@@ -1,4 +1,4 @@
-import { t as AstroError, I as InvalidComponentArgs, r as removeQueryString, N as NoImageMetadata, a as isRemoteAllowed, F as FailedToFetchRemoteImageDimensions, R as RemoteImageNotAllowed, w as joinPaths, E as ExpectedImage, i as isRemotePath, L as LocalImageUsedWrongly, M as MissingImageDimension, U as UnsupportedImageFormat, x as IncompatibleDescriptorOptions, y as UnsupportedImageConversion, z as InvalidImageService, B as ExpectedImageOptions, C as ExpectedNotESMImage, D as ImageMissingAlt, m as maybeRenderHead, e as addAttribute, G as spreadAttributes, f as renderTemplate, H as FontFamilyNotFound, u as unescapeHTML, J as MissingGetFontFileRequestUrl } from './server_CqV_976N.mjs';
+import { k as AstroError, I as InvalidComponentArgs, r as removeQueryString, N as NoImageMetadata, a as isRemoteAllowed, F as FailedToFetchRemoteImageDimensions, R as RemoteImageNotAllowed, z as joinPaths, E as ExpectedImage, i as isRemotePath, L as LocalImageUsedWrongly, M as MissingImageDimension, B as UnsupportedImageFormat, C as IncompatibleDescriptorOptions, D as UnsupportedImageConversion, G as InvalidImageService, H as ExpectedImageOptions, J as ExpectedNotESMImage, K as ImageMissingAlt, m as maybeRenderHead, h as addAttribute, s as spreadAttributes, e as renderTemplate, O as FontFamilyNotFound, u as unescapeHTML, P as MissingGetFontFileRequestUrl } from './server_BsBKsPp-.mjs';
 import * as mime from 'mrmime';
 import 'clsx';
 import 'piccolore';
@@ -37,6 +37,16 @@ function createComponent(arg1, moduleId, propagation) {
   }
 }
 
+const VALID_INPUT_FORMATS = [
+  "jpeg",
+  "jpg",
+  "png",
+  "tiff",
+  "webp",
+  "gif",
+  "svg",
+  "avif"
+];
 const VALID_SUPPORTED_FORMATS = [
   "jpeg",
   "jpg",
@@ -1583,7 +1593,7 @@ async function getConfiguredImageService() {
   if (!globalThis?.astroAsset?.imageService) {
     const { default: service } = await import(
       // @ts-expect-error
-      './sharp_BS8eTY95.mjs'
+      './sharp_CKpk-S9r.mjs'
     ).catch((e) => {
       const error = new AstroError(InvalidImageService);
       error.cause = e;
@@ -1973,4 +1983,4 @@ const assetQueryParams = undefined;
 					const serverDir = /* #__PURE__ */ new URL("file:///Users/tibereritobakanaan/Projects/ekwebsite/frontend/dist/server/");
 							const getImage = async (options) => await getImage$1(options, imageConfig);
 
-export { $$Font as $, inferSourceFormat as a, $$Image as b, createComponent as c, baseService as d, detector as e, fetchWithRedirects as f, getConfiguredImageService as g, imageConfig as i, outDir as o, parseQuality as p, resolveDefaultOutputFormat as r, serverDir as s };
+export { $$Font as $, VALID_INPUT_FORMATS as V, inferSourceFormat as a, $$Image as b, createComponent as c, baseService as d, detector as e, fetchWithRedirects as f, getConfiguredImageService as g, imageConfig as i, outDir as o, parseQuality as p, resolveDefaultOutputFormat as r, serverDir as s };

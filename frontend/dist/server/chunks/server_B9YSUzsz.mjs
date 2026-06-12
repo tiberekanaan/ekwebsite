@@ -1,4 +1,4 @@
-import { n as createInvalidVariablesError, o as getEnv$1, s as setOnSetGetEnv, p as createActionsProxy, q as pipelineSymbol, t as AstroError, v as ActionCalledFromServerError } from './server_CqV_976N.mjs';
+import { w as createInvalidVariablesError, x as getEnv$1, y as setOnSetGetEnv } from './server_BsBKsPp-.mjs';
 
 function getEnvFieldType(options) {
   const optional = options.optional ? options.default !== void 0 ? false : true : false;
@@ -181,16 +181,4 @@ let EMAIL_API_KEY = _internalGetSecret("EMAIL_API_KEY");
 _internalGetSecret("CONTACT_FORM_ENDPOINT");
 _internalGetSecret("NEWSLETTER_API_KEY");
 
-const actions = createActionsProxy({
-  handleAction: async (param, path, context) => {
-    const pipeline = context ? Reflect.get(context, pipelineSymbol) : void 0;
-    if (!pipeline) {
-      throw new AstroError(ActionCalledFromServerError);
-    }
-    const action = await pipeline.getAction(path);
-    if (!action) throw new Error(`Action not found: ${path}`);
-    return action.bind(context)(param);
-  }
-});
-
-export { BING_SITE_VERIFICATION as B, EMAIL_API_KEY as E, GOOGLE_SITE_VERIFICATION as G, STRAPI_URL as S, STRAPI_API_TOKEN as a, STRAPI_TOKEN as b, SITE_URL as c, actions as d };
+export { BING_SITE_VERIFICATION as B, EMAIL_API_KEY as E, GOOGLE_SITE_VERIFICATION as G, STRAPI_URL as S, STRAPI_API_TOKEN as a, STRAPI_TOKEN as b, SITE_URL as c };

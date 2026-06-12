@@ -1,0 +1,51 @@
+import { c as createComponent } from './_astro_assets_DTS9AsvG.mjs';
+import 'piccolore';
+import { f as isInputError, c as renderComponent, e as renderTemplate, m as maybeRenderHead, h as addAttribute } from './server_BsBKsPp-.mjs';
+import { $ as $$Layout } from './Layout_D-rqiVTg.mjs';
+import { a as actions } from './server_Cjh5J8Cz.mjs';
+
+const prerender = false;
+const $$Contact = createComponent(($$result, $$props, $$slots) => {
+  const Astro2 = $$result.createAstro($$props, $$slots);
+  Astro2.self = $$Contact;
+  const result = Astro2.getActionResult(actions.submitContact);
+  const fieldErrors = result?.error && isInputError(result.error) ? result.error.fields : {};
+  const formError = result?.error && !isInputError(result.error) ? result.error.message : null;
+  const success = result && !result.error;
+  return renderTemplate`${renderComponent($$result, "Layout", $$Layout, { "title": "Contact", "description": "Get in touch with the Empower Kiribati team." }, { "default": ($$result2) => renderTemplate` ${maybeRenderHead()}<section class="bg-slate-50"> <div class="mx-auto max-w-6xl px-6 py-20 lg:py-24"> <div class="grid gap-12 lg:grid-cols-5"> <header class="lg:col-span-2" data-reveal> <p class="font-accent text-3xl leading-none text-teal-700">
+Get in touch
+</p> <h1 class="font-display mt-3 text-4xl font-semibold text-slate-900 sm:text-5xl">
+Let's <span class="text-teal-700">connect</span>.
+</h1> <p class="mt-5 text-base leading-relaxed text-slate-600">
+Questions, partnerships, or ideas — drop us a note and we'll get back to you.
+</p> <dl class="mt-10 space-y-5"> <div> <dt class="text-xs font-semibold uppercase tracking-wider text-slate-500">Email</dt> <dd class="mt-1 text-base text-slate-800"> <a class="hover:text-teal-700" href="mailto:inquiry@empower.org.ki">
+inquiry@empower.org.ki
+</a> </dd> </div> <div> <dt class="text-xs font-semibold uppercase tracking-wider text-slate-500">Based in</dt> <dd class="mt-1 text-base text-slate-800">Bikenibeu, Tarawa, Kiribati</dd> </div> </dl> </header> <div class="lg:col-span-3" data-reveal> <div class="rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200 sm:p-10"> ${success ? renderTemplate`<div class="rounded-xl border border-teal-200 bg-teal-50 p-5"> <p class="font-semibold text-teal-900">Message sent.</p> <p class="mt-1 text-sm text-teal-800">
+Thanks for reaching out — we'll get back to you shortly.
+</p> </div>` : renderTemplate`<form method="POST"${addAttribute(actions.submitContact, "action")} class="space-y-6" novalidate> <div> <label for="name" class="block text-sm font-medium text-slate-700">
+Your name
+</label> <input id="name" name="name" type="text" required autocomplete="name" placeholder="Jane Doe" class="mt-2 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/30"> ${fieldErrors.name && renderTemplate`<p class="mt-1.5 text-sm text-rose-600">${fieldErrors.name[0]}</p>`} </div> <div> <label for="email" class="block text-sm font-medium text-slate-700">
+Email address
+</label> <input id="email" name="email" type="email" required autocomplete="email" placeholder="jane@example.com" class="mt-2 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/30"> ${fieldErrors.email && renderTemplate`<p class="mt-1.5 text-sm text-rose-600">${fieldErrors.email[0]}</p>`} </div> <div> <label for="message" class="block text-sm font-medium text-slate-700">
+Message
+</label> <textarea id="message" name="message" rows="6" required placeholder="Tell us a bit about why you're reaching out…" class="mt-2 block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/30"></textarea> ${fieldErrors.message && renderTemplate`<p class="mt-1.5 text-sm text-rose-600">${fieldErrors.message[0]}</p>`} </div> <div class="hidden" aria-hidden="true"> <label>
+Leave this empty
+<input type="text" name="honeypot" tabindex="-1" autocomplete="off"> </label> </div> ${formError && renderTemplate`<div class="rounded-lg border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700"> ${formError} </div>`} <button type="submit" class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-teal-700 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-600/40 focus:ring-offset-2 sm:w-auto">
+Send message
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"> <path d="M5 12h14M13 5l7 7-7 7"></path> </svg> </button> </form>`} </div> </div> </div> </div> </section> ` })}`;
+}, "/Users/tibereritobakanaan/Projects/ekwebsite/frontend/src/pages/contact.astro", void 0);
+
+const $$file = "/Users/tibereritobakanaan/Projects/ekwebsite/frontend/src/pages/contact.astro";
+const $$url = "/contact";
+
+const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: $$Contact,
+  file: $$file,
+  prerender,
+  url: $$url
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const page = () => _page;
+
+export { page };
