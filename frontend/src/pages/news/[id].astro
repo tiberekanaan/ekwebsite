@@ -1,25 +1,49 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import LanguageToggle from '@/components/empower/LanguageToggle.astro';
 import { marked } from 'marked';
 import { STRAPI_URL } from 'astro:env/server';
+import { STRAPI_LOCALES, resolveLang, type Lang } from '@/lib/i18n';
 
-export async function getStaticPaths() {
-  const items = await getCollection('news');
-  return items.map((item) => ({
-    params: { id: String(item.id) },
-    props: { item },
-  }));
+export const prerender = false;
+
+interface StrapiNewsUpdate {
+  documentId: string;
+  locale: string;
+  title: string;
+  summary: string | null;
+  content: string | null;
+  date: string;
+  photo: { url: string; alternativeText?: string | null } | null;
+  localizations: Array<{ documentId: string; locale: string }> | null;
 }
 
-interface Props {
-  item: CollectionEntry<'news'>;
-}
+const { id } = Astro.params;
+const lang = resolveLang(Astro.url.searchParams.get('lang'));
 
-const { item } = Astro.props;
-const { title, summary, content, date, photo } = item.data;
+const fetchNewsUpdate = async (locale: string): Promise<StrapiNewsUpdate | null> => {
+  try {
+    const res = await fetch(
+      `${STRAPI_URL}/api/news-updates/${id}?locale=${locale}&populate[photo]=true&populate[localizations]=true`,
+    );
+    if (!res.ok) return null;
+    const { data } = (await res.json()) as { data: StrapiNewsUpdate };
+    return data;
+  } catch {
+    return null;
+  }
+};
 
-const formattedDate = date.toLocaleDateString('en-US', {
+let item = await fetchNewsUpdate(STRAPI_LOCALES[lang]);
+// fall back to English when the requested translation doesn't exist
+if (!item && lang !== 'en') item = await fetchNewsUpdate(STRAPI_LOCALES.en);
+if (!item) return Astro.rewrite('/404');
+
+const { title, summary, content, photo } = item;
+const hasTranslation = (item.localizations ?? []).length > 0;
+const currentLang: Lang = item.locale === STRAPI_LOCALES.kir ? 'kir' : 'en';
+
+const formattedDate = new Date(item.date).toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
@@ -32,12 +56,15 @@ const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_U
 
 <Layout title={title} description={summary ?? `${title} — News update from Empower Kiribati`}>
   <div class="mx-auto max-w-3xl px-6 py-16 lg:py-24">
-    <a
-      href="/"
-      class="mb-8 inline-flex items-center gap-1 text-sm font-semibold text-slate-500 transition-colors hover:text-teal-700"
-    >
-      ← Back to home
-    </a>
+    <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+      <a
+        href="/"
+        class="inline-flex items-center gap-1 text-sm font-semibold text-slate-500 transition-colors hover:text-teal-700"
+      >
+        ← Back to home
+      </a>
+      {hasTranslation && <LanguageToggle current={currentLang} path={Astro.url.pathname} />}
+    </div>
 
     {
       photo && (

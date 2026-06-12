@@ -1,26 +1,54 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import LanguageToggle from '@/components/empower/LanguageToggle.astro';
 import { marked } from 'marked';
+import { STRAPI_URL } from 'astro:env/server';
+import { STRAPI_LOCALES, resolveLang, type Lang } from '@/lib/i18n';
 
-export async function getStaticPaths() {
-  const posts = await getCollection('blogs');
-  return posts.map((post) => ({
-    params: { id: post.id },
-    props: { post },
-  }));
+export const prerender = false;
+
+interface StrapiBlog {
+  documentId: string;
+  locale: string;
+  title: string;
+  content: string | null;
+  publish_date: string | null;
+  publishedAt: string | null;
+  localizations: Array<{ documentId: string; locale: string }> | null;
 }
 
-interface Props {
-  post: CollectionEntry<'blogs'>;
-}
+const { id } = Astro.params;
+const lang = resolveLang(Astro.url.searchParams.get('lang'));
 
-const { post } = Astro.props;
-const { title, content, publish_date, publishedAt } = post.data;
+const fetchBlog = async (locale: string): Promise<StrapiBlog | null> => {
+  try {
+    const res = await fetch(
+      `${STRAPI_URL}/api/blogs/${id}?locale=${locale}&populate[localizations]=true`,
+    );
+    if (!res.ok) return null;
+    const { data } = (await res.json()) as { data: StrapiBlog };
+    return data;
+  } catch {
+    return null;
+  }
+};
+
+let post = await fetchBlog(STRAPI_LOCALES[lang]);
+// fall back to English when the requested translation doesn't exist
+if (!post && lang !== 'en') post = await fetchBlog(STRAPI_LOCALES.en);
+if (!post) return Astro.rewrite('/404');
+
+const { title, content, publish_date, publishedAt } = post;
+const hasTranslation = (post.localizations ?? []).length > 0;
+const currentLang: Lang = post.locale === STRAPI_LOCALES.kir ? 'kir' : 'en';
 
 const displayDate = publish_date ?? publishedAt ?? null;
 const formattedDate = displayDate
-  ? displayDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  ? new Date(displayDate).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
   : '';
 
 const contentHtml = content ? marked.parse(content) : '';
@@ -28,12 +56,15 @@ const contentHtml = content ? marked.parse(content) : '';
 
 <Layout title={title} description={`${title} — Blog`}>
   <div class="mx-auto max-w-3xl px-6 py-16">
-    <a
-      href="/blog"
-      class="text-foreground-muted hover:text-brand-500 mb-8 inline-block text-sm transition-colors"
-    >
-      ← Back to blog
-    </a>
+    <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+      <a
+        href="/blog"
+        class="text-foreground-muted hover:text-brand-500 inline-block text-sm transition-colors"
+      >
+        ← Back to blog
+      </a>
+      {hasTranslation && <LanguageToggle current={currentLang} path={Astro.url.pathname} />}
+    </div>
 
     <header class="mb-10">
       <h1 class="font-display text-foreground mb-4 text-4xl font-bold leading-tight">
