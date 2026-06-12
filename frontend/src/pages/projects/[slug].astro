@@ -1,33 +1,60 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import LanguageToggle from '@/components/empower/LanguageToggle.astro';
+import { getCollection } from 'astro:content';
 import { marked } from 'marked';
 import { STRAPI_URL } from 'astro:env/server';
+import { STRAPI_LOCALES, resolveLang, type Lang } from '@/lib/i18n';
 
-export async function getStaticPaths() {
-  const items = await getCollection('projects');
-  return items.map((project) => ({
-    params: { slug: project.data.slug },
-    props: { project },
-  }));
+export const prerender = false;
+
+interface LocalizedProject {
+  documentId: string;
+  locale: string;
+  title: string;
+  description: string | null;
+  project_status: 'completed' | 'on-going' | null;
+  objectives: string | null;
+  location: string | null;
+  metrics: string | null;
+  localizations: Array<{ documentId: string; locale: string }> | null;
 }
 
-interface Props {
-  project: CollectionEntry<'projects'>;
-}
+const { slug } = Astro.params;
+const lang = resolveLang(Astro.url.searchParams.get('lang'));
 
-const { project } = Astro.props;
-const {
-  title,
-  description,
-  image,
-  project_status: status,
-  objectives,
-  location,
-  metrics,
-  partners,
-  testimonials,
-} = project.data;
+const projects = await getCollection('projects');
+const project = projects.find((entry) => entry.data.slug === slug);
+if (!project) return Astro.rewrite('/404');
+
+const fetchLocalized = async (locale: string): Promise<LocalizedProject | null> => {
+  try {
+    const res = await fetch(
+      `${STRAPI_URL}/api/projects/${project.id}?locale=${locale}&populate[localizations]=true`,
+    );
+    if (!res.ok) return null;
+    const { data } = (await res.json()) as { data: LocalizedProject };
+    return data;
+  } catch {
+    return null;
+  }
+};
+
+let localized = await fetchLocalized(STRAPI_LOCALES[lang]);
+// fall back to English when the requested translation doesn't exist
+if (!localized && lang !== 'en') localized = await fetchLocalized(STRAPI_LOCALES.en);
+
+// relations and media are shared across locales — keep them from the build-time
+// collection entry; only the localized text fields come from the runtime fetch
+const { image, partners, testimonials } = project.data;
+const title = localized?.title ?? project.data.title;
+const description = localized?.description ?? project.data.description;
+const status = localized?.project_status ?? project.data.project_status;
+const objectives = localized?.objectives ?? project.data.objectives;
+const location = localized?.location ?? project.data.location;
+const metrics = localized?.metrics ?? project.data.metrics;
+const hasTranslation = (localized?.localizations ?? []).length > 0;
+const currentLang: Lang = localized?.locale === STRAPI_LOCALES.kir ? 'kir' : 'en';
 
 const allPartners = await getCollection('partners');
 const partnerById = new Map(allPartners.map((p) => [p.id, p.data]));
@@ -52,12 +79,15 @@ const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_U
 <Layout title={title} description={description ?? `${title} — an Empower Kiribati program.`}>
   <section class="bg-white">
     <div class="mx-auto max-w-6xl px-6 py-16 lg:py-24">
-      <a
-        href="/our-programs"
-        class="mb-10 inline-flex items-center gap-1 text-sm font-semibold text-slate-500 transition-colors hover:text-teal-700"
-      >
-        ← Back to Programs
-      </a>
+      <div class="mb-10 flex flex-wrap items-center justify-between gap-4">
+        <a
+          href="/our-programs"
+          class="inline-flex items-center gap-1 text-sm font-semibold text-slate-500 transition-colors hover:text-teal-700"
+        >
+          ← Back to Programs
+        </a>
+        {hasTranslation && <LanguageToggle current={currentLang} path={Astro.url.pathname} />}
+      </div>
 
       <!-- Header: title + meta on the left, photo on the right -->
       <div class="grid grid-cols-1 items-start gap-10 lg:grid-cols-5 lg:gap-14">

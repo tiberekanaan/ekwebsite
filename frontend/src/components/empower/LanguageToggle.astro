@@ -1,0 +1,39 @@
+---
+import { LANG_LABELS, type Lang } from '@/lib/i18n';
+
+interface Props {
+  /** Language of the content currently being shown */
+  current: Lang;
+  /** Pathname of the page the toggle lives on (no query string) */
+  path: string;
+}
+
+const { current, path } = Astro.props;
+
+const options: Array<{ code: Lang; label: string; href: string }> = [
+  { code: 'en', label: LANG_LABELS.en, href: path },
+  { code: 'kir', label: LANG_LABELS.kir, href: `${path}?lang=kir` },
+];
+---
+
+<nav
+  aria-label="Content language"
+  class="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 p-1"
+>
+  {
+    options.map((option) => (
+      <a
+        href={option.href}
+        aria-current={option.code === current ? 'true' : undefined}
+        class:list={[
+          'rounded-full px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider transition-colors duration-300',
+          option.code === current
+            ? 'bg-slate-900 text-white shadow-sm'
+            : 'text-slate-500 hover:bg-white hover:text-slate-900',
+        ]}
+      >
+        {option.label}
+      </a>
+    ))
+  }
+</nav>

@@ -9,7 +9,15 @@ const PUBLIC_READ_ACTIONS = [
   'api::pillar.pillar.findOne',
   'api::basic-page.basic-page.find',
   'api::basic-page.basic-page.findOne',
+  'api::resource.resource.find',
+  'api::resource.resource.findOne',
+  'api::project.project.find',
+  'api::project.project.findOne',
 ];
+
+// Strapi's ISO locale list has no Gilbertese ("gil"); "en-KI" is the only
+// Kiribati code it accepts, so the Kiribati content locale lives under it.
+const KIRIBATI_LOCALE = { code: 'en-KI', name: 'Kiribati (Gilbertese)' };
 
 const DEFAULT_PILLARS: Array<{ title: string; description: string }> = [
   {
@@ -54,6 +62,20 @@ async function ensurePublicReadPermissions(strapi: Core.Strapi) {
   }
 }
 
+async function ensureKiribatiLocale(strapi: Core.Strapi) {
+  try {
+    const locales = strapi.plugin('i18n').service('locales');
+    const existing = await locales.findByCode(KIRIBATI_LOCALE.code);
+    if (!existing) {
+      await locales.create(KIRIBATI_LOCALE);
+    }
+  } catch (error) {
+    strapi.log.warn(
+      `Could not seed the ${KIRIBATI_LOCALE.code} locale — add it manually under Settings → Internationalization. (${error})`,
+    );
+  }
+}
+
 async function seedDefaultPillars(strapi: Core.Strapi) {
   const existing = await strapi.documents('api::pillar.pillar').findMany({
     fields: ['title'],
@@ -80,6 +102,7 @@ export default {
 
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
     await ensurePublicReadPermissions(strapi);
+    await ensureKiribatiLocale(strapi);
     await seedDefaultPillars(strapi);
   },
 };

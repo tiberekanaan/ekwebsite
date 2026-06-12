@@ -1,22 +1,59 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import LanguageToggle from '@/components/empower/LanguageToggle.astro';
 import { STRAPI_URL } from 'astro:env/server';
+import { STRAPI_LOCALES, resolveLang, type Lang } from '@/lib/i18n';
 
-export async function getStaticPaths() {
-  const resources = await getCollection('resources');
-  return resources.map((resource) => ({
-    params: { id: String(resource.id) },
-    props: { resource },
-  }));
+export const prerender = false;
+
+interface VideoBlock {
+  __component: 'content-blocks.video';
+  url: string;
+}
+interface DownloadBlock {
+  __component: 'content-blocks.download';
+  file: { url: string; name?: string | null; ext?: string | null; size?: number | null } | null;
+}
+interface ArticleBlock {
+  __component: 'content-blocks.article';
+  external_link: string;
+}
+type ContentBlock = VideoBlock | DownloadBlock | ArticleBlock;
+
+interface StrapiResource {
+  documentId: string;
+  title: string;
+  description: string | null;
+  locale: string;
+  content_blocks: ContentBlock[] | null;
+  localizations: Array<{ documentId: string; locale: string }> | null;
 }
 
-interface Props {
-  resource: CollectionEntry<'resources'>;
-}
+const { id } = Astro.params;
+const lang = resolveLang(Astro.url.searchParams.get('lang'));
 
-const { resource } = Astro.props;
-const { title, description, content_blocks } = resource.data;
+const fetchResource = async (locale: string): Promise<StrapiResource | null> => {
+  try {
+    const res = await fetch(
+      `${STRAPI_URL}/api/resources/${id}?locale=${locale}&populate[content_blocks][populate]=*&populate[localizations]=true`,
+    );
+    if (!res.ok) return null;
+    const { data } = (await res.json()) as { data: StrapiResource };
+    return data;
+  } catch {
+    return null;
+  }
+};
+
+let resource = await fetchResource(STRAPI_LOCALES[lang]);
+// fall back to English when the requested translation doesn't exist
+if (!resource && lang !== 'en') resource = await fetchResource(STRAPI_LOCALES.en);
+if (!resource) return Astro.rewrite('/404');
+
+const { title, description } = resource;
+const content_blocks = resource.content_blocks ?? [];
+const hasTranslation = (resource.localizations ?? []).length > 0;
+const currentLang: Lang = resource.locale === STRAPI_LOCALES.kir ? 'kir' : 'en';
 
 const absoluteUrl = (url: string) =>
   url.startsWith('http') ? url : `${STRAPI_URL}${url}`;
@@ -56,12 +93,15 @@ const formatBytes = (bytes?: number) => {
 
 <Layout title={title} description={description ?? `${title} — Community Resource`}>
   <div class="mx-auto max-w-3xl px-6 py-16">
-    <a
-      href="/resources"
-      class="mb-8 inline-block text-sm text-slate-500 transition-colors hover:text-teal-700"
-    >
-      ← Back to resources
-    </a>
+    <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+      <a
+        href="/resources"
+        class="inline-block text-sm text-slate-500 transition-colors hover:text-teal-700"
+      >
+        ← Back to resources
+      </a>
+      {hasTranslation && <LanguageToggle current={currentLang} path={Astro.url.pathname} />}
+    </div>
 
     <header class="mb-10">
       <p class="mb-2 font-accent text-3xl leading-none text-slate-700">Resource</p>
