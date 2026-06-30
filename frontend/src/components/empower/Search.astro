@@ -1,0 +1,147 @@
+---
+// Site search modal powered by Pagefind (@pagefind/default-ui).
+// Mounted once globally via Layout.astro; any [data-search-open] button opens it.
+// The Pagefind index is generated at build time (postbuild: `pagefind --site dist/client`),
+// so results only appear in `build`/`preview`, not in `dev`.
+---
+
+<div
+  id="search-modal"
+  class="fixed inset-0 z-[100] hidden items-start justify-center bg-slate-900/60 px-4 pt-24 backdrop-blur-sm sm:pt-32"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Site search"
+>
+  <div
+    class="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-slate-200"
+    data-search-panel
+  >
+    <div class="flex items-center justify-between border-b border-slate-100 px-5 py-3">
+      <span class="text-xs font-bold uppercase tracking-widest text-slate-500">Search</span>
+      <button
+        type="button"
+        data-search-close
+        class="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
+        aria-label="Close search"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+          aria-hidden="true"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="max-h-[70vh] overflow-y-auto p-5">
+      <div id="pagefind-search"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { PagefindUI } from '@pagefind/default-ui';
+  import '@pagefind/default-ui/css/ui.css';
+
+  const init = () => {
+    const modal = document.getElementById('search-modal');
+    if (!modal) return;
+
+    const panel = modal.querySelector<HTMLElement>('[data-search-panel]');
+    const openButtons = document.querySelectorAll<HTMLElement>('[data-search-open]');
+    const closeButtons = modal.querySelectorAll<HTMLElement>('[data-search-close]');
+
+    // Lazy-init the Pagefind UI once, on first open. The index only exists in a
+    // production build (postbuild: `pagefind --site dist/client`), so during
+    // `astro dev` we show a tidy notice instead of a dead input / console error.
+    const ensureUI = async () => {
+      if (modal.dataset.ready) return;
+      modal.dataset.ready = 'true';
+
+      const indexAvailable = await fetch('/pagefind/pagefind-entry.json', { method: 'HEAD' })
+        .then((res) => res.ok)
+        .catch(() => false);
+
+      const mount = document.getElementById('pagefind-search');
+      if (!indexAvailable) {
+        if (mount) {
+          mount.innerHTML =
+            '<p class="search-fallback">Search runs on the production build. Run <code>npm run build</code> then <code>npm run preview</code> to try it.</p>';
+        }
+        return;
+      }
+
+      new PagefindUI({
+        element: '#pagefind-search',
+        showSubResults: true,
+        showImages: false,
+      });
+    };
+
+    const open = async () => {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      await ensureUI();
+      modal.querySelector<HTMLInputElement>('.pagefind-ui__search-input')?.focus();
+    };
+
+    const close = () => {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+    };
+
+    openButtons.forEach((btn) => btn.addEventListener('click', open));
+    closeButtons.forEach((btn) => btn.addEventListener('click', close));
+
+    // Backdrop click (outside the panel) closes.
+    modal.addEventListener('click', (e) => {
+      if (panel && !panel.contains(e.target as Node)) close();
+    });
+
+    // Escape closes.
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) close();
+    });
+  };
+
+  document.addEventListener('astro:page-load', init);
+</script>
+
+<style is:global>
+  /* Match Pagefind default UI to the Tailwind v4 theme (slate / teal). */
+  #pagefind-search {
+    --pagefind-ui-primary: var(--color-teal-600);
+    --pagefind-ui-text: var(--color-slate-800);
+    --pagefind-ui-background: var(--color-white);
+    --pagefind-ui-border: var(--color-slate-200);
+    --pagefind-ui-tag: var(--color-slate-100);
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: 0.75rem;
+    --pagefind-ui-font: inherit;
+  }
+
+  .search-fallback {
+    margin: 0;
+    border: 1px dashed var(--color-slate-300);
+    border-radius: 0.75rem;
+    background: var(--color-slate-50);
+    padding: 1rem 1.25rem;
+    color: var(--color-slate-600);
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .search-fallback code {
+    border-radius: 0.25rem;
+    background: var(--color-slate-200);
+    padding: 0.05rem 0.35rem;
+    font-size: 0.8125rem;
+  }
+</style>

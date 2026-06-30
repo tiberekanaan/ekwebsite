@@ -1,0 +1,118 @@
+---
+import { STRAPI_URL } from 'astro:env/server';
+
+interface PartnerLogo {
+  name: string;
+  logo?: { url: string; alternativeText?: string | null } | null;
+}
+
+export interface PartnersBlockData {
+  eyebrow?: string | null;
+  title?: string | null;
+  allPartnersLink?: string | null;
+  logos?: PartnerLogo[] | null;
+}
+
+interface Props {
+  block: PartnersBlockData;
+}
+
+const { block } = Astro.props;
+const logos = block.logos ?? [];
+const allPartnersLink = block.allPartnersLink ?? '/our-partners';
+
+const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
+
+const loop = logos.length > 0 ? [...logos, ...logos] : [];
+---
+
+<section id="partners" class="bg-white">
+  <div class="mx-auto max-w-7xl px-6 py-16 lg:py-20">
+    <div class="mb-10 flex flex-wrap items-end justify-between gap-4">
+      <div data-reveal>
+        <p class="mb-2 font-accent text-3xl leading-none text-slate-700">{block.eyebrow ?? 'Our Partners'}</p>
+        <h2 class="font-display text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+          {
+            block.title ? (
+              block.title
+            ) : (
+              <Fragment>
+                Built with <span class="text-teal-700">trusted partners</span>.
+              </Fragment>
+            )
+          }
+        </h2>
+      </div>
+      <a
+        href={allPartnersLink}
+        data-reveal
+        data-reveal-delay="120"
+        class="group inline-flex items-center gap-1 text-sm font-bold uppercase tracking-wider text-slate-900 hover:underline"
+      >
+        All partners
+        <span aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-1">→</span>
+      </a>
+    </div>
+
+    {
+      logos.length === 0 ? (
+        <div class="rounded-2xl border border-dashed border-slate-300 px-6 py-12 text-center text-sm text-slate-500">
+          Partner logos will appear here once they are published in Strapi.
+        </div>
+      ) : (
+        <div
+          data-reveal
+          data-reveal-delay="150"
+          class="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
+        >
+          <div class="flex w-max animate-partner-marquee items-center gap-12 py-6">
+            {loop.map((p) => {
+              const logo = p.logo?.url ? absoluteUrl(p.logo.url) : null;
+              return (
+                <div class="flex h-20 w-44 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 px-6">
+                  {logo ? (
+                    <img
+                      src={logo}
+                      alt={p.logo?.alternativeText ?? p.name}
+                      class="max-h-12 max-w-full object-contain"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span class="text-center text-xs font-bold uppercase tracking-widest text-slate-600">
+                      {p.name}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  @keyframes partner-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-partner-marquee {
+    animation: partner-marquee 35s linear infinite;
+  }
+
+  .animate-partner-marquee:hover {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-partner-marquee {
+      animation: none;
+    }
+  }
+</style>

@@ -2,6 +2,13 @@
 import { getCollection } from 'astro:content';
 import { STRAPI_URL } from 'astro:env/server';
 
+interface Props {
+  heroTitle?: string | null;
+  heroDescription?: string | null;
+}
+
+const { heroTitle, heroDescription } = Astro.props;
+
 const highlights = [
   { value: '32', label: 'Atolls reached' },
   { value: '47+', label: 'Programmes' },
@@ -18,7 +25,7 @@ const formatDate = (d: Date) =>
 const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
 ---
 
-<section class="relative overflow-hidden bg-slate-900 text-white">
+<section class="relative min-h-screen overflow-hidden bg-slate-900 text-white">
   <div
     class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(45,212,191,0.25),transparent_55%),radial-gradient(ellipse_at_bottom_right,rgba(190,242,100,0.18),transparent_55%)]"
     aria-hidden="true"
@@ -48,7 +55,7 @@ const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_U
   >
   </div>
 
-  <div class="relative mx-auto grid max-w-7xl gap-10 px-6 py-12 lg:grid-cols-2 lg:items-center lg:gap-12 lg:py-16">
+  <div class="relative mx-auto grid max-w-7xl gap-10 px-6 pb-12 pt-32 lg:grid-cols-2 lg:items-center lg:gap-12 lg:pb-16 lg:pt-40">
     <div>
       <p
         data-reveal
@@ -65,14 +72,24 @@ const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_U
         data-reveal
         class="mt-5 font-heading text-4xl font-extrabold leading-tight tracking-tight text-white [transition-delay:80ms] sm:text-5xl lg:text-[2.75rem] xl:text-5xl 2xl:text-6xl"
       >
-        We foster initiatives<br />
-        that create <span class="bg-gradient-to-r from-lime-300 to-emerald-300 bg-clip-text text-transparent">thriving</span><br />
-        and <span class="bg-gradient-to-r from-teal-300 to-cyan-300 bg-clip-text text-transparent">resilient</span> futures.
+        {
+          heroTitle ? (
+            heroTitle
+          ) : (
+            <Fragment>
+              We foster initiatives<br />
+              that create <span class="bg-gradient-to-r from-lime-300 to-emerald-300 bg-clip-text text-transparent">thriving</span><br />
+              and <span class="bg-gradient-to-r from-teal-300 to-cyan-300 bg-clip-text text-transparent">resilient</span> futures.
+            </Fragment>
+          )
+        }
       </h1>
 
       <p data-reveal class="mt-5 max-w-xl text-base text-slate-300 [transition-delay:160ms] sm:text-lg">
-        Kiribati-led and community-driven — working alongside communities to strengthen
-        resilience, digital trust, and livelihoods across every atoll.
+        {
+          heroDescription ??
+            'Kiribati-led and community-driven — working alongside communities to strengthen resilience, digital trust, and livelihoods across every atoll.'
+        }
       </p>
 
       <div data-reveal class="mt-8 flex flex-wrap items-center gap-4 [transition-delay:240ms]">

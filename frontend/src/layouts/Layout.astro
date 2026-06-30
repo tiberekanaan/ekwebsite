@@ -3,6 +3,7 @@ import BaseLayout from './BaseLayout.astro';
 import Header from '@/components/empower/Header.astro';
 import Footer from '@/components/empower/Footer.astro';
 import Motion from '@/components/empower/Motion.astro';
+import Search from '@/components/empower/Search.astro';
 
 interface Props {
   title?: string;
@@ -18,6 +19,8 @@ interface Props {
   noindex?: boolean;
   nofollow?: boolean;
   includeOrgSchema?: boolean;
+  /** Floats the navbar over a full-bleed hero (landing only). */
+  floatingHeader?: boolean;
 }
 
 const {
@@ -29,6 +32,7 @@ const {
   noindex,
   nofollow,
   includeOrgSchema,
+  floatingHeader = false,
 } = Astro.props;
 ---
 
@@ -42,10 +46,11 @@ const {
   nofollow={nofollow}
   includeOrgSchema={includeOrgSchema}
 >
-  <Header slot="header" />
+  <Header slot="header" floating={floatingHeader} />
 
   <slot />
 
   <Footer slot="footer" />
+  <Search />
   <Motion />
 </BaseLayout>
