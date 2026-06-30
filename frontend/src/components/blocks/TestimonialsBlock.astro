@@ -18,185 +18,123 @@ interface Props {
   block: TestimonialsBlockData;
 }
 
+interface Voice {
+  quote: string;
+  name: string;
+  role: string;
+  image: { url: string; alternativeText?: string | null } | null;
+  placeholder: boolean;
+}
+
 const { block } = Astro.props;
-const testimonials = block.testimonials ?? [];
 
 const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
 
-const initials = (name: string) =>
-  name
-    .split(/\s+/)
-    .map((part) => part[0])
-    .filter(Boolean)
-    .slice(0, 2)
-    .join('')
-    .toUpperCase();
+const defaults: Voice[] = [
+  {
+    quote: 'A real change in a participant’s words — a new skill, income, or confidence gained.',
+    name: 'Community participant',
+    role: 'Name · island',
+    image: null,
+    placeholder: true,
+  },
+  {
+    quote: 'A partner’s words on working with us — reliability, alignment, and shared value.',
+    name: 'Partner / ministry',
+    role: 'Name · role',
+    image: null,
+    placeholder: true,
+  },
+  {
+    quote:
+      'A local leader’s words on growth, ownership, and leading change in their community.',
+    name: 'Local leader',
+    role: 'Name · programme',
+    image: null,
+    placeholder: true,
+  },
+];
+
+const voices: Voice[] =
+  block.testimonials && block.testimonials.length > 0
+    ? block.testimonials.map((t) => ({
+        quote: t.quote,
+        name: t.author,
+        role: t.role ?? '',
+        image: t.image ?? null,
+        placeholder: false,
+      }))
+    : defaults;
 ---
 
-<section id="testimonials" class="bg-slate-900 text-white">
-  <div class="mx-auto max-w-7xl px-6 py-16 lg:py-24">
-    <div class="mb-10 flex flex-wrap items-end justify-between gap-4">
-      <div data-reveal>
-        <p class="mb-2 font-accent text-3xl leading-none text-lime-300">{block.eyebrow ?? 'Testimonials'}</p>
-        <h2 class="font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-          {
-            block.title ? (
-              block.title
-            ) : (
-              <Fragment>
-                Voices from <span class="text-lime-300">the atolls</span>.
-              </Fragment>
-            )
-          }
-        </h2>
-      </div>
-      {
-        testimonials.length > 1 && (
-          <div class="flex items-center gap-2" data-reveal data-reveal-delay="120">
-            <button
-              type="button"
-              data-testimonial-prev
-              class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-700 text-slate-200 transition-colors hover:bg-slate-800"
-              aria-label="Previous testimonial"
-            >
-              <span aria-hidden="true">←</span>
-            </button>
-            <button
-              type="button"
-              data-testimonial-next
-              class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-700 text-slate-200 transition-colors hover:bg-slate-800"
-              aria-label="Next testimonial"
-            >
-              <span aria-hidden="true">→</span>
-            </button>
-          </div>
-        )
-      }
+<section id="voices" class="bg-ek-paper py-24">
+  <div class="mx-auto max-w-6xl px-7">
+    <div class="mb-14 max-w-[640px]" data-reveal>
+      <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
+        {block.eyebrow ?? 'In their words'}
+      </span>
+      <h2 class="mb-[18px] font-condensed text-4xl font-bold uppercase leading-[1.02] tracking-tight text-ek-800 sm:text-5xl">
+        {block.title ?? 'Voices from our communities'}
+      </h2>
+      <p class="text-lg text-ek-muted">
+        The best measure of our work is what people say about it. These voices will be drawn from
+        the communities, partners, and leaders we work alongside.
+      </p>
     </div>
 
-    {
-      testimonials.length === 0 ? (
-        <div class="rounded-2xl border border-dashed border-slate-700 px-6 py-12 text-center text-sm text-slate-400">
-          Testimonials will appear here once they are published in Strapi.
-        </div>
-      ) : (
-        <div
-          class="relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-800/40"
-          data-testimonial-carousel
-          data-reveal
-        >
-          <ul class="flex transition-transform duration-500 ease-out" data-testimonial-track>
-            {testimonials.map((t) => {
-              const imgUrl = t.image?.url ? absoluteUrl(t.image.url) : null;
-              return (
-                <li class="w-full flex-shrink-0 px-6 py-10 sm:px-12 sm:py-14">
-                  <div class="grid items-center gap-8 md:grid-cols-[auto_1fr]">
-                    <div class="flex justify-center md:justify-start">
-                      {imgUrl ? (
-                        <img
-                          src={imgUrl}
-                          alt={t.image?.alternativeText ?? t.author}
-                          class="h-24 w-24 rounded-full border-2 border-lime-300/40 object-cover transition-all duration-500 hover:scale-105 hover:border-lime-300/80 hover:shadow-xl hover:shadow-lime-300/20 sm:h-28 sm:w-28"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div class="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-teal-700 to-slate-700 text-xl font-bold text-white transition-transform duration-500 hover:scale-105 sm:h-28 sm:w-28">
-                          {initials(t.author)}
-                        </div>
-                      )}
-                    </div>
-
-                    <div>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="mb-4 h-8 w-8 text-lime-300"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path d="M7.17 6A5.17 5.17 0 0 0 2 11.17V18h6.17V11.83H5.5c0-1.83 1.5-3.33 3.33-3.33V6H7.17Zm10 0A5.17 5.17 0 0 0 12 11.17V18h6.17V11.83H15.5c0-1.83 1.5-3.33 3.33-3.33V6h-1.66Z" />
-                      </svg>
-                      <blockquote class="text-lg leading-relaxed text-slate-100 sm:text-xl">
-                        {t.quote}
-                      </blockquote>
-                      <footer class="mt-6">
-                        <div class="text-sm font-bold uppercase tracking-wider text-white">
-                          {t.author}
-                        </div>
-                        {t.role && (
-                          <div class="text-xs uppercase tracking-widest text-teal-300">
-                            {t.role}
-                          </div>
-                        )}
-                      </footer>
-                    </div>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-
-          {testimonials.length > 1 && (
-            <div
-              class="flex justify-center gap-2 pb-6"
-              data-testimonial-dots
-              aria-label="Carousel pagination"
+    <div class="grid gap-[22px] md:grid-cols-3">
+      {
+        voices.map((v, i) => {
+          const imgUrl = v.image?.url ? absoluteUrl(v.image.url) : null;
+          return (
+            <article
+              data-reveal
+              data-reveal-delay={i * 100}
+              class="rounded-md border border-ek-sand bg-white px-7 py-[30px]"
             >
-              {testimonials.map((_, i) => (
-                <button
-                  type="button"
-                  data-index={i}
-                  class:list={[
-                    'h-2 w-2 rounded-full transition-colors',
-                    i === 0 ? 'bg-lime-300' : 'bg-slate-600',
-                  ]}
-                  aria-label={`Go to testimonial ${i + 1}`}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      )
-    }
+              <p class="mb-[22px] text-[1.05rem] text-ek-ink">
+                <span class="mr-1 font-condensed text-5xl leading-[0] text-ek-lime align-middle" aria-hidden="true">
+                  “
+                </span>
+                {v.quote}
+              </p>
+              <div class="flex items-center gap-3 border-t border-ek-sand pt-4">
+                {imgUrl ? (
+                  <img
+                    src={imgUrl}
+                    alt={v.image?.alternativeText ?? v.name}
+                    class="h-[42px] w-[42px] flex-none rounded-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div class="flex h-[42px] w-[42px] flex-none items-center justify-center rounded-full bg-ek-sand text-ek-600">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      aria-hidden="true"
+                    >
+                      <circle cx="12" cy="8" r="4" />
+                      <path d="M4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1" />
+                    </svg>
+                  </div>
+                )}
+                <div>
+                  <div class="font-condensed text-[0.95rem] font-semibold uppercase tracking-[0.04em] text-ek-800">
+                    {v.name}
+                  </div>
+                  {v.role && <div class="text-[0.85rem] text-ek-muted">{v.role}</div>}
+                </div>
+              </div>
+              {v.placeholder && (
+                <p class="mt-[14px] text-[0.85rem] italic text-ek-olive">To be added once gathered</p>
+              )}
+            </article>
+          );
+        })
+      }
+    </div>
   </div>
 </section>
-
-<script>
-  const root = document.querySelector<HTMLElement>('[data-testimonial-carousel]');
-  if (root) {
-    const track = root.querySelector<HTMLUListElement>('[data-testimonial-track]');
-    const dots = root.querySelectorAll<HTMLButtonElement>('[data-testimonial-dots] button');
-    const prev = document.querySelector<HTMLButtonElement>('[data-testimonial-prev]');
-    const next = document.querySelector<HTMLButtonElement>('[data-testimonial-next]');
-    const slides = track?.children.length ?? 0;
-    let index = 0;
-
-    const update = () => {
-      if (!track) return;
-      track.style.transform = `translateX(-${index * 100}%)`;
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('bg-lime-300', i === index);
-        dot.classList.toggle('bg-slate-600', i !== index);
-      });
-    };
-
-    const go = (delta: number) => {
-      if (slides === 0) return;
-      index = (index + delta + slides) % slides;
-      update();
-    };
-
-    prev?.addEventListener('click', () => go(-1));
-    next?.addEventListener('click', () => go(1));
-    dots.forEach((dot) =>
-      dot.addEventListener('click', () => {
-        index = Number(dot.dataset.index ?? 0);
-        update();
-      }),
-    );
-
-    if (slides > 1) {
-      setInterval(() => go(1), 7000);
-    }
-  }
-</script>

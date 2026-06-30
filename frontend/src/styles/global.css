@@ -98,6 +98,24 @@
   --color-brand-800: var(--brand-800);
   --color-brand-900: var(--brand-900);
 
+  /* Empower Kiribati landing palette (bwabwai / atoll theme) — namespaced
+     `ek-*` so they never clash with Tailwind's default teal/lime/muted. */
+  --color-ek-900: #072529;
+  --color-ek-800: #0b373d;
+  --color-ek-700: #114a52;
+  --color-ek-600: #19636d;
+  --color-ek-500: #2a8089;
+  --color-ek-lime: #aecb3a;
+  --color-ek-lime-bright: #c4dd5c;
+  --color-ek-olive: #7d9b2f;
+  --color-ek-paper: #f6f4ec;
+  --color-ek-sand: #ece5d4;
+  --color-ek-ink: #15323a;
+  --color-ek-muted: #54666c;
+
+  /* Saira Condensed — landing display face (self-hosted via Astro Fonts) */
+  --font-condensed: var(--font-saira), 'Inter', sans-serif;
+
   /* Font Sizes - matches original design scale */
   --font-size-xs: 0.75rem;     /* 12px */
   --font-size-sm: 0.875rem;    /* 14px */

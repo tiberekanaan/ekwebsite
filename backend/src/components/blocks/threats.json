@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_blocks_threats",
+  "info": {
+    "displayName": "Threats",
+    "icon": "shield",
+    "description": "Roots-of-empowerment bridge pairing each threat with our response."
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "lead": {
+      "type": "text"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.threat-item"
+    }
+  }
+}

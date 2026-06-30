@@ -1,0 +1,44 @@
+---
+interface Props {
+  /** Main page heading. */
+  title: string;
+  /** Optional subtitle shown below the title. */
+  description?: string;
+  /** Optional small accent label shown above the title. */
+  eyebrow?: string;
+}
+
+const { title, description, eyebrow } = Astro.props;
+---
+
+<header
+  class="w-full bg-gradient-to-br from-slate-900 to-teal-900 px-8 pt-40 pb-20 text-white"
+>
+  <div class="mx-auto max-w-6xl">
+    {
+      eyebrow && (
+        <p class="mb-3 font-accent text-3xl leading-none text-lime-300" data-reveal>
+          {eyebrow}
+        </p>
+      )
+    }
+    <h1
+      class="font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
+      data-reveal
+      data-reveal-delay="80"
+    >
+      {title}
+    </h1>
+    {
+      description && (
+        <p
+          class="mt-5 max-w-2xl text-lg leading-relaxed text-slate-300"
+          data-reveal
+          data-reveal-delay="160"
+        >
+          {description}
+        </p>
+      )
+    }
+  </div>
+</header>

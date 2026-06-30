@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_shared_threat_items",
+  "info": {
+    "displayName": "Threat Item",
+    "icon": "shield",
+    "description": "A single threat paired with the response (pillar) that answers it."
+  },
+  "options": {},
+  "attributes": {
+    "threatLabel": {
+      "type": "string",
+      "required": true
+    },
+    "threatText": {
+      "type": "text"
+    },
+    "answerTitle": {
+      "type": "string",
+      "required": true
+    },
+    "answerText": {
+      "type": "text"
+    }
+  }
+}

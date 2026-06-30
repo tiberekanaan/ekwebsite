@@ -1,0 +1,36 @@
+{
+  "collectionName": "components_blocks_futures",
+  "info": {
+    "displayName": "Future",
+    "icon": "rocket",
+    "description": "Forward-looking section with values and headline stats."
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "buttonText": {
+      "type": "string"
+    },
+    "buttonLink": {
+      "type": "string"
+    },
+    "values": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.value-item"
+    },
+    "stats": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.future-stat"
+    }
+  }
+}

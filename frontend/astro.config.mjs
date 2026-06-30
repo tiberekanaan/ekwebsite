@@ -117,6 +117,12 @@ export default defineConfig({
       cssVariable: '--font-inter',
       weights: [400, 500, 600, 700],
     },
+    {
+      provider: fontProviders.google(),
+      name: 'Saira Condensed',
+      cssVariable: '--font-saira',
+      weights: [500, 600, 700],
+    },
   ],
 
   adapter: node({ mode: 'standalone' }),

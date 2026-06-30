@@ -542,6 +542,46 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
+  collectionName: 'homepages';
+  info: {
+    description: 'Editable hero copy and impact metrics for the landing page.';
+    displayName: 'Homepage';
+    pluralName: 'homepages';
+    singularName: 'homepage';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    blocks: Schema.Attribute.DynamicZone<
+      [
+        'blocks.hero',
+        'blocks.challenges',
+        'blocks.threats',
+        'blocks.impact',
+        'blocks.pillars',
+        'blocks.testimonials',
+        'blocks.future',
+        'blocks.partners',
+      ]
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::homepage.homepage'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiNewsUpdateNewsUpdate extends Struct.CollectionTypeSchema {
   collectionName: 'news_updates';
   info: {
@@ -1364,6 +1404,7 @@ declare module '@strapi/strapi' {
       'api::basic-page.basic-page': ApiBasicPageBasicPage;
       'api::blog.blog': ApiBlogBlog;
       'api::event.event': ApiEventEvent;
+      'api::homepage.homepage': ApiHomepageHomepage;
       'api::news-update.news-update': ApiNewsUpdateNewsUpdate;
       'api::partner.partner': ApiPartnerPartner;
       'api::pillar.pillar': ApiPillarPillar;

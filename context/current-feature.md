@@ -1,17 +1,20 @@
-## Current Feature
+# Current Feature
 
-**Feature:** Extend i18n language toggle to News Updates and Blog
+**Feature:** Automated Content Seeding for the Homepage
 
 ## Status
-- ✅ Completed — verified against live Strapi + dev server, build passes, merged to `main`, branch deleted.
-- Kiribati content locale is `en-KI` (Strapi's ISO list has no Gilbertese `gil`; `en-KI` is the only Kiribati code it accepts), exposed in URLs as `?lang=kir`. Locale + `resource`/`project` Public read perms are seeded on bootstrap.
-- Detail pages (`resources/[id]`, `projects/[slug]`) are now SSR (`prerender = false`) so they can read `?lang=`; missing translations fall back to English and hide the toggle.
-- Translations are human-authored in the Strapi admin (no machine translation anywhere): create the English entry, switch the locale dropdown to "Kiribati (Gilbertese)", write the translation, then publish both locales together via "Publish multiple locales". The frontend toggle appears automatically once both locales are published.
+- The `Homepage` Single Type schema is ready with dynamic zones (`blocks.hero`, `blocks.threats`, etc.).
+- Content is ready in the "Cultivating Resilience" narrative, but the database is currently empty.
+- We need to programmatically import this content into Strapi using a seeder script rather than manual data entry.
 
 ## Goals
-1. **Backend (Strapi):** Update collection schemas (e.g., `Resource`, `Project`) to enable localization by adding `"pluginOptions": { "i18n": { "localized": true } }`. 
-2. **Frontend Data (Astro):** On dynamic detail pages (e.g., `src/pages/resources/[id].astro`), read the `lang` URL search parameter (default to `en`). Query Strapi using the `documentId`, passing `?locale=${lang}&populate=localizations` to fetch the correct translation and check for alternate versions.
-3. **Frontend UI (Tailwind v4):** Create a language toggle (English / Kiribati) at the top of the content. Conditionally render this toggle *only* if the `localizations` array from the Strapi response contains the alternate locale data.
+1. **Content Extraction:** Read the `Cultivating Resilience_ The Bwabwai Strategy Narrative.pdf` (or the provided HTML design file) and extract the narrative text for the Hero section, the Threats section (including the 4 bullet points), and the Pillars section.
+2. **Script Creation:** Create a Node.js script in the `backend/` folder (e.g., `seed-homepage.js`). 
+3. **API Integration:** The script should use the native `fetch` API to send a `PUT` request to `http://localhost:1337/api/homepage`. Construct the JSON payload mapping the extracted text to the `blocks` dynamic zone array (containing the `blocks.hero`, `blocks.threats`, and `blocks.pillars` components).
+4. **Execution:** Execute the script using the local `.env` file's `STRAPI_API_TOKEN` to authenticate and inject the content directly into the Strapi 5 database.
+
+
+
 
 ## Notes
 

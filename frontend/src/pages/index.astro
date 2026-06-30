@@ -5,24 +5,17 @@ import Layout from '@/layouts/Layout.astro';
 // Block components (dynamic-zone driven)
 import HeroBlock, { type HeroBlockData } from '@/components/blocks/HeroBlock.astro';
 import ChallengesBlock, { type ChallengesBlockData } from '@/components/blocks/ChallengesBlock.astro';
+import ThreatsBlock, { type ThreatsBlockData } from '@/components/blocks/ThreatsBlock.astro';
 import ImpactBlock, { type ImpactBlockData } from '@/components/blocks/ImpactBlock.astro';
 import PillarsBlock, { type PillarsBlockData } from '@/components/blocks/PillarsBlock.astro';
 import TestimonialsBlock, { type TestimonialsBlockData } from '@/components/blocks/TestimonialsBlock.astro';
 import FutureBlock, { type FutureBlockData } from '@/components/blocks/FutureBlock.astro';
 import PartnersBlock, { type PartnersBlockData } from '@/components/blocks/PartnersBlock.astro';
 
-// Static fallback (rendered when no blocks are published yet)
-import Hero from '@/components/empower/Hero.astro';
-import Challenges from '@/components/empower/Challenges.astro';
-import OurWork from '@/components/empower/OurWork.astro';
-import Impact from '@/components/empower/Impact.astro';
-import TestimonialCarousel from '@/components/empower/TestimonialCarousel.astro';
-import Future from '@/components/empower/Future.astro';
-import PartnerCarousel from '@/components/empower/PartnerCarousel.astro';
-
 type Block =
   | ({ __component: 'blocks.hero' } & HeroBlockData)
   | ({ __component: 'blocks.challenges' } & ChallengesBlockData)
+  | ({ __component: 'blocks.threats' } & ThreatsBlockData)
   | ({ __component: 'blocks.impact' } & ImpactBlockData)
   | ({ __component: 'blocks.pillars' } & PillarsBlockData)
   | ({ __component: 'blocks.testimonials' } & TestimonialsBlockData)
@@ -33,6 +26,7 @@ type Block =
 const POPULATE = [
   'populate[blocks][on][blocks.hero][populate]=*',
   'populate[blocks][on][blocks.challenges][populate]=*',
+  'populate[blocks][on][blocks.threats][populate]=*',
   'populate[blocks][on][blocks.impact][populate]=*',
   'populate[blocks][on][blocks.pillars][populate][pillars][populate]=*',
   'populate[blocks][on][blocks.testimonials][populate][testimonials][populate]=*',
@@ -50,13 +44,13 @@ try {
     blocks = json.data?.blocks ?? [];
   }
 } catch {
-  // Strapi unreachable — fall back to the static landing below.
+  // Strapi unreachable — fall back to the default landing below.
 }
 ---
 
 <Layout
   title="Empower Kiribati"
-  description="A Kiribati-led NGO building a self-sustaining ecosystem of digital trust and economic opportunity by 2030, built by I-Kiribati, for I-Kiribati."
+  description="A locally-led NGO helping I-Kiribati gain the leadership, enterprise, and digital skills to cultivate a resilient Kiribati — built by local people, made to last."
   floatingHeader
 >
   {
@@ -67,6 +61,8 @@ try {
             return <HeroBlock block={block} />;
           case 'blocks.challenges':
             return <ChallengesBlock block={block} />;
+          case 'blocks.threats':
+            return <ThreatsBlock block={block} />;
           case 'blocks.impact':
             return <ImpactBlock block={block} />;
           case 'blocks.pillars':
@@ -83,13 +79,13 @@ try {
       })
     ) : (
       <Fragment>
-        <Hero />
-        <Challenges />
-        <OurWork />
-        <Impact />
-        <TestimonialCarousel />
-        <Future />
-        <PartnerCarousel />
+        <HeroBlock block={{}} />
+        <ChallengesBlock block={{}} />
+        <ThreatsBlock block={{}} />
+        <ImpactBlock block={{}} />
+        <TestimonialsBlock block={{}} />
+        <PartnersBlock block={{}} />
+        <FutureBlock block={{}} />
       </Fragment>
     )
   }

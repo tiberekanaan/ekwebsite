@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_shared_impact_metrics",
+  "info": {
+    "displayName": "Impact Metric",
+    "icon": "chartCircle",
+    "description": "A single landing-page impact statistic."
+  },
+  "options": {},
+  "attributes": {
+    "number": {
+      "type": "string",
+      "required": true
+    },
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    }
+  }
+}

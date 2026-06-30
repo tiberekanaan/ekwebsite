@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_shared_challenge_items",
+  "info": {
+    "displayName": "Challenge Item",
+    "icon": "alert",
+    "description": "A single challenge card (title, caption, headline stat)."
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "caption": {
+      "type": "text"
+    },
+    "stat": {
+      "type": "string"
+    },
+    "statLabel": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_blocks_challenges",
+  "info": {
+    "displayName": "Challenges",
+    "icon": "alert",
+    "description": "Grid of major challenges the organisation responds to."
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.challenge-item"
+    }
+  }
+}

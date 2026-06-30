@@ -1,0 +1,28 @@
+{
+  "kind": "singleType",
+  "collectionName": "homepages",
+  "info": {
+    "singularName": "homepage",
+    "pluralName": "homepages",
+    "displayName": "Homepage",
+    "description": "Editable hero copy and impact metrics for the landing page."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "blocks": {
+      "type": "dynamiczone",
+      "components": [
+        "blocks.hero",
+        "blocks.challenges",
+        "blocks.threats",
+        "blocks.impact",
+        "blocks.pillars",
+        "blocks.testimonials",
+        "blocks.future",
+        "blocks.partners"
+      ]
+    }
+  }
+}

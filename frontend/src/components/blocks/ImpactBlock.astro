@@ -17,120 +17,91 @@ interface Props {
 }
 
 interface Stat {
-  value: string;
+  badge: string;
   label: string;
-  caption: string;
-  accent: string;
-  icon: string;
 }
 
 const { block } = Astro.props;
 
-// Accent + icon rotate per card; CMS supplies only number/label/description.
-const ACCENTS = ['border-l-lime-400', 'border-l-teal-500', 'border-l-amber-400'];
-const ICONS = [
-  'M3 12h3l2-7 4 14 2-7h7',
-  'M17 20h5v-2a4 4 0 0 0-3-3.87M9 20H4v-2a4 4 0 0 1 3-3.87m6-5.13a4 4 0 1 1-8 0 4 4 0 0 1 8 0Zm6 0a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
-  'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 0v20M2 12h20',
-];
-
 const defaults: Stat[] = [
-  {
-    value: '47+',
-    label: 'Programs Delivered',
-    caption: 'Across leadership, enterprise, digital and youth pillars since 2022.',
-    accent: ACCENTS[0],
-    icon: ICONS[0],
-  },
-  {
-    value: '11,400+',
-    label: 'Community Members Reached',
-    caption: 'I-Kiribati participants engaged across 32 atolls and outer islands.',
-    accent: ACCENTS[1],
-    icon: ICONS[1],
-  },
-  {
-    value: '$4.2M',
-    label: 'Total Project Value',
-    caption: 'Mobilised in grants, partner co-investment and community contribution.',
-    accent: ACCENTS[2],
-    icon: ICONS[2],
-  },
+  { badge: 'From 2026', label: 'People supported into stronger livelihoods and enterprise' },
+  { badge: 'From 2026', label: 'Communities reached through digital skills and safety' },
+  { badge: 'From 2026', label: 'Local leaders developed through our programmes' },
+  { badge: 'From 2026', label: 'Active partnerships delivering work together' },
 ];
 
 const stats: Stat[] =
   block.metrics && block.metrics.length > 0
-    ? block.metrics.map((m, i) => ({
-        value: m.number,
-        label: m.label,
-        caption: m.description ?? '',
-        accent: ACCENTS[i % ACCENTS.length],
-        icon: ICONS[i % ICONS.length],
-      }))
+    ? block.metrics.map((m) => ({ badge: m.number ?? 'From 2026', label: m.label }))
     : defaults;
+
+// Qualitative outcomes we hold ourselves to (decorative checklist).
+const track = [
+  'More people confident and safe using digital tools — and fewer left out.',
+  'Leadership and skills that no longer depend on any single person.',
+  'Real co-design and shared investment with partners — a sign of trust.',
+  'Local practices that communities carry on themselves.',
+];
 ---
 
-<section class="bg-white">
-  <div class="mx-auto max-w-7xl px-6 py-16 lg:py-24">
-    <div class="grid gap-8 lg:grid-cols-2 lg:items-end">
-      <div data-reveal>
-        <p class="mb-3 font-accent text-3xl leading-none text-slate-700">{block.eyebrow ?? 'Our Impact'}</p>
-        <h2 class="font-display text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl">
-          {
-            block.title ? (
-              block.title
-            ) : (
-              <Fragment>
-                THE NUMBERS<br />BEHIND <span class="text-teal-700">THE</span><br />MISSION.
-              </Fragment>
-            )
-          }
-        </h2>
-      </div>
-      <p data-reveal data-reveal-delay="120" class="max-w-lg text-base text-slate-600 lg:pb-2">
+<section id="impact" class="bg-ek-sand py-24">
+  <div class="mx-auto max-w-6xl px-7">
+    <div class="mb-14 max-w-[640px]" data-reveal>
+      <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
+        {block.eyebrow ?? 'The harvest'}
+      </span>
+      <h2 class="mb-[18px] font-condensed text-4xl font-bold uppercase leading-[1.02] tracking-tight text-ek-800 sm:text-5xl">
+        {block.title ?? 'The change we’re growing'}
+      </h2>
+      <p class="text-lg text-ek-muted">
         {
           block.description ??
-            'Impact, in our work, is measured one community at a time — but the aggregate tells a story of trust, scale and steady progress.'
+            'We measure real change, not just activity. As our programmes take root from 2026 onward, this is the evidence we hold ourselves to.'
         }
       </p>
     </div>
 
-    <div class="mt-12 grid gap-6 md:grid-cols-3">
+    <p
+      class="mb-12 max-w-[780px] font-condensed text-2xl font-semibold uppercase leading-[1.15] text-ek-800 sm:text-3xl"
+      data-reveal
+    >
+      Our aim is for communities to know us not as a one-off service, but as a lasting partner for
+      change.
+    </p>
+
+    <div class="mb-12 grid gap-[18px] sm:grid-cols-2 lg:grid-cols-4">
       {
         stats.map((s, i) => (
-          <article
+          <div
             data-reveal
-            data-reveal-delay={i * 120}
-            class:list={[
-              'group rounded-xl border border-slate-200 border-l-4 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10',
-              s.accent,
-            ]}
+            data-reveal-delay={i * 100}
+            class="rounded-md border-b-[3px] border-ek-lime bg-white px-6 py-7"
           >
-            <div class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-lime-300 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="1.75"
-                aria-hidden="true"
-              >
-                <path stroke-linecap="round" stroke-linejoin="round" d={s.icon} />
-              </svg>
-            </div>
-            <div
-              class="font-display text-5xl font-extrabold tracking-tight text-slate-900"
-              data-countup
-              data-target={s.value}
+            <span class="mb-1.5 inline-block rounded-[3px] bg-ek-olive/10 px-2 py-[3px] font-condensed text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-ek-olive">
+              {s.badge}
+            </span>
+            <div class="mt-2 text-[0.96rem] text-ek-muted">{s.label}</div>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="grid max-w-[880px] gap-x-9 gap-y-[14px] sm:grid-cols-2" data-reveal>
+      {
+        track.map((t) => (
+          <div class="flex gap-3 text-[1.02rem] text-ek-ink">
+            <svg
+              class="mt-[3px] h-[22px] w-[22px] flex-none text-ek-olive"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
             >
-              {s.value}
-            </div>
-            <div class="mt-2 text-sm font-bold uppercase tracking-wider text-teal-700">
-              {s.label}
-            </div>
-            <p class="mt-3 text-sm text-slate-600">{s.caption}</p>
-          </article>
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+            <span>{t}</span>
+          </div>
         ))
       }
     </div>

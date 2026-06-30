@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_blocks_partners",
+  "info": {
+    "displayName": "Partners",
+    "icon": "apps",
+    "description": "Partner logo marquee with editable logo + name entries."
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "allPartnersLink": {
+      "type": "string"
+    },
+    "logos": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.partner-logo"
+    }
+  }
+}

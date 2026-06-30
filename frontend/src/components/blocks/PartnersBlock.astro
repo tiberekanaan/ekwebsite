@@ -19,100 +19,82 @@ interface Props {
 
 const { block } = Astro.props;
 const logos = block.logos ?? [];
-const allPartnersLink = block.allPartnersLink ?? '/our-partners';
 
 const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
 
-const loop = logos.length > 0 ? [...logos, ...logos] : [];
+// Partner categories are editorial (not per-logo); kept as static copy.
+const categories = [
+  {
+    title: 'Government ministries',
+    text: 'Designing and delivering programmes aligned to national priorities.',
+  },
+  {
+    title: 'Communities',
+    text: 'Working directly with the people we serve, so programmes are owned locally.',
+  },
+  {
+    title: 'Funders & donors',
+    text: 'Long-term relationships supporting multi-year, mission-aligned work.',
+  },
+  {
+    title: 'Networks & allies',
+    text: 'Wider networks that extend our reach and lift standards across the sector.',
+  },
+];
 ---
 
-<section id="partners" class="bg-white">
-  <div class="mx-auto max-w-7xl px-6 py-16 lg:py-20">
-    <div class="mb-10 flex flex-wrap items-end justify-between gap-4">
-      <div data-reveal>
-        <p class="mb-2 font-accent text-3xl leading-none text-slate-700">{block.eyebrow ?? 'Our Partners'}</p>
-        <h2 class="font-display text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-          {
-            block.title ? (
-              block.title
-            ) : (
-              <Fragment>
-                Built with <span class="text-teal-700">trusted partners</span>.
-              </Fragment>
-            )
-          }
-        </h2>
-      </div>
-      <a
-        href={allPartnersLink}
-        data-reveal
-        data-reveal-delay="120"
-        class="group inline-flex items-center gap-1 text-sm font-bold uppercase tracking-wider text-slate-900 hover:underline"
-      >
-        All partners
-        <span aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-1">→</span>
-      </a>
+<section id="partners" class="border-t border-ek-sand bg-white py-24">
+  <div class="mx-auto max-w-6xl px-7">
+    <div class="mb-14 max-w-[640px]" data-reveal>
+      <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
+        {block.eyebrow ?? 'Stronger together'}
+      </span>
+      <h2 class="mb-[18px] font-condensed text-4xl font-bold uppercase leading-[1.02] tracking-tight text-ek-800 sm:text-5xl">
+        {block.title ?? 'Who we work with'}
+      </h2>
+      <p class="text-lg text-ek-muted">
+        We don’t work alone. We build trusted relationships that bring coordination, shared
+        investment, and greater reach — so our work can grow and last.
+      </p>
     </div>
 
-    {
-      logos.length === 0 ? (
-        <div class="rounded-2xl border border-dashed border-slate-300 px-6 py-12 text-center text-sm text-slate-500">
-          Partner logos will appear here once they are published in Strapi.
-        </div>
-      ) : (
-        <div
-          data-reveal
-          data-reveal-delay="150"
-          class="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
-        >
-          <div class="flex w-max animate-partner-marquee items-center gap-12 py-6">
-            {loop.map((p) => {
-              const logo = p.logo?.url ? absoluteUrl(p.logo.url) : null;
-              return (
-                <div class="flex h-20 w-44 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 px-6">
-                  {logo ? (
-                    <img
-                      src={logo}
-                      alt={p.logo?.alternativeText ?? p.name}
-                      class="max-h-12 max-w-full object-contain"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <span class="text-center text-xs font-bold uppercase tracking-widest text-slate-600">
-                      {p.name}
-                    </span>
-                  )}
-                </div>
-              );
-            })}
+    <div class="mb-[50px] grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        categories.map((c, i) => (
+          <div
+            data-reveal
+            data-reveal-delay={i * 100}
+            class="rounded-md border border-ek-sand bg-ek-paper px-6 py-7"
+          >
+            <h3 class="mb-[10px] font-condensed text-xl font-bold uppercase text-ek-700">
+              {c.title}
+            </h3>
+            <p class="text-[0.96rem] text-ek-muted">{c.text}</p>
           </div>
-        </div>
-      )
-    }
+        ))
+      }
+    </div>
+
+    <div class="flex flex-wrap items-center gap-4" data-reveal>
+      {
+        (logos.length > 0 ? logos : Array.from({ length: 5 }, () => null)).map((p) => {
+          const logo = p?.logo?.url ? absoluteUrl(p.logo.url) : null;
+          return (
+            <div class="flex h-16 min-w-[120px] flex-1 items-center justify-center rounded-md border border-dashed border-ek-sand bg-ek-paper px-4 text-[0.82rem] text-[#b6ac95]">
+              {logo ? (
+                <img
+                  src={logo}
+                  alt={p?.logo?.alternativeText ?? p?.name ?? 'Partner logo'}
+                  class="max-h-12 max-w-full object-contain"
+                  loading="lazy"
+                />
+              ) : (
+                <span class="text-center">{p?.name ?? 'Partner logo'}</span>
+              )}
+            </div>
+          );
+        })
+      }
+    </div>
   </div>
 </section>
-
-<style>
-  @keyframes partner-marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
-  }
-
-  .animate-partner-marquee {
-    animation: partner-marquee 35s linear infinite;
-  }
-
-  .animate-partner-marquee:hover {
-    animation-play-state: paused;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .animate-partner-marquee {
-      animation: none;
-    }
-  }
-</style>

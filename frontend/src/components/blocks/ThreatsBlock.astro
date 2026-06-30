@@ -1,0 +1,124 @@
+---
+interface ThreatItem {
+  threatLabel: string;
+  threatText: string | null;
+  answerTitle: string;
+  answerText: string | null;
+}
+
+export interface ThreatsBlockData {
+  eyebrow?: string | null;
+  title?: string | null;
+  lead?: string | null;
+  items?: ThreatItem[] | null;
+}
+
+interface Props {
+  block: ThreatsBlockData;
+}
+
+const { block } = Astro.props;
+
+const defaults: ThreatItem[] = [
+  {
+    threatLabel: 'When the environment shifts',
+    threatText: 'Climate change erodes the land, water, and food our communities rely on.',
+    answerTitle: 'We create conditions for innovation',
+    answerText:
+      'We help communities test, learn, and adapt new ways of growing food, preserving culture, and building climate resilience — so solutions are owned locally.',
+  },
+  {
+    threatLabel: 'When jobs are scarce',
+    threatText: 'A narrow job market leaves capable people without a way to earn.',
+    answerTitle: 'We enable livelihoods & enterprise',
+    answerText:
+      'We teach practical money management and help entrepreneurs build viable businesses — creating new income that doesn’t depend on a limited job market.',
+  },
+  {
+    threatLabel: 'When the world moves online',
+    threatText: 'Many are left behind without the skills to take part safely.',
+    answerTitle: 'We enable digital participation',
+    answerText:
+      'We build the digital literacy and cyber-safety skills people need to navigate the internet with confidence — so no one is left behind.',
+  },
+  {
+    threatLabel: 'When progress is fragile',
+    threatText: 'Change stalls when it depends on too few people.',
+    answerTitle: 'We empower leaders & communities',
+    answerText:
+      'We develop local stewards and build strong organisational foundations — so communities can lead their own change long after external funding ends.',
+  },
+  {
+    threatLabel: 'Because we can’t do this alone',
+    threatText: 'Lasting change needs reach beyond any one organisation.',
+    answerTitle: 'We build partnerships for impact',
+    answerText:
+      'We forge trusted relationships with government ministries and regional funders — so our work reaches every island and achieves true scale.',
+  },
+];
+
+const items: ThreatItem[] =
+  block.items && block.items.length > 0 ? block.items : defaults;
+---
+
+<section
+  id="pillars"
+  class="bg-gradient-to-b from-ek-800 to-ek-900 py-24 text-white"
+>
+  <div class="mx-auto max-w-6xl px-7">
+    <div class="mb-14 max-w-[640px]" data-reveal>
+      <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-lime-bright">
+        {block.eyebrow ?? 'How we adapt'}
+      </span>
+      <h2 class="font-condensed text-4xl font-bold uppercase leading-[1.02] tracking-tight sm:text-5xl">
+        {block.title ?? 'Our roots of empowerment'}
+      </h2>
+    </div>
+
+    <p class="mb-14 max-w-[680px] text-lg text-[#cfe0db]" data-reveal data-reveal-delay="100">
+      {
+        block.lead ? (
+          block.lead
+        ) : (
+          <Fragment>
+            Like the bwabwai, surviving these challenges takes a healthy root system and the ability
+            to adapt. We don’t offer temporary relief — we build the{' '}
+            <strong class="font-semibold text-white">knowledge, skills, and local leadership</strong>{' '}
+            needed to meet each threat at its root. Here’s how each challenge becomes a pathway for
+            growth.
+          </Fragment>
+        )
+      }
+    </p>
+
+    <div class="border-b border-ek-lime/20">
+      {
+        items.map((item, i) => (
+          <div
+            data-reveal
+            data-reveal-delay={i * 80}
+            class="grid grid-cols-[auto_1fr] items-start gap-7 border-t border-ek-lime/20 py-[30px]"
+          >
+            <div class="min-w-[34px] pt-1.5 font-condensed text-base font-semibold text-ek-lime-bright">
+              {String(i + 1).padStart(2, '0')}
+            </div>
+            <div class="grid items-baseline gap-[30px] md:grid-cols-[1fr_1.25fr]">
+              <div class="text-base text-[#8fb0ab]">
+                <b class="mb-1.5 block font-condensed text-[0.8rem] font-semibold uppercase tracking-[0.04em] text-ek-lime-bright">
+                  {item.threatLabel}
+                </b>
+                {item.threatText}
+              </div>
+              <div>
+                <h3 class="mb-[10px] font-condensed text-2xl font-bold uppercase tracking-tight">
+                  {item.answerTitle}
+                </h3>
+                <p class="text-[1.02rem] text-[#c5d6d1]">{item.answerText}</p>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

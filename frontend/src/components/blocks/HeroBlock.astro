@@ -1,7 +1,4 @@
 ---
-import { getCollection } from 'astro:content';
-import { STRAPI_URL } from 'astro:env/server';
-
 export interface HeroBlockData {
   title?: string | null;
   description?: string | null;
@@ -17,231 +14,129 @@ interface Props {
 
 const { block } = Astro.props;
 
-const primaryText = block.primaryButtonText ?? 'Support Us';
-const primaryLink = block.primaryButtonLink ?? '/support-us';
-const secondaryText = block.secondaryButtonText ?? 'Strategy 2026–2030';
-const secondaryLink = block.secondaryButtonLink ?? '/strategy-2026-2030';
-
-const highlights = [
-  { value: '32', label: 'Atolls reached' },
-  { value: '47+', label: 'Programmes' },
-  { value: '11.4K', label: 'Lives touched' },
-];
-
-const latestNews = (await getCollection('news'))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 3);
-
-const formatDate = (d: Date) =>
-  d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-
-const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
+const primaryText = block.primaryButtonText ?? 'Support our work';
+const primaryLink = block.primaryButtonLink ?? '#support';
+const secondaryText = block.secondaryButtonText ?? 'See our 2026–2030 vision';
+const secondaryLink = block.secondaryButtonLink ?? '#future';
 ---
 
-<section class="relative min-h-screen overflow-hidden bg-slate-900 text-white">
-  <div
-    class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(45,212,191,0.25),transparent_55%),radial-gradient(ellipse_at_bottom_right,rgba(190,242,100,0.18),transparent_55%)]"
+<section
+  id="top"
+  class="relative overflow-hidden bg-ek-900 bg-[radial-gradient(1200px_600px_at_75%_-10%,rgba(42,128,137,0.55),transparent_60%),linear-gradient(160deg,var(--color-ek-800)_0%,var(--color-ek-900)_70%)] text-white"
+>
+  <svg
+    class="pointer-events-none absolute -top-[6%] right-[-8%] z-0 w-[600px] opacity-[0.06]"
+    viewBox="0 0 200 200"
     aria-hidden="true"
   >
-  </div>
+    <path d="M100 20c-25 0-45 20-45 50s20 60 45 60 45-30 45-60-20-50-45-50z" fill="#aecb3a" />
+  </svg>
 
-  <div
-    class="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:28px_28px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]"
-    aria-hidden="true"
-  >
-  </div>
-
-  <div
-    class="hero-glow absolute -top-24 right-1/4 h-80 w-80 rounded-full bg-teal-400/15 blur-3xl"
-    aria-hidden="true"
-  >
-  </div>
-  <div
-    class="hero-glow absolute -bottom-32 left-1/3 h-96 w-96 rounded-full bg-lime-300/10 blur-3xl [animation-delay:-4s]"
-    aria-hidden="true"
-  >
-  </div>
-
-  <div
-    class="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(180deg,transparent,rgba(15,23,42,0.85))]"
-    aria-hidden="true"
-  >
-  </div>
-
-  <div class="relative mx-auto grid max-w-7xl gap-10 px-6 pb-12 pt-32 lg:grid-cols-2 lg:items-center lg:gap-12 lg:pb-16 lg:pt-40">
+  <div class="relative z-[2] mx-auto grid max-w-6xl items-center gap-10 px-7 pt-32 pb-0 lg:grid-cols-[1.15fr_0.85fr] lg:pt-40">
     <div>
       <p
         data-reveal
-        class="inline-flex items-center gap-2 rounded-full border border-lime-300/30 bg-lime-300/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-lime-200"
+        class="mb-5 font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-lime-bright"
       >
-        <span class="relative flex h-1.5 w-1.5" aria-hidden="true">
-          <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-lime-300 opacity-75 motion-reduce:hidden"></span>
-          <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-lime-300"></span>
-        </span>
-        Empower Kiribati
+        A locally-led NGO · Kiribati
       </p>
 
       <h1
         data-reveal
-        class="mt-5 font-heading text-4xl font-extrabold leading-tight tracking-tight text-white [transition-delay:80ms] sm:text-5xl lg:text-[2.75rem] xl:text-5xl 2xl:text-6xl"
+        data-reveal-delay="80"
+        class="mb-6 font-condensed text-5xl font-bold uppercase leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl"
       >
         {
           block.title ? (
             block.title
           ) : (
             <Fragment>
-              We foster initiatives<br />
-              that create <span class="bg-gradient-to-r from-lime-300 to-emerald-300 bg-clip-text text-transparent">thriving</span><br />
-              and <span class="bg-gradient-to-r from-teal-300 to-cyan-300 bg-clip-text text-transparent">resilient</span> futures.
+              Cultivating a <em class="not-italic text-ek-lime-bright">Resilient</em> Kiribati
             </Fragment>
           )
         }
       </h1>
 
-      <p data-reveal class="mt-5 max-w-xl text-base text-slate-300 [transition-delay:160ms] sm:text-lg">
+      <p data-reveal data-reveal-delay="160" class="mb-[18px] max-w-[30em] text-lg text-[#cfe0db]">
         {
           block.description ??
-            'Kiribati-led and community-driven — working alongside communities to strengthen resilience, digital trust, and livelihoods across every atoll.'
+            'We help our people gain the leadership, enterprise, and digital skills they need to thrive in a rapidly changing world — and to lead that change themselves.'
         }
       </p>
 
-      <div data-reveal class="mt-8 flex flex-wrap items-center gap-4 [transition-delay:240ms]">
+      <p
+        data-reveal
+        data-reveal-delay="220"
+        class="mb-9 max-w-[34em] border-l-2 border-ek-olive pl-[18px] text-base text-[#9fb9b4]"
+      >
+        For generations, our people have grown the bwabwai in harsh atoll soils — work that has
+        always demanded knowledge, planning, and constant adaptation. Today our communities face the
+        same test, and need new tools to meet it.
+      </p>
+
+      <div data-reveal data-reveal-delay="300" class="flex flex-wrap items-center gap-4">
         <a
           href={primaryLink}
-          class="group inline-flex items-center gap-2 rounded-full bg-lime-300 px-6 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-lime-300/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-lime-400 hover:shadow-xl hover:shadow-lime-300/30"
+          class="inline-flex items-center gap-2 rounded-[2px] bg-ek-lime px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-ek-900 transition-all duration-200 hover:-translate-y-0.5 hover:bg-ek-lime-bright hover:shadow-[0_8px_22px_rgba(174,203,58,0.3)]"
         >
           {primaryText}
-          <span aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-1">→</span>
         </a>
         <a
           href={secondaryLink}
-          class="inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/10"
+          class="inline-flex items-center gap-2 rounded-[2px] border-[1.5px] border-white/35 px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-white transition-colors duration-200 hover:border-ek-lime-bright hover:text-ek-lime-bright"
         >
           {secondaryText}
         </a>
       </div>
-
-      <dl class="mt-10 grid max-w-md grid-cols-3 divide-x divide-white/10">
-        {
-          highlights.map((h, i) => (
-            <div
-              data-reveal
-              class:list={[
-                'px-4 first:pl-0 last:pr-0 before:block before:h-1 before:w-6 before:rounded-full before:bg-lime-300/70',
-                ['[transition-delay:320ms]', '[transition-delay:400ms]', '[transition-delay:480ms]'][i],
-              ]}
-            >
-              <dt
-                class="mt-3 font-display text-3xl font-extrabold text-white"
-                data-countup
-                data-target={h.value}
-              >
-                {h.value}
-              </dt>
-              <dd class="mt-1 text-[11px] font-semibold uppercase tracking-widest text-slate-400">
-                {h.label}
-              </dd>
-            </div>
-          ))
-        }
-      </dl>
     </div>
 
-    <div class="relative" data-reveal>
-      <div
-        class="absolute -inset-3 rounded-[1.75rem] border border-white/10 bg-white/[0.03] -rotate-1"
+    <div
+      class="relative flex min-h-[300px] items-end justify-center lg:min-h-[380px]"
+      data-reveal
+      data-reveal-delay="200"
+    >
+      <svg
+        class="h-auto w-[min(100%,420px)] drop-shadow-[0_20px_40px_rgba(0,0,0,0.35)]"
+        viewBox="0 0 300 340"
         aria-hidden="true"
       >
-      </div>
-
-      <p
-        class="absolute -top-5 right-6 z-10 rotate-3 rounded-full bg-lime-300 px-5 py-2 font-accent text-2xl leading-none text-slate-900 shadow-lg shadow-lime-300/30"
-      >
-        From the ground
-      </p>
-
-      <div
-        class="group relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-gradient-to-br from-teal-700 via-teal-600 to-emerald-700 shadow-2xl shadow-teal-900/40 ring-1 ring-white/15 transition-all duration-500 hover:-translate-y-1 hover:shadow-teal-900/60 sm:aspect-[5/4] lg:aspect-[5/6] xl:aspect-[4/5]"
-        role="img"
-        aria-label="Community gathering on a Kiribati atoll"
-      >
-        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.25),transparent_60%)] transition-transform duration-700 group-hover:scale-110"></div>
-        <div
-          class="absolute inset-0 bg-[repeating-linear-gradient(135deg,rgba(255,255,255,0.04)_0px,rgba(255,255,255,0.04)_2px,transparent_2px,transparent_14px)]"
-          aria-hidden="true"
-        >
-        </div>
-
-        <div class="absolute inset-x-5 bottom-5 rounded-2xl bg-slate-900/70 p-5 backdrop-blur transition-all duration-500 group-hover:bg-slate-900/80 group-hover:translate-y-[-2px]">
-          <p class="font-accent text-2xl leading-none text-lime-300">Latest News</p>
-
-          {
-            latestNews.length === 0 ? (
-              <p class="mt-3 text-xs text-slate-300">Latest news coming soon.</p>
-            ) : (
-              <ul class="mt-4 divide-y divide-white/10">
-                {latestNews.map((item) => (
-                  <li>
-                    <a
-                      href={`/news/${item.id}`}
-                      class="group/item -mx-2 flex items-center gap-3 rounded-lg px-2 py-2.5 transition-colors hover:bg-white/10"
-                    >
-                      {item.data.photo ? (
-                        <img
-                          src={absoluteUrl(item.data.photo.url)}
-                          alt={item.data.photo.alternativeText ?? item.data.title}
-                          class="h-12 w-12 flex-none rounded-md object-cover ring-1 ring-white/10 transition-transform duration-300 group-hover/item:scale-[1.04]"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div
-                          aria-hidden="true"
-                          class="h-12 w-12 flex-none rounded-md bg-gradient-to-br from-teal-600 to-emerald-700 ring-1 ring-white/10"
-                        />
-                      )}
-                      <div class="min-w-0 flex-1">
-                        <p class="line-clamp-2 text-sm font-bold leading-snug text-white transition-colors group-hover/item:text-lime-200">
-                          {item.data.title}
-                        </p>
-                        <time class="mt-1 block text-[11px] font-semibold uppercase tracking-widest text-slate-400">
-                          {formatDate(item.data.date)}
-                        </time>
-                      </div>
-                      <span
-                        aria-hidden="true"
-                        class="text-slate-500 transition-all duration-300 group-hover/item:translate-x-1 group-hover/item:text-lime-300"
-                      >
-                        →
-                      </span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )
-          }
-        </div>
-      </div>
+        <path d="M150 40c-30 0-52 24-52 58s24 64 52 64 52-30 52-64-22-58-52-58z" fill="#f6f4ec" />
+        <path d="M96 60c-30 4-50 28-50 58s26 44 52 40 30-30 26-58-12-44-28-40z" fill="#e9e4d4" />
+        <path d="M204 60c30 4 50 28 50 58s-26 44-52 40-30-30-26-58 12-44 28-40z" fill="#e9e4d4" />
+        <path
+          d="M150 60v95M150 90c-10 8-16 18-20 30M150 90c10 8 16 18 20 30"
+          stroke="#19636d"
+          stroke-width="2.4"
+          fill="none"
+          opacity=".5"
+        />
+        <path d="M150 162v60" stroke="#f6f4ec" stroke-width="6" />
+        <g stroke="#aecb3a" stroke-width="2.4" fill="none">
+          <path d="M150 222c-30 0-50 14-70 36M150 222c30 0 50 14 70 36M150 222c-14 0-22 16-22 44M150 222c14 0 22 16 22 44M150 222v54" />
+        </g>
+        <g fill="#aecb3a">
+          <circle cx="80" cy="262" r="5" /><circle cx="220" cy="262" r="5" />
+          <circle cx="128" cy="270" r="5" /><circle cx="172" cy="270" r="5" />
+          <circle cx="150" cy="280" r="5" />
+          <circle cx="64" cy="276" r="4" /><circle cx="236" cy="276" r="4" />
+        </g>
+      </svg>
     </div>
   </div>
+
+  <svg
+    class="relative z-[2] mt-14 block h-auto w-full"
+    viewBox="0 0 1440 90"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    <path d="M0,40 C240,90 480,0 720,30 C960,60 1200,95 1440,45 L1440,90 L0,90 Z" fill="#f6f4ec" />
+    <path
+      d="M0,40 C240,90 480,0 720,30 C960,60 1200,95 1440,45"
+      fill="none"
+      stroke="#aecb3a"
+      stroke-width="3"
+      opacity=".6"
+    />
+  </svg>
 </section>
-
-<style>
-  .hero-glow {
-    animation: hero-glow-drift 9s ease-in-out infinite alternate;
-  }
-
-  @keyframes hero-glow-drift {
-    from {
-      transform: translate3d(0, 0, 0) scale(1);
-    }
-    to {
-      transform: translate3d(2rem, -1.5rem, 0) scale(1.15);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero-glow {
-      animation: none;
-    }
-  }
-</style>

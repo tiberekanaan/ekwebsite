@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_blocks_impacts",
+  "info": {
+    "displayName": "Impact",
+    "icon": "chartCircle",
+    "description": "Impact section with a repeatable set of headline metrics."
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "metrics": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.impact-metric"
+    }
+  }
+}

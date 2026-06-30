@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_blocks_pillars",
+  "info": {
+    "displayName": "Pillars",
+    "icon": "grid",
+    "description": "Our Work section linking to selected Pillar entries."
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "pillars": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::pillar.pillar"
+    }
+  }
+}

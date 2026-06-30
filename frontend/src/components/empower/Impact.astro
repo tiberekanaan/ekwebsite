@@ -7,29 +7,60 @@ interface Stat {
   icon: string;
 }
 
-const stats: Stat[] = [
+interface ImpactMetric {
+  number: string;
+  label: string;
+  description: string | null;
+}
+
+interface Props {
+  metrics?: ImpactMetric[] | null;
+}
+
+const { metrics } = Astro.props;
+
+// Accent + icon rotate per card; CMS supplies only number/label/description.
+const ACCENTS = ['border-l-lime-400', 'border-l-teal-500', 'border-l-amber-400'];
+const ICONS = [
+  'M3 12h3l2-7 4 14 2-7h7',
+  'M17 20h5v-2a4 4 0 0 0-3-3.87M9 20H4v-2a4 4 0 0 1 3-3.87m6-5.13a4 4 0 1 1-8 0 4 4 0 0 1 8 0Zm6 0a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
+  'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 0v20M2 12h20',
+];
+
+const defaults: Stat[] = [
   {
     value: '47+',
     label: 'Programs Delivered',
     caption: 'Across leadership, enterprise, digital and youth pillars since 2022.',
-    accent: 'border-l-lime-400',
-    icon: 'M3 12h3l2-7 4 14 2-7h7',
+    accent: ACCENTS[0],
+    icon: ICONS[0],
   },
   {
     value: '11,400+',
     label: 'Community Members Reached',
     caption: 'I-Kiribati participants engaged across 32 atolls and outer islands.',
-    accent: 'border-l-teal-500',
-    icon: 'M17 20h5v-2a4 4 0 0 0-3-3.87M9 20H4v-2a4 4 0 0 1 3-3.87m6-5.13a4 4 0 1 1-8 0 4 4 0 0 1 8 0Zm6 0a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
+    accent: ACCENTS[1],
+    icon: ICONS[1],
   },
   {
     value: '$4.2M',
     label: 'Total Project Value',
     caption: 'Mobilised in grants, partner co-investment and community contribution.',
-    accent: 'border-l-amber-400',
-    icon: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 0v20M2 12h20',
+    accent: ACCENTS[2],
+    icon: ICONS[2],
   },
 ];
+
+const stats: Stat[] =
+  metrics && metrics.length > 0
+    ? metrics.map((m, i) => ({
+        value: m.number,
+        label: m.label,
+        caption: m.description ?? '',
+        accent: ACCENTS[i % ACCENTS.length],
+        icon: ICONS[i % ICONS.length],
+      }))
+    : defaults;
 ---
 
 <section class="bg-white">

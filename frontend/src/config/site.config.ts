@@ -50,8 +50,8 @@ export interface SiteConfig {
 }
 
 const siteConfig: SiteConfig = {
-  name: 'Velocity',
-  description: 'A modern website built with Astro and Tailwind CSS',
+  name: 'Empower Kiribati',
+  description: 'Empower Kiribati — building skills, partnerships, and digital participation for communities across Kiribati',
   url: SITE_URL || 'https://example.com',
   ogImage: '/og-default.png',
   author: 'Southwell Media',
@@ -81,7 +81,7 @@ const siteConfig: SiteConfig = {
   // Replace the SVG files there with your own branding
   branding: {
     logo: {
-      alt: 'Velocity',
+      alt: 'Empower Kiribati',
     },
     favicon: {
       href: '/favicon.webp',

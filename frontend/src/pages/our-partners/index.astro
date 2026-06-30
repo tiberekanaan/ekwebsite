@@ -1,5 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
 import { getCollection } from 'astro:content';
 import { STRAPI_URL } from 'astro:env/server';
 
@@ -13,14 +14,12 @@ const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_U
 <Layout
   title="Our Partners"
   description="Organizations and institutions collaborating with Empower Kiribati."
+  floatingHeader
 >
-  <div class="mx-auto max-w-6xl px-6 py-16 lg:py-24">
+  <PageHeader eyebrow="Partners" title="Our Partners" />
+  <div class="mx-auto max-w-6xl px-6 py-12">
     <header class="mb-16 max-w-3xl">
-      <p class="mb-3 font-accent text-3xl leading-none text-slate-700">Partners</p>
-      <h1 class="font-display text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-        Our <span class="text-teal-700">Partners</span>
-      </h1>
-      <div class="mt-6 space-y-5 text-base leading-relaxed text-slate-700 sm:text-lg">
+      <div class="space-y-5 text-base leading-relaxed text-slate-700 sm:text-lg">
         <p>
           No single organization can meet the scale of challenges facing Kiribati alone —
           especially across a nation of scattered atolls where resources, services, and

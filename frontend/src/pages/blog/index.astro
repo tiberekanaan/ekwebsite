@@ -1,5 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blogs')).sort((a, b) => {
@@ -14,16 +15,13 @@ const formatDate = (d?: Date | null) =>
     : '';
 ---
 
-<Layout title="Blog" description="Latest articles and updates">
-  <div class="mx-auto max-w-4xl px-6 py-16">
-    <header class="mb-12">
-      <p class="mb-3 font-accent text-3xl leading-none text-slate-700">Blog</p>
-      <h1 class="font-display text-foreground mb-3 text-4xl font-bold">
-        Latest <span class="text-teal-700">articles</span>
-      </h1>
-      <p class="text-foreground-muted">Stories, updates, and reflections from the team.</p>
-    </header>
-
+<Layout title="Blog" description="Latest articles and updates" floatingHeader>
+  <PageHeader
+    eyebrow="Blog"
+    title="Latest articles"
+    description="Stories, updates, and reflections from the team."
+  />
+  <div class="mx-auto max-w-4xl px-6 py-12">
     {
       posts.length === 0 ? (
         <p class="text-foreground-muted py-16 text-center">No posts yet.</p>
