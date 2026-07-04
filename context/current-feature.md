@@ -1,25 +1,39 @@
 # Current Feature
 
-**Feature:** Automated Content Seeding for the Homepage
+**Feature:** Landing page design fixes (design-first pass, dummy content)
 
 ## Status
-- The `Homepage` Single Type schema is ready with dynamic zones (`blocks.hero`, `blocks.threats`, etc.).
-- Content is ready in the "Cultivating Resilience" narrative, but the database is currently empty.
-- We need to programmatically import this content into Strapi using a seeder script rather than manual data entry.
+- Full design review of the landing page done (desktop + mobile screenshots, all 8 block components).
+- Content is not built out yet — this pass focuses on **design only**, using realistic dummy text/imagery in the placeholders.
+- After the design is agreed, a follow-up feature will wire every element (headings, hero button, image, impact metrics, etc.) to Strapi so they're CMS-editable.
 
 ## Goals
-1. **Content Extraction:** Read the `Cultivating Resilience_ The Bwabwai Strategy Narrative.pdf` (or the provided HTML design file) and extract the narrative text for the Hero section, the Threats section (including the 4 bullet points), and the Pillars section.
-2. **Script Creation:** Create a Node.js script in the `backend/` folder (e.g., `seed-homepage.js`). 
-3. **API Integration:** The script should use the native `fetch` API to send a `PUT` request to `http://localhost:1337/api/homepage`. Construct the JSON payload mapping the extracted text to the `blocks` dynamic zone array (containing the `blocks.hero`, `blocks.threats`, and `blocks.pillars` components).
-4. **Execution:** Execute the script using the local `.env` file's `STRAPI_API_TOKEN` to authenticate and inject the content directly into the Strapi 5 database.
+1. **No-JS fix:** `Motion.astro` hides all `[data-reveal]` content via static CSS — add a `<noscript>` override so the page isn't blank without JS.
+2. **Dead/circular CTAs:** navbar "Build your skills" → `/our-programs` (was dead `#build-your-skills`); hero "Support our work" and Future's button → `/contact` (was a `#support` ↔ `#top` loop).
+3. **ThreatsBlock:** render the unused `threatText` field — restructure rows as threat (label + text) → answer (title + text) → Read More.
+4. **ChallengesBlock:** remove `line-clamp-3` so captions no longer truncate mid-sentence.
+5. **ImpactBlock:** redesign stat cards around a big animated number (`data-countup`, dummy metrics) instead of a badge-only card.
+6. **TestimonialsBlock:** replace scaffold placeholders ("Name · island", "To be added once gathered") with realistic dummy voices + initials avatars; center the intro for section rhythm; add img width/height (CLS).
+7. **PartnersBlock:** replace dashed "Partner logo" boxes with polished text-chip dummy logos.
+8. **PillarsBlock:** re-tint accents from off-brand emerald/blue/orange/purple to the ek palette (block stays available to the CMS zone; not on the page yet).
+9. **HeroBlock:** replace the abstract SVG plant with a designed photo-slot card (awaiting real photography).
 
+### Design refresh (second pass)
+10. **ThreatsBlock → tabs:** replace the long 5-row list with an accessible tab interface (roving tabindex, arrow keys, `aria-selected`); each panel pairs a dark "The threat" card (amber accent) with a paper "Our answer" card (lime accent) + per-pillar CTA. All panels stack when JS is off.
+11. **Coherent story chrome:** numbered journey eyebrows (`01 ·` … `06 ·`) across sections, a lime→teal gradient tick under every section heading, pill-shaped buttons matching the navbar CTA.
+12. **Vibrancy accents:** amber "threat" identity on Challenges (icon chips + numbers), gradient countup numbers + marker-highlighted pull quote on Impact, hover lifts on Voices/Partner cards.
 
-
+### Design refresh (third pass — per screenshot feedback)
+13. **Wave dividers removed** (hero exit + Future top) — sections now meet on clean straight edges. Full-viewport hero (`min-h-svh`).
+14. **Hero card = plain image**: chip/badge/caption chrome stripped; swap `src/assets/images/hero-placeholder.png` (same filename) for the real photo.
+15. **Playfair Display headings**: added via Astro Fonts API (`--font-playfair` in `astro.config.mjs` + `<Font>` in `BaseLayout`), exposed as `--font-serif`/`font-serif`; applied to h1/h2/h3 across all blocks, mixed-case (uppercase removed per feedback). Eyebrows, buttons, numbers, and timeline chrome stay Saira Condensed. Gradient text on hero h1, all h2s, and Future's closing statement.
+16. **Gotcha fixed:** dev-server `_image` 500s ("Could not find Sharp") after restarting servers — resolved by `npm install sharp` + dev restart. Start Strapi *before* Astro: the content loader crashes on a refused connection.
 
 ## Notes
 
-- Hero already had fully staggered `[transition-delay:*]` reveals — left untouched.
-- `Motion.astro` keeps powering everything; no new scripts or libraries.
+- Homepage renders 7 Strapi dynamic-zone blocks; `blocks.pillars` is not in the zone (PillarsBlock is dormant, kept for editors).
+- Empty-state hiding for Testimonials/Partners is deliberately deferred to the backend-wiring phase — dummy content is wanted now to judge the design.
+- Component naming is inverted vs. content (`ChallengesBlock` shows "threats", `ThreatsBlock` shows the answers) — renaming deferred; tied to Strapi `blocks.*` keys.
 
 ## History
 

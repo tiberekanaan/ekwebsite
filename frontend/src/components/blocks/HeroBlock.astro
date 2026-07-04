@@ -1,4 +1,9 @@
 ---
+import { Image } from 'astro:assets';
+// Placeholder photography — overwrite this file with the real hero photo
+// (same path/filename) and update the alt text below.
+import heroPhoto from '@/assets/images/hero-placeholder.png';
+
 export interface HeroBlockData {
   title?: string | null;
   description?: string | null;
@@ -15,14 +20,14 @@ interface Props {
 const { block } = Astro.props;
 
 const primaryText = block.primaryButtonText ?? 'Support our work';
-const primaryLink = block.primaryButtonLink ?? '#support';
+const primaryLink = block.primaryButtonLink ?? '/contact';
 const secondaryText = block.secondaryButtonText ?? 'See our 2026–2030 vision';
 const secondaryLink = block.secondaryButtonLink ?? '#future';
 ---
 
 <section
   id="top"
-  class="relative overflow-hidden bg-ek-900 bg-[radial-gradient(1200px_600px_at_75%_-10%,rgba(42,128,137,0.55),transparent_60%),linear-gradient(160deg,var(--color-ek-800)_0%,var(--color-ek-900)_70%)] text-white"
+  class="relative flex min-h-svh flex-col overflow-hidden bg-ek-900 bg-[radial-gradient(1200px_600px_at_75%_-10%,rgba(42,128,137,0.55),transparent_60%),linear-gradient(160deg,var(--color-ek-800)_0%,var(--color-ek-900)_70%)] text-white"
 >
   <svg
     class="pointer-events-none absolute -top-[6%] right-[-8%] z-0 w-[600px] opacity-[0.06]"
@@ -32,7 +37,7 @@ const secondaryLink = block.secondaryButtonLink ?? '#future';
     <path d="M100 20c-25 0-45 20-45 50s20 60 45 60 45-30 45-60-20-50-45-50z" fill="#aecb3a" />
   </svg>
 
-  <div class="relative z-[2] mx-auto grid max-w-6xl items-center gap-10 px-7 pt-32 pb-0 lg:grid-cols-[1.15fr_0.85fr] lg:pt-40">
+  <div class="relative z-[2] mx-auto grid w-full max-w-6xl flex-1 items-center gap-10 px-7 pt-28 pb-8 lg:grid-cols-[1.15fr_0.85fr] lg:pt-32">
     <div>
       <p
         data-reveal
@@ -44,7 +49,7 @@ const secondaryLink = block.secondaryButtonLink ?? '#future';
       <h1
         data-reveal
         data-reveal-delay="80"
-        class="mb-6 font-condensed text-5xl font-bold uppercase leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl"
+        class="mb-6 bg-gradient-to-br from-white via-white to-ek-lime-bright bg-clip-text font-serif text-5xl font-bold leading-[1.06] text-transparent sm:text-6xl lg:text-7xl"
       >
         {
           block.title ? (
@@ -77,66 +82,33 @@ const secondaryLink = block.secondaryButtonLink ?? '#future';
       <div data-reveal data-reveal-delay="300" class="flex flex-wrap items-center gap-4">
         <a
           href={primaryLink}
-          class="inline-flex items-center gap-2 rounded-[2px] bg-ek-lime px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-ek-900 transition-all duration-200 hover:-translate-y-0.5 hover:bg-ek-lime-bright hover:shadow-[0_8px_22px_rgba(174,203,58,0.3)]"
+          class="inline-flex items-center gap-2 rounded-full bg-ek-lime px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-ek-900 transition-all duration-200 hover:-translate-y-0.5 hover:bg-ek-lime-bright hover:shadow-[0_8px_22px_rgba(174,203,58,0.3)]"
         >
           {primaryText}
         </a>
         <a
           href={secondaryLink}
-          class="inline-flex items-center gap-2 rounded-[2px] border-[1.5px] border-white/35 px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-white transition-colors duration-200 hover:border-ek-lime-bright hover:text-ek-lime-bright"
+          class="inline-flex items-center gap-2 rounded-full border-[1.5px] border-white/35 px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-white transition-colors duration-200 hover:border-ek-lime-bright hover:text-ek-lime-bright"
         >
           {secondaryText}
         </a>
       </div>
     </div>
 
-    <div
-      class="relative flex min-h-[300px] items-end justify-center lg:min-h-[380px]"
-      data-reveal
-      data-reveal-delay="200"
-    >
-      <svg
-        class="h-auto w-[min(100%,420px)] drop-shadow-[0_20px_40px_rgba(0,0,0,0.35)]"
-        viewBox="0 0 300 340"
-        aria-hidden="true"
-      >
-        <path d="M150 40c-30 0-52 24-52 58s24 64 52 64 52-30 52-64-22-58-52-58z" fill="#f6f4ec" />
-        <path d="M96 60c-30 4-50 28-50 58s26 44 52 40 30-30 26-58-12-44-28-40z" fill="#e9e4d4" />
-        <path d="M204 60c30 4 50 28 50 58s-26 44-52 40-30-30-26-58 12-44 28-40z" fill="#e9e4d4" />
-        <path
-          d="M150 60v95M150 90c-10 8-16 18-20 30M150 90c10 8 16 18 20 30"
-          stroke="#19636d"
-          stroke-width="2.4"
-          fill="none"
-          opacity=".5"
+    {/* Plain photo slot — overwrite src/assets/images/hero-placeholder.png with
+        the real photo (same filename) and set a meaningful alt text. */}
+    <div class="relative hidden justify-center pb-4 lg:flex" data-reveal data-reveal-delay="200">
+      <div class="relative aspect-[4/5] w-[min(100%,400px)] overflow-hidden rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.4)] ring-1 ring-white/15">
+        <Image
+          src={heroPhoto}
+          alt=""
+          widths={[400, 800]}
+          sizes="(min-width: 1024px) 400px, 100vw"
+          class="absolute inset-0 h-full w-full object-cover"
+          loading="eager"
         />
-        <path d="M150 162v60" stroke="#f6f4ec" stroke-width="6" />
-        <g stroke="#aecb3a" stroke-width="2.4" fill="none">
-          <path d="M150 222c-30 0-50 14-70 36M150 222c30 0 50 14 70 36M150 222c-14 0-22 16-22 44M150 222c14 0 22 16 22 44M150 222v54" />
-        </g>
-        <g fill="#aecb3a">
-          <circle cx="80" cy="262" r="5" /><circle cx="220" cy="262" r="5" />
-          <circle cx="128" cy="270" r="5" /><circle cx="172" cy="270" r="5" />
-          <circle cx="150" cy="280" r="5" />
-          <circle cx="64" cy="276" r="4" /><circle cx="236" cy="276" r="4" />
-        </g>
-      </svg>
+      </div>
     </div>
   </div>
 
-  <svg
-    class="relative z-[2] mt-14 block h-auto w-full"
-    viewBox="0 0 1440 90"
-    preserveAspectRatio="none"
-    aria-hidden="true"
-  >
-    <path d="M0,40 C240,90 480,0 720,30 C960,60 1200,95 1440,45 L1440,90 L0,90 Z" fill="#f6f4ec" />
-    <path
-      d="M0,40 C240,90 480,0 720,30 C960,60 1200,95 1440,45"
-      fill="none"
-      stroke="#aecb3a"
-      stroke-width="3"
-      opacity=".6"
-    />
-  </svg>
 </section>

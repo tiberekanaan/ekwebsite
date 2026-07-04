@@ -23,35 +23,34 @@ interface Voice {
   name: string;
   role: string;
   image: { url: string; alternativeText?: string | null } | null;
-  placeholder: boolean;
 }
 
 const { block } = Astro.props;
 
 const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
 
+// Dummy voices for the design pass — replaced by real testimonials from the CMS.
 const defaults: Voice[] = [
   {
-    quote: 'A real change in a participant’s words — a new skill, income, or confidence gained.',
-    name: 'Community participant',
-    role: 'Name · island',
+    quote:
+      'The budgeting course changed how I run my canteen. For the first time I know my numbers — and the business is feeding my family.',
+    name: 'Teretia',
+    role: 'Small business owner · South Tarawa',
     image: null,
-    placeholder: true,
-  },
-  {
-    quote: 'A partner’s words on working with us — reliability, alignment, and shared value.',
-    name: 'Partner / ministry',
-    role: 'Name · role',
-    image: null,
-    placeholder: true,
   },
   {
     quote:
-      'A local leader’s words on growth, ownership, and leading change in their community.',
-    name: 'Local leader',
-    role: 'Name · programme',
+      'They came to co-design with us, not to hand over a finished plan. That is why our council trusts this partnership.',
+    name: 'Ioane',
+    role: 'Island council member · Abaiang',
     image: null,
-    placeholder: true,
+  },
+  {
+    quote:
+      'I joined as a participant. Now I run the digital-safety sessions for my own village.',
+    name: 'Ruta',
+    role: 'Volunteer facilitator · Betio',
+    image: null,
   },
 ];
 
@@ -62,23 +61,24 @@ const voices: Voice[] =
         name: t.author,
         role: t.role ?? '',
         image: t.image ?? null,
-        placeholder: false,
       }))
     : defaults;
 ---
 
 <section id="voices" class="bg-ek-paper py-24">
   <div class="mx-auto max-w-6xl px-7">
-    <div class="mb-14 max-w-[640px]" data-reveal>
+    {/* Centered intro — intentional break from the left-aligned section rhythm. */}
+    <div class="mx-auto mb-14 max-w-[640px] text-center" data-reveal>
       <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
-        {block.eyebrow ?? 'In their words'}
+        04 · {block.eyebrow ?? 'In their words'}
       </span>
-      <h2 class="mb-[18px] font-condensed text-4xl font-bold uppercase leading-[1.02] tracking-tight text-ek-800 sm:text-5xl">
+      <h2 class="mb-4 font-serif text-4xl font-bold leading-[1.08] sm:text-5xl bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text text-transparent">
         {block.title ?? 'Voices from our communities'}
       </h2>
+      <span class="mx-auto mb-5 block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500" aria-hidden="true"></span>
       <p class="text-lg text-ek-muted">
-        The best measure of our work is what people say about it. These voices will be drawn from
-        the communities, partners, and leaders we work alongside.
+        The best measure of our work is what people say about it — the communities, partners, and
+        leaders we work alongside.
       </p>
     </div>
 
@@ -90,7 +90,7 @@ const voices: Voice[] =
             <article
               data-reveal
               data-reveal-delay={i * 100}
-              class="rounded-md border border-ek-sand bg-white px-7 py-[30px]"
+              class="rounded-2xl border border-ek-sand bg-white px-7 py-[30px] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_38px_rgba(15,50,58,0.08)]"
             >
               <p class="mb-[22px] text-[1.05rem] text-ek-ink">
                 <span class="mr-1 font-condensed text-5xl leading-[0] text-ek-lime align-middle" aria-hidden="true">
@@ -103,22 +103,17 @@ const voices: Voice[] =
                   <img
                     src={imgUrl}
                     alt={v.image?.alternativeText ?? v.name}
+                    width="42"
+                    height="42"
                     class="h-[42px] w-[42px] flex-none rounded-full object-cover"
                     loading="lazy"
                   />
                 ) : (
-                  <div class="flex h-[42px] w-[42px] flex-none items-center justify-center rounded-full bg-ek-sand text-ek-600">
-                    <svg
-                      viewBox="0 0 24 24"
-                      width="20"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.6"
-                      aria-hidden="true"
-                    >
-                      <circle cx="12" cy="8" r="4" />
-                      <path d="M4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1" />
-                    </svg>
+                  <div
+                    class="flex h-[42px] w-[42px] flex-none items-center justify-center rounded-full bg-ek-600 font-condensed text-lg font-bold text-white"
+                    aria-hidden="true"
+                  >
+                    {v.name.charAt(0).toUpperCase()}
                   </div>
                 )}
                 <div>
@@ -128,9 +123,6 @@ const voices: Voice[] =
                   {v.role && <div class="text-[0.85rem] text-ek-muted">{v.role}</div>}
                 </div>
               </div>
-              {v.placeholder && (
-                <p class="mt-[14px] text-[0.85rem] italic text-ek-olive">To be added once gathered</p>
-              )}
             </article>
           );
         })

@@ -113,8 +113,11 @@
   --color-ek-ink: #15323a;
   --color-ek-muted: #54666c;
 
-  /* Saira Condensed — landing display face (self-hosted via Astro Fonts) */
+  /* Saira Condensed — landing UI chrome face (self-hosted via Astro Fonts) */
   --font-condensed: var(--font-saira), 'Inter', sans-serif;
+
+  /* Playfair Display — landing heading face (self-hosted via Astro Fonts) */
+  --font-serif: var(--font-playfair), 'Playfair Display', Georgia, serif;
 
   /* Font Sizes - matches original design scale */
   --font-size-xs: 0.75rem;     /* 12px */

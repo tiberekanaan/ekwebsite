@@ -123,6 +123,12 @@ export default defineConfig({
       cssVariable: '--font-saira',
       weights: [500, 600, 700],
     },
+    {
+      provider: fontProviders.google(),
+      name: 'Playfair Display',
+      cssVariable: '--font-playfair',
+      weights: [500, 600, 700, 800],
+    },
   ],
 
   adapter: node({ mode: 'standalone' }),

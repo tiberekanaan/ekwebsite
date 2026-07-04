@@ -55,18 +55,19 @@ const timeline = [
 ];
 
 const buttonText = block.buttonText ?? 'Support our work';
-const buttonLink = block.buttonLink ?? '#top';
+const buttonLink = block.buttonLink ?? '/contact';
 ---
 
 <section id="future" class="bg-gradient-to-b from-ek-900 to-ek-800 py-24 text-white">
   <div class="mx-auto max-w-6xl px-7">
     <div class="mb-14 max-w-[640px]" data-reveal>
       <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-lime-bright">
-        {block.eyebrow ?? 'The road ahead'}
+        06 · {block.eyebrow ?? 'The road ahead'}
       </span>
-      <h2 class="mb-[18px] font-condensed text-4xl font-bold uppercase leading-[1.02] tracking-tight sm:text-5xl">
+      <h2 class="mb-4 bg-gradient-to-r from-white to-ek-lime-bright bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl">
         {block.title ?? 'Where we’re heading'}
       </h2>
+      <span class="mb-5 block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500" aria-hidden="true"></span>
       <p class="text-lg text-[#b9cdc8]">
         {
           block.description ??
@@ -100,12 +101,12 @@ const buttonLink = block.buttonLink ?? '#top';
       class="mt-[60px] flex flex-wrap items-center justify-between gap-[30px] border-t border-ek-lime/20 pt-10"
       data-reveal
     >
-      <p class="max-w-[18em] font-condensed text-2xl font-semibold uppercase leading-[1.1] sm:text-3xl">
+      <p class="max-w-[18em] bg-gradient-to-r from-white to-ek-lime-bright bg-clip-text font-condensed text-2xl font-semibold uppercase leading-[1.1] text-transparent sm:text-3xl">
         Together, we can grow a stronger, more resilient future for Kiribati.
       </p>
       <a
         href={buttonLink}
-        class="inline-flex items-center gap-2 rounded-[2px] bg-ek-lime px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-ek-900 transition-all duration-200 hover:-translate-y-0.5 hover:bg-ek-lime-bright hover:shadow-[0_8px_22px_rgba(174,203,58,0.3)]"
+        class="inline-flex items-center gap-2 rounded-full bg-ek-lime px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-ek-900 transition-all duration-200 hover:-translate-y-0.5 hover:bg-ek-lime-bright hover:shadow-[0_8px_22px_rgba(174,203,58,0.3)]"
       >
         {buttonText}
       </a>
