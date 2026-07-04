@@ -54,17 +54,20 @@ const track = [
 ];
 ---
 
-<section id="impact" class="bg-ek-sand py-24">
+<section
+  id="impact"
+  class="bg-ek-900 bg-[radial-gradient(1000px_500px_at_80%_-10%,rgba(42,128,137,0.45),transparent_60%)] py-24 text-white"
+>
   <div class="mx-auto max-w-6xl px-7">
     <div class="mb-14 max-w-[640px]" data-reveal>
-      <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
+      <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-lime-bright">
         03 · {block.eyebrow ?? 'The harvest'}
       </span>
-      <h2 class="mb-4 font-serif text-4xl font-bold leading-[1.08] sm:text-5xl bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text text-transparent">
+      <h2 class="mb-4 font-serif text-4xl font-bold leading-[1.08] sm:text-5xl bg-gradient-to-br from-white via-white to-ek-lime-bright bg-clip-text text-transparent">
         {block.title ?? 'The change we’re growing'}
       </h2>
       <span class="mb-5 block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500" aria-hidden="true"></span>
-      <p class="text-lg text-ek-muted">
+      <p class="text-lg text-[#cfe0db]">
         {
           block.description ??
             'We measure real change, not just activity. As our programmes take root from 2026 onward, this is the evidence we hold ourselves to.'
@@ -73,11 +76,11 @@ const track = [
     </div>
 
     <p
-      class="mb-12 max-w-[780px] font-condensed text-2xl font-semibold uppercase leading-[1.15] text-ek-800 sm:text-3xl"
+      class="mb-12 max-w-[780px] font-condensed text-2xl font-semibold uppercase leading-[1.15] text-white sm:text-3xl"
       data-reveal
     >
       Our aim is for communities to know us not as a one-off service, but as a{' '}
-      <mark class="bg-ek-lime/40 px-1 text-ek-800">lasting partner for change</mark>.
+      <mark class="bg-ek-lime/25 px-1 text-ek-lime-bright">lasting partner for change</mark>.
     </p>
 
     <div class="mb-12 grid gap-[18px] sm:grid-cols-2 lg:grid-cols-4">
@@ -86,19 +89,19 @@ const track = [
           <div
             data-reveal
             data-reveal-delay={i * 100}
-            class="rounded-2xl border-b-[3px] border-ek-lime bg-white px-6 py-7 transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(15,50,58,0.08)]"
+            class="rounded-2xl border-b-[3px] border-ek-lime bg-white/[0.06] px-6 py-7 ring-1 ring-white/10 transition-all duration-200 hover:-translate-y-1 hover:bg-white/10 hover:shadow-[0_12px_30px_rgba(174,203,58,0.15)]"
           >
-            <span class="mb-1.5 inline-block rounded-[3px] bg-ek-olive/10 px-2 py-[3px] font-condensed text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-ek-olive">
+            <span class="mb-1.5 inline-block rounded-[3px] bg-ek-lime/15 px-2 py-[3px] font-condensed text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-ek-lime-bright">
               {s.badge}
             </span>
             <div
-              class="mt-3 bg-gradient-to-r from-ek-600 to-ek-olive bg-clip-text font-condensed text-5xl font-bold leading-none tracking-tight text-transparent"
+              class="mt-3 bg-gradient-to-br from-white to-ek-lime-bright bg-clip-text font-condensed text-5xl font-bold leading-none tracking-tight text-transparent"
               data-countup
               data-target={s.number}
             >
               {s.number}
             </div>
-            <div class="mt-2.5 text-[0.96rem] text-ek-muted">{s.label}</div>
+            <div class="mt-2.5 text-[0.96rem] text-[#9fb9b4]">{s.label}</div>
           </div>
         ))
       }
@@ -107,9 +110,9 @@ const track = [
     <div class="grid max-w-[880px] gap-x-9 gap-y-[14px] sm:grid-cols-2" data-reveal>
       {
         track.map((t) => (
-          <div class="flex gap-3 text-[1.02rem] text-ek-ink">
+          <div class="flex gap-3 text-[1.02rem] text-[#cfe0db]">
             <svg
-              class="mt-[3px] h-[22px] w-[22px] flex-none text-ek-olive"
+              class="mt-[3px] h-[22px] w-[22px] flex-none text-ek-lime"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"

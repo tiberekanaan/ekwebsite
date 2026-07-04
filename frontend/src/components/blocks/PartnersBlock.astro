@@ -52,7 +52,7 @@ const categories = [
 ];
 ---
 
-<section id="partners" class="border-t border-ek-sand bg-white py-24">
+<section id="partners" class="border-t border-ek-700/10 bg-white py-24">
   <div class="mx-auto max-w-6xl px-7">
     <div class="mb-14 max-w-[640px]" data-reveal>
       <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
@@ -74,7 +74,7 @@ const categories = [
           <div
             data-reveal
             data-reveal-delay={i * 100}
-            class="rounded-2xl border border-ek-sand bg-ek-paper px-6 py-7 transition-all duration-200 hover:-translate-y-1 hover:border-ek-olive/40 hover:shadow-[0_12px_30px_rgba(15,50,58,0.08)]"
+            class="rounded-2xl border border-ek-700/10 bg-ek-mist/60 px-6 py-7 transition-all duration-200 hover:-translate-y-1 hover:border-ek-500/40 hover:shadow-[0_12px_30px_rgba(15,50,58,0.08)]"
           >
             <h3 class="mb-[10px] font-serif text-xl font-bold text-ek-700">
               {c.title}
@@ -90,7 +90,7 @@ const categories = [
         (logos.length > 0 ? logos : dummyLogos).map((p) => {
           const logo = p.logo?.url ? absoluteUrl(p.logo.url) : null;
           return (
-            <div class="flex h-16 min-w-[150px] flex-1 items-center justify-center rounded-md border border-ek-sand bg-ek-paper px-5 transition-colors duration-200 hover:border-ek-olive/40">
+            <div class="flex h-16 min-w-[150px] flex-1 items-center justify-center rounded-md border border-ek-700/10 bg-ek-mist/60 px-5 transition-colors duration-200 hover:border-ek-500/40">
               {logo ? (
                 <img
                   src={logo}

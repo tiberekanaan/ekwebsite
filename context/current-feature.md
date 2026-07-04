@@ -1,39 +1,20 @@
 # Current Feature
 
-**Feature:** Landing page design fixes (design-first pass, dummy content)
+**Feature:** Vibrant alternating section backgrounds on the landing page
 
 ## Status
-- Full design review of the landing page done (desktop + mobile screenshots, all 8 block components).
-- Content is not built out yet — this pass focuses on **design only**, using realistic dummy text/imagery in the placeholders.
-- After the design is agreed, a follow-up feature will wire every element (headings, hero button, image, impact metrics, etc.) to Strapi so they're CMS-editable.
+- In progress on branch `feature/landing-vibrant-bg`.
 
 ## Goals
-1. **No-JS fix:** `Motion.astro` hides all `[data-reveal]` content via static CSS — add a `<noscript>` override so the page isn't blank without JS.
-2. **Dead/circular CTAs:** navbar "Build your skills" → `/our-programs` (was dead `#build-your-skills`); hero "Support our work" and Future's button → `/contact` (was a `#support` ↔ `#top` loop).
-3. **ThreatsBlock:** render the unused `threatText` field — restructure rows as threat (label + text) → answer (title + text) → Read More.
-4. **ChallengesBlock:** remove `line-clamp-3` so captions no longer truncate mid-sentence.
-5. **ImpactBlock:** redesign stat cards around a big animated number (`data-countup`, dummy metrics) instead of a badge-only card.
-6. **TestimonialsBlock:** replace scaffold placeholders ("Name · island", "To be added once gathered") with realistic dummy voices + initials avatars; center the intro for section rhythm; add img width/height (CLS).
-7. **PartnersBlock:** replace dashed "Partner logo" boxes with polished text-chip dummy logos.
-8. **PillarsBlock:** re-tint accents from off-brand emerald/blue/orange/purple to the ek palette (block stays available to the CMS zone; not on the page yet).
-9. **HeroBlock:** replace the abstract SVG plant with a designed photo-slot card (awaiting real photography).
-
-### Design refresh (second pass)
-10. **ThreatsBlock → tabs:** replace the long 5-row list with an accessible tab interface (roving tabindex, arrow keys, `aria-selected`); each panel pairs a dark "The threat" card (amber accent) with a paper "Our answer" card (lime accent) + per-pillar CTA. All panels stack when JS is off.
-11. **Coherent story chrome:** numbered journey eyebrows (`01 ·` … `06 ·`) across sections, a lime→teal gradient tick under every section heading, pill-shaped buttons matching the navbar CTA.
-12. **Vibrancy accents:** amber "threat" identity on Challenges (icon chips + numbers), gradient countup numbers + marker-highlighted pull quote on Impact, hover lifts on Voices/Partner cards.
-
-### Design refresh (third pass — per screenshot feedback)
-13. **Wave dividers removed** (hero exit + Future top) — sections now meet on clean straight edges. Full-viewport hero (`min-h-svh`).
-14. **Hero card = plain image**: chip/badge/caption chrome stripped; swap `src/assets/images/hero-placeholder.png` (same filename) for the real photo.
-15. **Playfair Display headings**: added via Astro Fonts API (`--font-playfair` in `astro.config.mjs` + `<Font>` in `BaseLayout`), exposed as `--font-serif`/`font-serif`; applied to h1/h2/h3 across all blocks, mixed-case (uppercase removed per feedback). Eyebrows, buttons, numbers, and timeline chrome stay Saira Condensed. Gradient text on hero h1, all h2s, and Future's closing statement.
-16. **Gotcha fixed:** dev-server `_image` 500s ("Could not find Sharp") after restarting servers — resolved by `npm install sharp` + dev restart. Start Strapi *before* Astro: the content loader crashes on a refused connection.
+1. Keep the alternating light/dark section rhythm but recolor it so text pops: dark hero → **seafoam** Challenges → white Threats → **deep-teal dark Impact** → **seafoam** Testimonials → white Partners → dark Future (symmetric dark bookends + dark centerpiece).
+2. New `--color-ek-mist` token (vibrant cool seafoam) replaces the muted warm `ek-paper`/`ek-sand` section washes on Challenges, Testimonials (and dormant Pillars); card hairlines on those sections switch from warm `border-ek-sand` to cool `border-ek-700/10`.
+3. **ImpactBlock goes dark**: `ek-900` panel with a radial teal glow, white/lime type, glass stat cards (`bg-white/5` + lime underline), white→lime gradient countup numbers, lime marker highlight — the section the numbers deserve.
+4. Partners stays white but its top border and logo chips re-tint from warm paper/sand to the new cool mist so the whole page reads as one palette.
 
 ## Notes
 
-- Homepage renders 7 Strapi dynamic-zone blocks; `blocks.pillars` is not in the zone (PillarsBlock is dormant, kept for editors).
-- Empty-state hiding for Testimonials/Partners is deliberately deferred to the backend-wiring phase — dummy content is wanted now to judge the design.
-- Component naming is inverted vs. content (`ChallengesBlock` shows "threats", `ThreatsBlock` shows the answers) — renaming deferred; tied to Strapi `blocks.*` keys.
+- Hero, Threats, and Future backgrounds are untouched; ThreatsBlock's paper "Our answer" card keeps its deliberate paper identity.
+- `ek-paper`/`ek-sand` tokens stay defined — still used by ThreatsBlock and inner pages.
 
 ## History
 
@@ -56,3 +37,4 @@
 - 2026-06-12 — **Staggered landing-page reveal transitions**. `Motion.astro` gained a `data-reveal-delay` attribute — the stagger is applied as an inline `transition-delay` only for the reveal and cleared on `transitionend`, so `transition-all` hover effects on the same cards stay instant (skipped under `prefers-reduced-motion`). Card grids in `Challenges`/`OurWork`/`Future` cascade at 100ms steps and `Impact` at 120ms; previously un-animated section intro paragraphs, the Testimonial header + nav buttons, the Partner header/"All partners" link, the partner marquee, and the Future image card joined the `data-reveal` system. Hero was already fully staggered via `[transition-delay:*]` classes — untouched (except the image-card badge copy: "Kiribati-led" → "From the ground", committed separately). Branch `feature/landing-transitions` merged to `main` and deleted.
 - 2026-06-12 — **Content i18n with Kiribati language toggle**. Strapi: `resource` + `project` schemas localized (`pluginOptions.i18n.localized` at type level and on `title`/`description`/`content_blocks` resp. `title`/`description`/`objectives`/`location`/`metrics`; image, status, relations stay shared). Strapi's ISO list has no Gilbertese (`gil`) so the Kiribati locale is stored as `en-KI` ("Kiribati (Gilbertese)") and exposed in URLs as `?lang=kir` — mapping in `frontend/src/lib/i18n.ts`. Bootstrap seeds the locale idempotently and adds `resource`/`project` `find`/`findOne` to Public-role seeding (findOne was never granted; detail pages now call it at runtime). Frontend: `resources/[id].astro` + `projects/[slug].astro` switched to `prerender = false` (query params need SSR), fetch by `documentId` with `?locale=…&populate[localizations]=true`, fall back to English when a translation is missing, 404-rewrite when the entry doesn't exist; projects keep relations/media from the build-time collection and only override localized text fields. New `LanguageToggle.astro` pill switch renders only when `localizations` is non-empty, `aria-current` on the active language. Translations are human-authored in the admin (locale dropdown → write → "Publish multiple locales"); no machine translation. Note: `/resources/*` and `/projects/*` are no longer in the static build output — the node server must run in production (as it already does for `/contact`). Branch `feature/i18n-toggle` merged to `main` and deleted.
 - 2026-06-12 — **i18n toggle extended to News Updates and Blog**. Mirrors the Resource/Project pattern: `news-update` schema localized on `title`/`summary`/`content` (`date` + `photo` shared), `blog` on `title`/`content` (`publish_date` shared); bootstrap seeds Public `find`/`findOne` for `blog` (its `findOne` was never granted; news-update already had both). `news/[id].astro` and `blog/[id].astro` converted to SSR (`prerender = false`) with `documentId` fetch + `?locale=…&populate[localizations]=true`, English fallback, 404-rewrite, and the shared `LanguageToggle` beside the back link. Verified live round-trip on blog (temp en-KI translation → toggle appeared → deleted → toggle gone). Branch `feature/i18n-news-blog` merged to `main` and deleted.
+- 2026-07-05 — **Landing page redesign (design-first pass, dummy content)**. Branch `feature/landing-redesign` also carried the floating pill navbar + Pagefind site search and the Strapi `homepage` single type with its dynamic-zone block system (`blocks.*` components, `seed-homepage.js`, 8 block components under `frontend/src/components/blocks/`). Design pass over all blocks in three rounds: `<noscript>` override in `Motion.astro` (page no longer blank without JS); dead/circular CTAs fixed (navbar "Build your skills" → `/our-programs`, support CTAs → `/contact`); ThreatsBlock rebuilt as an accessible tab UI (roving tabindex, arrow keys, `aria-selected`; panels stack without JS) pairing a dark amber "The threat" card with a paper lime "Our answer" card + per-pillar CTA; ChallengesBlock drops `line-clamp-3` and gains amber icon chips/numbers; ImpactBlock redesigned around big gradient `data-countup` numbers + marker-highlighted pull quote; Testimonials/Partners scaffolds replaced with realistic dummy voices (initials avatars) and text-chip logos with hover lifts; PillarsBlock re-tinted to the ek palette (still dormant — not in the CMS zone); hero is full-viewport `min-h-svh` with a plain photo-slot card (`src/assets/images/hero-placeholder.png` — swap same filename for real photo); wave dividers removed; numbered journey eyebrows (`01 ·`…`06 ·`), lime→teal gradient heading ticks, pill buttons throughout; Playfair Display headings via Astro Fonts API (`--font-playfair` → `--font-serif`, mixed-case h1–h3, gradient text on hero h1/all h2s/Future closer) while eyebrows/buttons/numbers stay Saira Condensed. Gotcha: dev `_image` 500s ("Could not find Sharp") fixed by `npm install sharp`; start Strapi before Astro. Component naming still inverted vs. content (`ChallengesBlock` shows threats, `ThreatsBlock` shows answers) — renaming deferred with backend wiring. Merged to `main` (commit `c95a2d5`), branch deleted.
