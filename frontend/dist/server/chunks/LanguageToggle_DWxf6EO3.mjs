@@ -1,6 +1,6 @@
-import { c as createComponent } from './_astro_assets_BHj8oFJj.mjs';
+import { c as createComponent } from './_astro_assets_COHw2xVq.mjs';
 import 'piccolore';
-import { m as maybeRenderHead, h as addAttribute, e as renderTemplate } from './server_DO--nj06.mjs';
+import { m as maybeRenderHead, h as addAttribute, e as renderTemplate } from './server_CEkVBgB4.mjs';
 import 'clsx';
 
 const STRAPI_LOCALES = {

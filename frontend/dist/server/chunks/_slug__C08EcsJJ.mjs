@@ -1,15 +1,15 @@
-import { c as createComponent, V as VALID_INPUT_FORMATS } from './_astro_assets_BHj8oFJj.mjs';
+import { c as createComponent, V as VALID_INPUT_FORMATS } from './_astro_assets_COHw2xVq.mjs';
 import 'piccolore';
-import { n as generateCspDigest, s as spreadAttributes, u as unescapeHTML, e as renderTemplate, o as removeBase, i as isRemotePath, k as AstroError, U as UnknownContentCollectionError, c as renderComponent, m as maybeRenderHead, h as addAttribute } from './server_DO--nj06.mjs';
-import { $ as $$Layout } from './Layout_CKhng6WL.mjs';
-import { r as resolveLang, S as STRAPI_LOCALES, $ as $$LanguageToggle } from './LanguageToggle_VzDdfZeW.mjs';
+import { n as generateCspDigest, s as spreadAttributes, u as unescapeHTML, e as renderTemplate, o as removeBase, i as isRemotePath, k as AstroError, U as UnknownContentCollectionError, c as renderComponent, m as maybeRenderHead, h as addAttribute } from './server_CEkVBgB4.mjs';
+import { $ as $$Layout } from './Layout_BQwvTXFA.mjs';
+import { r as resolveLang, S as STRAPI_LOCALES, $ as $$LanguageToggle } from './LanguageToggle_DWxf6EO3.mjs';
 import 'html-escaper';
 import { Traverse } from 'neotraverse/modern';
 import * as z from 'zod/v4';
 import 'clsx';
 import * as devalue from 'devalue';
 import { marked } from 'marked';
-import { S as STRAPI_URL } from './server_DIHSIf4J.mjs';
+import { S as STRAPI_URL } from './server_CWCqUcvC.mjs';
 
 function createSvgComponent({ meta, attributes, children, styles }) {
   const hasStyles = styles.length > 0;
@@ -102,7 +102,7 @@ class ImmutableDataStore {
    */
   static async fromModule() {
     try {
-      const data = await import('./_astro_data-layer-content_CJ_FPgUU.mjs');
+      const data = await import('./_astro_data-layer-content_BX7ztGy8.mjs');
       if (data.default instanceof Map) {
         return ImmutableDataStore.fromMap(data.default);
       }
