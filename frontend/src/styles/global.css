@@ -82,7 +82,7 @@
   /* Typography - theme-controlled font stacks */
   --font-sans: var(--font-inter);
   --font-heading: var(--font-ubuntu);
-  --font-display: var(--theme-font-display);
+  --font-display: var(--font-serif);
   --font-accent: var(--theme-font-accent);
   --font-mono: var(--theme-font-mono);
 
@@ -185,6 +185,7 @@
 
   /* Typography - headings inherit color by default for flexibility */
   h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
     font-weight: var(--theme-heading-weight);
     line-height: 1.1;
     letter-spacing: var(--theme-heading-tracking);

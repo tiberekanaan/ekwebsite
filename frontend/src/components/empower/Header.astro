@@ -63,7 +63,7 @@ const isActive = (href: string) => {
             href={item.href}
             aria-current={isActive(item.href) ? 'page' : undefined}
             class:list={[
-              'relative text-sm font-medium transition-colors after:absolute after:inset-x-0 after:-bottom-1 after:h-0.5 after:origin-left after:scale-x-0 after:bg-lime-400 after:transition-transform after:duration-300 hover:after:scale-x-100',
+              'relative font-serif text-sm font-medium transition-colors after:absolute after:inset-x-0 after:-bottom-1 after:h-0.5 after:origin-left after:scale-x-0 after:bg-lime-400 after:transition-transform after:duration-300 hover:after:scale-x-100',
               isActive(item.href)
                 ? 'text-slate-900 after:scale-x-100'
                 : 'text-slate-700 hover:text-slate-900',
@@ -134,7 +134,7 @@ const isActive = (href: string) => {
         nav.map((item) => (
           <a
             href={item.href}
-            class="rounded-md px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+            class="rounded-md px-3 py-2 font-serif text-base font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900"
           >
             {item.label}
           </a>
