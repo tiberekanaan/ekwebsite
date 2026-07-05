@@ -1,4 +1,12 @@
 ---
+import { Image } from 'astro:assets';
+// Placeholder photography — overwrite these files with real photos of each
+// challenge (same path/filename) and give each card a meaningful alt below.
+import photoClimate from '@/assets/images/community/challenge-climate.jpg';
+import photoWork from '@/assets/images/community/challenge-work.jpg';
+import photoDigital from '@/assets/images/community/challenge-digital.jpg';
+import photoLeadership from '@/assets/images/community/challenge-leadership.jpg';
+
 interface ChallengeItem {
   title: string;
   caption: string | null;
@@ -21,7 +29,10 @@ interface Challenge {
   title: string;
   caption: string;
   icon: string;
+  photo: ImageMetadata;
 }
+
+const PHOTOS = [photoClimate, photoWork, photoDigital, photoLeadership];
 
 const { block } = Astro.props;
 
@@ -39,24 +50,28 @@ const defaults: Challenge[] = [
     caption:
       'Rising seas wash away shorelines and contaminate the freshwater and soil our communities depend on for survival.',
     icon: ICONS[0],
+    photo: PHOTOS[0],
   },
   {
     title: 'Unemployment',
     caption:
       'Few jobs and limited pathways into enterprise leave young people unable to earn, straining households and pushing many into vulnerable informal work.',
     icon: ICONS[1],
+    photo: PHOTOS[1],
   },
   {
     title: 'Limited digital participation',
     caption:
       'Gaps in access, awareness, and confidence lock people out of the tools needed to connect, learn, and earn safely online.',
     icon: ICONS[2],
+    photo: PHOTOS[2],
   },
   {
     title: 'Fragile local leadership',
     caption:
       'Progress too often rests on a few individuals or outside help, making it hard for communities to sustain long-term change on their own.',
     icon: ICONS[3],
+    photo: PHOTOS[3],
   },
 ];
 
@@ -66,6 +81,7 @@ const challenges: Challenge[] =
         title: c.title,
         caption: c.caption ?? '',
         icon: ICONS[i % ICONS.length],
+        photo: PHOTOS[i % PHOTOS.length],
       }))
     : defaults;
 ---
@@ -94,26 +110,37 @@ const challenges: Challenge[] =
           <article
             data-reveal
             data-reveal-delay={i * 100}
-            class="group relative rounded-2xl border border-ek-700/10 bg-white px-7 py-[30px] transition-all duration-200 hover:-translate-y-1 hover:border-amber-400/60 hover:shadow-[0_16px_38px_rgba(15,50,58,0.1)]"
+            class="group relative overflow-hidden rounded-2xl border border-ek-700/10 bg-white transition-all duration-200 hover:-translate-y-1 hover:border-amber-400/60 hover:shadow-[0_16px_38px_rgba(15,50,58,0.1)]"
           >
-            <span class="absolute right-7 top-[26px] font-condensed text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-amber-500">
-              {String(i + 1).padStart(2, '0')}
-            </span>
-            <span class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 transition-colors duration-200 group-hover:bg-amber-500 group-hover:text-white">
-              <svg
-                class="h-6 w-6"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.6"
-                aria-hidden="true"
-                set:html={c.icon}
+            <div class="relative aspect-[3/2] overflow-hidden">
+              <Image
+                src={c.photo}
+                alt=""
+                widths={[400, 800]}
+                sizes="(min-width: 1024px) 270px, (min-width: 640px) 50vw, 100vw"
+                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
-            </span>
-            <h3 class="mb-[10px] font-serif text-2xl font-bold text-ek-800">
-              {c.title}
-            </h3>
-            <p class="text-base text-slate-600">{c.caption}</p>
+              <span class="absolute right-4 top-4 rounded-full bg-ek-900/55 px-2.5 py-1 font-condensed text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-amber-300 backdrop-blur-sm">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+            </div>
+            <div class="px-7 pb-[30px]">
+              <span class="relative z-[2] -mt-6 mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white text-amber-600 shadow-md ring-1 ring-ek-700/10 transition-colors duration-200 group-hover:bg-amber-500 group-hover:text-white">
+                <svg
+                  class="h-6 w-6"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  aria-hidden="true"
+                  set:html={c.icon}
+                />
+              </span>
+              <h3 class="mb-[10px] font-serif text-2xl font-bold text-ek-800">
+                {c.title}
+              </h3>
+              <p class="text-base text-slate-600">{c.caption}</p>
+            </div>
           </article>
         ))
       }

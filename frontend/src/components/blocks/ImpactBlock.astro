@@ -1,4 +1,10 @@
 ---
+import { Image } from 'astro:assets';
+// Placeholder photography — overwrite these files with real photos of
+// community engagement (same path/filename) and update the alt texts below.
+import photoField1 from '@/assets/images/community/impact-engagement-01.jpg';
+import photoField2 from '@/assets/images/community/impact-engagement-02.jpg';
+
 interface ImpactMetric {
   number: string;
   label: string;
@@ -107,24 +113,44 @@ const track = [
       }
     </div>
 
-    <div class="grid max-w-[880px] gap-x-9 gap-y-[14px] sm:grid-cols-2" data-reveal>
-      {
-        track.map((t) => (
-          <div class="flex gap-3 text-[1.02rem] text-[#cfe0db]">
-            <svg
-              class="mt-[3px] h-[22px] w-[22px] flex-none text-ek-lime"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              aria-hidden="true"
-            >
-              <path d="M20 6L9 17l-5-5" />
-            </svg>
-            <span>{t}</span>
-          </div>
-        ))
-      }
+    <div class="grid items-center gap-x-14 gap-y-10 lg:grid-cols-[1.1fr_0.9fr]">
+      <div class="grid gap-x-9 gap-y-[14px] sm:grid-cols-2 lg:grid-cols-1" data-reveal>
+        {
+          track.map((t) => (
+            <div class="flex gap-3 text-[1.02rem] text-[#cfe0db]">
+              <svg
+                class="mt-[3px] h-[22px] w-[22px] flex-none text-ek-lime"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"
+              >
+                <path d="M20 6L9 17l-5-5" />
+              </svg>
+              <span>{t}</span>
+            </div>
+          ))
+        }
+      </div>
+
+      {/* Offset photo pair — moments from the work itself. */}
+      <div class="grid grid-cols-2 gap-4" data-reveal data-reveal-delay="120">
+        <Image
+          src={photoField1}
+          alt=""
+          widths={[400, 800]}
+          sizes="(min-width: 1024px) 240px, 45vw"
+          class="aspect-[3/4] w-full rounded-2xl object-cover shadow-[0_18px_44px_rgba(0,0,0,0.35)] ring-1 ring-white/15"
+        />
+        <Image
+          src={photoField2}
+          alt=""
+          widths={[400, 800]}
+          sizes="(min-width: 1024px) 240px, 45vw"
+          class="mt-10 aspect-[3/4] w-full rounded-2xl object-cover shadow-[0_18px_44px_rgba(0,0,0,0.35)] ring-1 ring-white/15"
+        />
+      </div>
     </div>
   </div>
 </section>
