@@ -20,6 +20,9 @@ interface Props {
 const { block } = Astro.props;
 const logos = block.logos ?? [];
 
+// Track is duplicated so the -50% translate loops seamlessly.
+const marqueeSets = [false, true];
+
 const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
 
 // Fictional wordmarks for the design pass — replaced by real partner logos from the CMS.
@@ -85,28 +88,62 @@ const categories = [
       }
     </div>
 
-    <div class="flex flex-wrap items-center gap-4" data-reveal>
-      {
-        (logos.length > 0 ? logos : dummyLogos).map((p) => {
-          const logo = p.logo?.url ? absoluteUrl(p.logo.url) : null;
-          return (
-            <div class="flex h-16 min-w-[150px] flex-1 items-center justify-center rounded-md border border-ek-700/10 bg-ek-mist/60 px-5 transition-colors duration-200 hover:border-ek-500/40">
-              {logo ? (
-                <img
-                  src={logo}
-                  alt={p.logo?.alternativeText ?? p.name}
-                  class="max-h-12 max-w-full object-contain grayscale transition-[filter] duration-200 hover:grayscale-0"
-                  loading="lazy"
-                />
-              ) : (
-                <span class="text-center font-condensed text-[0.92rem] font-bold uppercase leading-tight tracking-[0.08em] text-ek-600">
-                  {p.name}
-                </span>
-              )}
+    <div
+      data-reveal
+      class="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
+    >
+      <div class="flex w-max animate-partner-marquee items-center gap-4">
+        {
+          marqueeSets.map((isDuplicate) => (
+            <div class="flex shrink-0 items-center gap-4 pr-4" aria-hidden={isDuplicate || undefined}>
+              {(logos.length > 0 ? logos : dummyLogos).map((p) => {
+                const logo = p.logo?.url ? absoluteUrl(p.logo.url) : null;
+                return (
+                  <div class="flex h-16 w-44 shrink-0 items-center justify-center rounded-md border border-ek-700/10 bg-ek-mist/60 px-5 transition-colors duration-200 hover:border-ek-500/40">
+                    {logo ? (
+                      <img
+                        src={logo}
+                        alt={p.logo?.alternativeText ?? p.name}
+                        class="max-h-12 max-w-full object-contain grayscale transition-[filter] duration-200 hover:grayscale-0"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span class="text-center font-condensed text-[0.92rem] font-bold uppercase leading-tight tracking-[0.08em] text-ek-600">
+                        {p.name}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
             </div>
-          );
-        })
-      }
+          ))
+        }
+      </div>
     </div>
   </div>
 </section>
+
+<style>
+  @keyframes partner-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-partner-marquee {
+    animation: partner-marquee 30s linear infinite;
+  }
+
+  .animate-partner-marquee:hover {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-partner-marquee {
+      animation: none;
+    }
+  }
+</style>
