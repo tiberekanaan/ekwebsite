@@ -1,90 +1,237 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import PageHeader from '@/components/PageHeader.astro';
+import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
+import { marked } from 'marked';
 import { STRAPI_URL } from 'astro:env/server';
+// Fallback photo when no image is uploaded to the Partners Page single type —
+// overwrite with a real photo of partners working together and set alt below.
+import fallbackPhoto from '@/assets/images/community/impact-engagement-01.jpg';
+
+type PartnersPage = {
+  documentId: string;
+  eyebrow: string | null;
+  title: string;
+  description: string | null;
+  introHeading: string | null;
+  intro: string | null;
+  image: { url: string; alternativeText: string | null } | null;
+  ctaHeading: string | null;
+  ctaText: string | null;
+  ctaLabel: string | null;
+  ctaUrl: string | null;
+};
+
+const res = await fetch(`${STRAPI_URL}/api/partners-page?populate=*`);
+let page: PartnersPage | null = null;
+
+if (res.ok) {
+  const { data } = (await res.json()) as { data: PartnersPage | null };
+  page = data;
+} else if (res.status !== 403 && res.status !== 404) {
+  throw new Error(`Strapi /api/partners-page → ${res.status} ${res.statusText}`);
+} else {
+  console.warn(
+    `Strapi /api/partners-page returned ${res.status} — falling back to defaults. Check the singleType is published and Public has 'find' permission.`,
+  );
+}
+
+const eyebrow = page?.eyebrow ?? 'Partners';
+const title = page?.title ?? 'Our Partners';
+const description =
+  page?.description ??
+  'The organizations, institutions, and community groups building alongside Empower Kiribati.';
+const introHeading = page?.introHeading ?? 'No one builds an atoll nation alone';
+const introHtml = page?.intro ? marked.parse(page.intro) : '';
+const ctaHeading = page?.ctaHeading ?? 'Become a partner';
+const ctaText =
+  page?.ctaText ??
+  "Whether you bring funding, expertise, delivery capacity, or deep community roots — there's a place for you in this work.";
+const ctaLabel = page?.ctaLabel ?? 'Start the conversation';
+const ctaUrl = page?.ctaUrl ?? '/contact';
 
 const partners = (await getCollection('partners')).sort((a, b) =>
   a.data.name.localeCompare(b.data.name),
 );
 
+const projectIds = new Set(
+  partners.flatMap((p) => p.data.projects.map((project) => project.documentId)),
+);
+
 const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
+
+const arrowRight = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
 ---
 
-<Layout
-  title="Our Partners"
-  description="Organizations and institutions collaborating with Empower Kiribati."
-  floatingHeader
->
-  <PageHeader eyebrow="Partners" title="Our Partners" />
-  <div class="mx-auto max-w-7xl px-8 py-12">
-    <header class="mb-16 max-w-3xl">
-      <div class="space-y-5 text-base leading-relaxed text-slate-700 sm:text-lg">
-        <p>
-          No single organization can meet the scale of challenges facing Kiribati alone —
-          especially across a nation of scattered atolls where resources, services, and
-          opportunities are unevenly distributed. We build partnerships that respect local
-          leadership and bring together government, community groups, churches, schools, diaspora
-          networks, and the private sector so that solutions are coordinated, culturally grounded,
-          and practical to deliver.
-        </p>
-        <p>
-          Our approach is to connect strengths: local knowledge and trusted relationships,
-          technical expertise, funding, and delivery capacity. By aligning partners around shared
-          goals and clear roles, we reduce duplication and ensure projects are designed with
-          communities — not simply delivered to them. Strong partnerships also help ideas move
-          from pilot to long-term programs, with the right support systems in place for
-          maintenance, training, and continued learning.
-        </p>
-        <p>
-          Partnerships are also how we grow impact beyond a single project. When we collaborate
-          openly, share evidence, and invest in long-term relationships, we can unlock better
-          services, stronger local organizations, and more resilient livelihoods — while ensuring
-          benefits reach women, youth, and outer island communities.
-        </p>
-      </div>
-    </header>
+<Layout title={title} description={description} floatingHeader>
+  <PageHeader eyebrow={eyebrow} title={title} description={description} />
 
-    {
-      partners.length === 0 ? (
-        <p class="py-16 text-center text-slate-500">No partners published yet.</p>
-      ) : (
-        <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {partners.map((partner) => {
-            const { name, logo, projects: linked } = partner.data;
-            return (
-              <li>
-                <a
-                  href={`/our-partners/${partner.id}`}
-                  class="group flex h-full flex-col items-start gap-4 rounded-xl border border-slate-200 bg-white p-6 transition-colors hover:border-teal-500"
-                >
-                  <div class="flex h-20 w-full items-center justify-center rounded-lg bg-slate-50">
-                    {logo ? (
-                      <img
-                        src={absoluteUrl(logo.url)}
-                        alt={logo.alternativeText ?? `${name} logo`}
-                        class="max-h-16 max-w-[80%] object-contain"
-                        loading="lazy"
+  {/* Why partnership — magazine intro with offset photo */}
+  <section class="bg-white py-24">
+    <div
+      class="mx-auto grid w-full max-w-6xl items-start gap-x-14 gap-y-12 px-7 lg:grid-cols-[1.1fr_0.9fr]"
+    >
+      <div data-reveal>
+        <span
+          class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive"
+        >
+          01 · Why partnership
+        </span>
+        <h2
+          class="mb-4 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl"
+        >
+          {introHeading}
+        </h2>
+        <span
+          class="mb-8 block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500"
+          aria-hidden="true"></span>
+        {
+          introHtml && (
+            <article
+              class="prose prose-lg max-w-none [&_p]:text-ek-muted [&_strong]:text-ek-ink [&_a]:text-ek-600 [&_a:hover]:text-ek-800"
+              set:html={introHtml}
+            />
+          )
+        }
+      </div>
+
+      <div class="relative lg:sticky lg:top-28" data-reveal data-reveal-delay="150">
+        {
+          page?.image?.url ? (
+            <img
+              src={absoluteUrl(page.image.url)}
+              alt={page.image.alternativeText ?? ''}
+              loading="lazy"
+              class="aspect-[4/5] w-full rounded-2xl object-cover shadow-[0_18px_44px_rgba(15,50,58,0.18)] ring-1 ring-ek-700/10"
+            />
+          ) : (
+            <Image
+              src={fallbackPhoto}
+              alt=""
+              widths={[480, 960]}
+              sizes="(min-width: 1024px) 480px, 90vw"
+              class="aspect-[4/5] w-full rounded-2xl object-cover shadow-[0_18px_44px_rgba(15,50,58,0.18)] ring-1 ring-ek-700/10"
+            />
+          )
+        }
+        {
+          partners.length > 0 && (
+            <div class="absolute -bottom-5 left-6 flex items-center gap-4 rounded-2xl bg-ek-900 px-6 py-4 text-white shadow-[0_14px_34px_rgba(7,37,41,0.35)] ring-1 ring-white/10">
+              <p class="font-serif text-3xl font-bold text-ek-lime-bright">{partners.length}</p>
+              <p class="font-condensed text-[0.78rem] font-semibold uppercase leading-snug tracking-[0.14em] text-[#cfe0db]">
+                Partners ·<br />
+                {projectIds.size} joint {projectIds.size === 1 ? 'project' : 'projects'}
+              </p>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* Partner grid */}
+  <section class="bg-ek-mist py-24">
+    <div class="mx-auto w-full max-w-6xl px-7">
+      <div class="mb-14 max-w-[640px]" data-reveal>
+        <span
+          class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive"
+        >
+          02 · Who we work with
+        </span>
+        <h2
+          class="mb-4 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl"
+        >
+          The organizations beside us
+        </h2>
+        <span
+          class="block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500"
+          aria-hidden="true"></span>
+      </div>
+
+      {
+        partners.length === 0 ? (
+          <p class="py-16 text-center text-ek-muted" data-reveal>
+            No partners published yet.
+          </p>
+        ) : (
+          <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {partners.map((partner, idx) => {
+              const { name, logo, projects: linked } = partner.data;
+              return (
+                <li data-reveal data-reveal-delay={(idx % 3) * 80}>
+                  <a
+                    href={`/our-partners/${partner.id}`}
+                    class="group flex h-full flex-col items-start gap-5 rounded-2xl border border-ek-700/10 bg-white p-7 transition-all duration-200 hover:-translate-y-1 hover:border-ek-lime/60 hover:shadow-[0_16px_38px_rgba(15,50,58,0.1)]"
+                  >
+                    <div class="flex h-24 w-full items-center justify-center rounded-xl bg-ek-mist ring-1 ring-ek-700/10 transition-colors duration-200 group-hover:bg-ek-mist/60">
+                      {logo ? (
+                        <img
+                          src={absoluteUrl(logo.url)}
+                          alt={logo.alternativeText ?? `${name} logo`}
+                          class="max-h-16 max-w-[70%] object-contain transition-transform duration-200 group-hover:scale-[1.04]"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <span class="px-4 text-center font-condensed text-sm font-semibold uppercase tracking-[0.18em] text-ek-600">
+                          {name}
+                        </span>
+                      )}
+                    </div>
+                    <h3 class="font-serif text-xl font-bold leading-snug text-ek-800 transition-colors group-hover:text-ek-600">
+                      {name}
+                    </h3>
+                    <span class="mt-auto inline-flex items-center gap-2 rounded-full bg-ek-900 px-4 py-1.5 font-condensed text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-ek-lime-bright">
+                      {linked.length} {linked.length === 1 ? 'project' : 'projects'}
+                      <span
+                        class="transition-transform duration-200 group-hover:translate-x-0.5"
+                        set:html={arrowRight}
                       />
-                    ) : (
-                      <span class="text-xs font-bold uppercase tracking-widest text-slate-400">
-                        {name}
-                      </span>
-                    )}
-                  </div>
-                  <h2 class="text-lg font-bold leading-snug text-slate-900 group-hover:text-teal-700">
-                    {name}
-                  </h2>
-                  <span class="mt-auto inline-flex items-center gap-1 pt-2 text-xs font-bold uppercase tracking-wider text-slate-900">
-                    {linked.length} {linked.length === 1 ? 'project' : 'projects'}
-                    <span aria-hidden="true">→</span>
-                  </span>
-                </a>
-              </li>
-            );
-          })}
-        </ul>
-      )
-    }
-  </div>
+                    </span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        )
+      }
+    </div>
+  </section>
+
+  {/* Closing CTA — dark band */}
+  <section class="bg-gradient-to-b from-ek-900 to-ek-800 py-24 text-white">
+    <div class="mx-auto w-full max-w-6xl px-7">
+      <div class="max-w-[640px]" data-reveal>
+        <span
+          class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-lime-bright"
+        >
+          03 · Work with us
+        </span>
+        <h2
+          class="mb-4 bg-gradient-to-r from-white to-ek-lime-bright bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl"
+        >
+          {ctaHeading}
+        </h2>
+        <span
+          class="mb-5 block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500"
+          aria-hidden="true"></span>
+        <p class="text-lg text-[#b9cdc8]">{ctaText}</p>
+      </div>
+      <div class="mt-10 flex flex-wrap items-center gap-4" data-reveal data-reveal-delay="120">
+        <a
+          href={ctaUrl}
+          class="inline-flex items-center gap-2 rounded-full bg-ek-lime px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-ek-900 transition-all duration-200 hover:-translate-y-0.5 hover:bg-ek-lime-bright hover:shadow-[0_8px_22px_rgba(174,203,58,0.3)]"
+        >
+          {ctaLabel}
+          <span set:html={arrowRight} />
+        </a>
+        <a
+          href="/our-programs"
+          class="inline-flex items-center gap-2 rounded-full border-[1.5px] border-white/35 px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-white transition-colors duration-200 hover:border-ek-lime-bright hover:text-ek-lime-bright"
+        >
+          See our programs
+        </a>
+      </div>
+    </div>
+  </section>
 </Layout>

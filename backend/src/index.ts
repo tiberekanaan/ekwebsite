@@ -17,6 +17,7 @@ const PUBLIC_READ_ACTIONS = [
   'api::blog.blog.findOne',
   'api::homepage.homepage.find',
   'api::global.global.find',
+  'api::partners-page.partners-page.find',
 ];
 
 // Strapi's ISO locale list has no Gilbertese ("gil"); "en-KI" is the only
@@ -45,6 +46,39 @@ const DEFAULT_PILLARS: Array<{ title: string; description: string }> = [
       'We grow trust in the digital world by strengthening safety, standards, and digital confidence on every atoll — closing connectivity gaps and helping people use digital services for real needs.',
   },
 ];
+
+const DEFAULT_PARTNERS_PAGE = {
+  eyebrow: 'Partners',
+  title: 'Our Partners',
+  description:
+    'The organizations, institutions, and community groups building alongside Empower Kiribati.',
+  introHeading: 'No one builds an atoll nation alone',
+  intro: [
+    'No single organization can meet the scale of challenges facing Kiribati alone — especially across a nation of scattered atolls where resources, services, and opportunities are unevenly distributed. We build partnerships that respect local leadership and bring together government, community groups, churches, schools, diaspora networks, and the private sector so that solutions are coordinated, culturally grounded, and practical to deliver.',
+    'Our approach is to connect strengths: local knowledge and trusted relationships, technical expertise, funding, and delivery capacity. By aligning partners around shared goals and clear roles, we reduce duplication and ensure projects are designed with communities — not simply delivered to them. Strong partnerships also help ideas move from pilot to long-term programs, with the right support systems in place for maintenance, training, and continued learning.',
+    'Partnerships are also how we grow impact beyond a single project. When we collaborate openly, share evidence, and invest in long-term relationships, we can unlock better services, stronger local organizations, and more resilient livelihoods — while ensuring benefits reach women, youth, and outer island communities.',
+  ].join('\n\n'),
+  ctaHeading: 'Become a partner',
+  ctaText:
+    "Whether you bring funding, expertise, delivery capacity, or deep community roots — there's a place for you in this work. Let's talk about what we can build together.",
+  ctaLabel: 'Start the conversation',
+  ctaUrl: '/contact',
+};
+
+async function seedPartnersPage(strapi: Core.Strapi) {
+  const existing = await strapi
+    .documents('api::partners-page.partners-page')
+    .findFirst({ status: 'draft' });
+  if (existing) return;
+
+  const created = await strapi
+    .documents('api::partners-page.partners-page')
+    .create({ data: DEFAULT_PARTNERS_PAGE });
+
+  await strapi
+    .documents('api::partners-page.partners-page')
+    .publish({ documentId: created.documentId });
+}
 
 async function ensurePublicReadPermissions(strapi: Core.Strapi) {
   const publicRole = await strapi.db
@@ -108,5 +142,6 @@ export default {
     await ensurePublicReadPermissions(strapi);
     await ensureKiribatiLocale(strapi);
     await seedDefaultPillars(strapi);
+    await seedPartnersPage(strapi);
   },
 };
