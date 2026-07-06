@@ -20,6 +20,17 @@
       "type": "component",
       "repeatable": true,
       "component": "shared.impact-metric"
+    },
+    "outcomes": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.outcome-item"
+    },
+    "photos": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": ["images"]
     }
   }
 }

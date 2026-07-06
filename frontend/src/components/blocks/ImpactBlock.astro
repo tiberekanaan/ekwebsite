@@ -1,7 +1,8 @@
 ---
 import { Image } from 'astro:assets';
-// Placeholder photography — overwrite these files with real photos of
-// community engagement (same path/filename) and update the alt texts below.
+import { STRAPI_URL } from 'astro:env/server';
+// Placeholder photography — used only when no photos are uploaded on the
+// Impact block in Strapi (Homepage → Impact → photos, first two are shown).
 import photoField1 from '@/assets/images/community/impact-engagement-01.jpg';
 import photoField2 from '@/assets/images/community/impact-engagement-02.jpg';
 
@@ -9,6 +10,12 @@ interface ImpactMetric {
   number: string;
   label: string;
   description: string | null;
+  badge?: string | null;
+}
+
+interface ImpactPhoto {
+  url: string;
+  alternativeText?: string | null;
 }
 
 export interface ImpactBlockData {
@@ -16,6 +23,8 @@ export interface ImpactBlockData {
   title?: string | null;
   description?: string | null;
   metrics?: ImpactMetric[] | null;
+  outcomes?: { text: string }[] | null;
+  photos?: ImpactPhoto[] | null;
 }
 
 interface Props {
@@ -45,19 +54,35 @@ const isStat = (v: string | null | undefined): v is string => !!v && /^\d/.test(
 const stats: Stat[] =
   block.metrics && block.metrics.length > 0
     ? block.metrics.map((m, i) => ({
-        badge: 'From 2026',
+        badge: m.badge?.trim() || 'From 2026',
         number: isStat(m.number) ? m.number.trim() : defaults[i % defaults.length].number,
         label: m.label,
       }))
     : defaults;
 
-// Qualitative outcomes we hold ourselves to (decorative checklist).
-const track = [
+// Qualitative outcomes checklist; defaults until edited on the Impact block.
+const defaultTrack = [
   'More people confident and safe using digital tools — and fewer left out.',
   'Leadership and skills that no longer depend on any single person.',
   'Real co-design and shared investment with partners — a sign of trust.',
   'Local practices that communities carry on themselves.',
 ];
+
+const track: string[] =
+  block.outcomes && block.outcomes.length > 0
+    ? block.outcomes.map((o) => o.text)
+    : defaultTrack;
+
+// Offset photo pair — CMS uploads win per slot, placeholders fill the rest.
+const uploadedPhotos = (block.photos ?? []).filter((p) => p?.url);
+const absoluteUrl = (path: string) => (path.startsWith('http') ? path : `${STRAPI_URL}${path}`);
+const placeholders = [photoField1, photoField2];
+const photoSlots = placeholders.map((placeholder, i) => {
+  const remote = uploadedPhotos[i];
+  return remote
+    ? { remote: { url: absoluteUrl(remote.url), alt: remote.alternativeText ?? '' } }
+    : { placeholder };
+});
 ---
 
 <section
@@ -136,20 +161,32 @@ const track = [
 
       {/* Offset photo pair — moments from the work itself. */}
       <div class="grid grid-cols-2 gap-4" data-reveal data-reveal-delay="120">
-        <Image
-          src={photoField1}
-          alt=""
-          widths={[400, 800]}
-          sizes="(min-width: 1024px) 240px, 45vw"
-          class="aspect-[3/4] w-full rounded-2xl object-cover shadow-[0_18px_44px_rgba(0,0,0,0.35)] ring-1 ring-white/15"
-        />
-        <Image
-          src={photoField2}
-          alt=""
-          widths={[400, 800]}
-          sizes="(min-width: 1024px) 240px, 45vw"
-          class="mt-10 aspect-[3/4] w-full rounded-2xl object-cover shadow-[0_18px_44px_rgba(0,0,0,0.35)] ring-1 ring-white/15"
-        />
+        {
+          photoSlots.map((slot, i) =>
+            slot.remote ? (
+              <img
+                src={slot.remote.url}
+                alt={slot.remote.alt}
+                loading="lazy"
+                class:list={[
+                  'aspect-[3/4] w-full rounded-2xl object-cover shadow-[0_18px_44px_rgba(0,0,0,0.35)] ring-1 ring-white/15',
+                  i === 1 && 'mt-10',
+                ]}
+              />
+            ) : (
+              <Image
+                src={slot.placeholder!}
+                alt=""
+                widths={[400, 800]}
+                sizes="(min-width: 1024px) 240px, 45vw"
+                class:list={[
+                  'aspect-[3/4] w-full rounded-2xl object-cover shadow-[0_18px_44px_rgba(0,0,0,0.35)] ring-1 ring-white/15',
+                  i === 1 && 'mt-10',
+                ]}
+              />
+            ),
+          )
+        }
       </div>
     </div>
   </div>

@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_shared_outcome_items",
+  "info": {
+    "displayName": "Outcome Item",
+    "icon": "check",
+    "description": "A single qualitative outcome for the impact checklist."
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "text",
+      "required": true
+    }
+  }
+}
