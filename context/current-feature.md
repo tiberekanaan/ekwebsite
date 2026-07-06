@@ -1,17 +1,20 @@
 # Current Feature
 
-**Feature:** Global Typography and Internal Page Headers
+**Feature:** About Us, Contact & 404 Redesign (landing-page vibes)
 
 ## Status
-- ✅ Completed 2026-07-06 on branch `feature/global-typography-page-headers`. See History.
+- ✅ Completed 2026-07-06 on branch `feature/about-redesign`. See History.
 
 ## Goals
-1. **Global Typography:** Analyze the fonts and text colors used in the new landing page blocks. Update `src/layouts/Layout.astro` and `src/styles/global.css` so the `<body>` inherits these Tailwind v4 font styles globally.
-2. **Internal Page Header:** Create a `src/components/PageHeader.astro` component. It must accept a `title` prop. Style it with a vibrant background that matches the new landing page aesthetic (e.g., a soft gradient or deep brand color) and ensure it has large top padding (e.g., `pt-40` and `pb-16`) to provide a clear background for the absolute-positioned floating navbar.
-3. **Apply to All Pages:** Refactor all internal routing pages (e.g., `src/pages/pillars/[id].astro`, `src/pages/projects/[id].astro`, `src/pages/resources/[id].astro`). Insert the `<PageHeader title={dynamicTitle} />` at the top of the layout so the floating navbar never covers the main content.
+1. **Align with landing aesthetic:** Rebuild `src/pages/about.astro`, `src/pages/contact.astro`, and `src/pages/404.astro` from the old slate/teal (and Velocity `brand-*`) look to the current landing vocabulary — `ek-*` palette, Playfair serif gradient headings, condensed eyebrows with journey numbering (`01 ·` …), lime→teal ticks, dark `ek-900` radial-glow panels alternating with white/mist sections.
+2. **Motion:** Full `data-reveal` / `data-reveal-delay` staggering (hero cascade, card grids), honoring `prefers-reduced-motion`.
+3. **Wow factor:** Full-bleed dark heroes under the floating pill navbar (`floatingHeader`), magazine origin story with Playfair drop cap + offset photo pair, dark/light Mission–Vision card duet, numbered principle cards, dark closing CTA bands, floating gradient 404 digits.
+4. **Keep CMS/form wiring:** About content still comes from the Strapi `basic-page` single type (heading splitter + principles parser intact); Contact keeps its Astro Actions submission flow untouched.
 
 
 ## History
+
+- 2026-07-06 — **About, Contact & 404 redesigned to the landing aesthetic**. `about.astro`: old slate/teal template replaced with the landing vocabulary while keeping the Strapi `basic-page` fetch, `## `-heading splitter, and principles parser untouched — full-bleed dark `ek-900` hero under the floating pill navbar (`floatingHeader`, radial teal glow + bwabwai leaf, gradient Playfair h1, lime `<mark>` tagline, condensed chip row, 80–280ms reveal cascade); `01 · Our story` white magazine section (Playfair drop cap now `ek-olive`, offset 3:4 photo pair from `community/impact-engagement-*` — `lg:sticky top-28`); `02 · Why we exist` mist section with dark/light Mission–Vision card duet (ek-900 glow card vs. white card, hover lifts, blurred corner glows); `03 · Our approach` numbered principle cards (ek-900 number pills, mist icon tiles flooding `ek-500` on hover, 80ms stagger, keyword→icon map kept); `04 · Get involved` dark gradient band in the FutureBlock style (condensed gradient statement + lime/outline pill CTAs, `/#our-work` anchor verified). `contact.astro`: converted to `floatingHeader` + `PageHeader` banner; mist section with white info cards (mail/pin icon tiles, olive condensed labels, hover lift), bwabwai-style olive-border pull line, white form card with `ek` focus rings (`ek-500` border + ring), lime pill submit, lime-tinted success panel — Astro Actions flow (`submitContact`, honeypot, `isInputError`) unchanged. `404.astro`: moved off Velocity's `LandingLayout`/`brand-*` onto `Layout` + `floatingHeader` — `min-h-svh` dark panel, giant Playfair 404 with floating digits (gradient middle 0, `prefers-reduced-motion` disables the float), condensed "Error 404 · Lost at sea" eyebrow, gradient heading, pill CTAs, quick-link chips to the five real sections; `noindex` kept. All three verified via headless-Chrome screenshots through `astro preview`; production build passes. Branch `feature/about-redesign`.
 
 <!-- Keep this updated. Earliest to latest -->
 

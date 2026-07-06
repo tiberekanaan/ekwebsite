@@ -1,9 +1,9 @@
-import { c as createComponent } from './_astro_assets_CL3KYVc9.mjs';
+import { c as createComponent } from './_astro_assets_De93nOwO.mjs';
 import 'piccolore';
-import { c as renderComponent, e as renderTemplate, m as maybeRenderHead, h as addAttribute } from './server_D-XiJHcZ.mjs';
-import { $ as $$Layout } from './Layout_uAHwrxxZ.mjs';
-import { r as resolveLang, S as STRAPI_LOCALES, $ as $$PageHeader, a as $$LanguageToggle } from './LanguageToggle_Cka-B2q5.mjs';
-import { S as STRAPI_URL } from './server_B5dqAppw.mjs';
+import { c as renderComponent, e as renderTemplate, m as maybeRenderHead, h as addAttribute } from './server_B71wUxTc.mjs';
+import { $ as $$Layout, a as $$PageHeader } from './PageHeader_3joNX9At.mjs';
+import { r as resolveLang, S as STRAPI_LOCALES, $ as $$LanguageToggle } from './LanguageToggle_Bu6fekBL.mjs';
+import { S as STRAPI_URL } from './server_Cnanraoi.mjs';
 
 const prerender = false;
 const $$id = createComponent(async ($$result, $$props, $$slots) => {

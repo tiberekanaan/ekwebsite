@@ -1,8 +1,8 @@
-import { c as createComponent, $ as $$Font, b as $$Image } from './_astro_assets_CL3KYVc9.mjs';
+import { c as createComponent, $ as $$Font, b as $$Image } from './_astro_assets_De93nOwO.mjs';
 import 'piccolore';
-import { t as createRenderInstruction, h as addAttribute, e as renderTemplate, u as unescapeHTML, m as maybeRenderHead, c as renderComponent, q as renderSlot, v as renderHead } from './server_D-XiJHcZ.mjs';
+import { q as createRenderInstruction, h as addAttribute, e as renderTemplate, u as unescapeHTML, m as maybeRenderHead, c as renderComponent, t as renderSlot, v as renderHead } from './server_B71wUxTc.mjs';
 import { clsx } from 'clsx';
-import { G as GOOGLE_SITE_VERIFICATION, B as BING_SITE_VERIFICATION, c as SITE_URL, S as STRAPI_URL } from './server_B5dqAppw.mjs';
+import { G as GOOGLE_SITE_VERIFICATION, B as BING_SITE_VERIFICATION, c as SITE_URL, S as STRAPI_URL } from './server_Cnanraoi.mjs';
 import { twMerge } from 'tailwind-merge';
 import 'react/jsx-runtime';
 import 'react';
@@ -744,4 +744,12 @@ const $$Layout = createComponent(async ($$result, $$props, $$slots) => {
   return renderTemplate`${renderComponent($$result, "BaseLayout", $$BaseLayout, { "title": title, "description": description, "image": image, "imageAlt": imageAlt, "article": article, "noindex": noindex, "nofollow": nofollow, "includeOrgSchema": includeOrgSchema, "siteName": global?.siteName ?? void 0, "favicon": favicon }, { "default": async ($$result2) => renderTemplate`  ${renderSlot($$result2, $$slots["default"])}  ${renderComponent($$result2, "Search", $$Search, {})} ${renderComponent($$result2, "Motion", $$Motion, {})} `, "footer": async ($$result2) => renderTemplate`${renderComponent($$result2, "Footer", $$Footer, { "slot": "footer" })}`, "header": async ($$result2) => renderTemplate`${renderComponent($$result2, "Header", $$Header, { "slot": "header", "floating": floatingHeader, "logo": logo, "links": global?.navbarLinks ?? void 0 })}` })}`;
 }, "/Users/tibereritobakanaan/Projects/ekwebsite/frontend/src/layouts/Layout.astro", void 0);
 
-export { $$Layout as $ };
+const $$PageHeader = createComponent(($$result, $$props, $$slots) => {
+  const Astro2 = $$result.createAstro($$props, $$slots);
+  Astro2.self = $$PageHeader;
+  const { title, description, eyebrow, backHref, backLabel } = Astro2.props;
+  return renderTemplate`${maybeRenderHead()}<header class="relative overflow-hidden bg-ek-900 bg-[radial-gradient(1200px_600px_at_75%_-10%,rgba(42,128,137,0.55),transparent_60%),linear-gradient(160deg,var(--color-ek-800)_0%,var(--color-ek-900)_70%)] pt-40 pb-16 text-white"> <svg class="pointer-events-none absolute -top-[10%] right-[-6%] z-0 w-[420px] opacity-[0.06]" viewBox="0 0 200 200" aria-hidden="true"> <path d="M100 20c-25 0-45 20-45 50s20 60 45 60 45-30 45-60-20-50-45-50z" fill="#aecb3a"></path> </svg> <div class="relative z-[2] mx-auto w-full max-w-7xl px-8"> ${backHref && renderTemplate`<a${addAttribute(backHref, "href")} class="mb-7 inline-flex items-center gap-1 text-sm font-semibold text-[#9fb9b4] transition-colors hover:text-ek-lime-bright" data-reveal>
+← ${backLabel ?? "Back"} </a>`} ${eyebrow && renderTemplate`<p class="mb-4 font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-lime-bright" data-reveal> ${eyebrow} </p>`} <h1 class="max-w-4xl bg-gradient-to-br from-white via-white to-ek-lime-bright bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl lg:text-6xl" data-reveal data-reveal-delay="80"> ${title} </h1> <span class="mt-5 block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500" aria-hidden="true" data-reveal data-reveal-delay="120"></span> ${description && renderTemplate`<p class="mt-5 max-w-[38em] text-lg text-[#cfe0db]" data-reveal data-reveal-delay="160"> ${description} </p>`} ${renderSlot($$result, $$slots["default"])} </div> </header>`;
+}, "/Users/tibereritobakanaan/Projects/ekwebsite/frontend/src/components/PageHeader.astro", void 0);
+
+export { $$Layout as $, $$PageHeader as a };
