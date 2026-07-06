@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_shared_partner_categories",
+  "info": {
+    "displayName": "Partner Category",
+    "icon": "grid",
+    "description": "A single partner-category card (title + short text)."
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "text": {
+      "type": "text"
+    }
+  }
+}

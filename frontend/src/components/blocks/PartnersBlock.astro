@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import { STRAPI_URL } from 'astro:env/server';
 
 interface PartnerLogo {
@@ -6,10 +7,18 @@ interface PartnerLogo {
   logo?: { url: string; alternativeText?: string | null } | null;
 }
 
+interface PartnerCategory {
+  title: string;
+  text?: string | null;
+}
+
 export interface PartnersBlockData {
   eyebrow?: string | null;
   title?: string | null;
+  description?: string | null;
   allPartnersLink?: string | null;
+  allPartnersLabel?: string | null;
+  categories?: PartnerCategory[] | null;
   logos?: PartnerLogo[] | null;
 }
 
@@ -25,7 +34,14 @@ const marqueeSets = [false, true];
 
 const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
 
-// Fictional wordmarks for the design pass — replaced by real partner logos from the CMS.
+// Real partners from the Partner collection (same source as /our-partners),
+// alphabetical. The block's own `logos` list, when filled, overrides it.
+const partnerEntries = await getCollection('partners');
+const collectionLogos: PartnerLogo[] = partnerEntries
+  .map((p) => ({ name: p.data.name, logo: p.data.logo ?? null }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+// Fictional wordmarks, shown only while no partners exist in the CMS at all.
 const dummyLogos: PartnerLogo[] = [
   { name: 'Te Mauri Trust' },
   { name: 'Pacific Skills Alliance' },
@@ -34,8 +50,16 @@ const dummyLogos: PartnerLogo[] = [
   { name: 'Reef & Root Foundation' },
 ];
 
-// Partner categories are editorial (not per-logo); kept as static copy.
-const categories = [
+const marqueeLogos =
+  logos.length > 0 ? logos : collectionLogos.length > 0 ? collectionLogos : dummyLogos;
+
+// With few partners the track would be narrower than the viewport and the
+// -50% loop would show gaps — repeat the set until each half has ≥ 8 chips.
+const repeats = Math.max(1, Math.ceil(8 / marqueeLogos.length));
+const marqueeItems = Array.from({ length: repeats }, () => marqueeLogos).flat();
+
+// Defaults until edited on the Partners block in Strapi.
+const defaultCategories: PartnerCategory[] = [
   {
     title: 'Government ministries',
     text: 'Designing and delivering programmes aligned to national priorities.',
@@ -53,6 +77,9 @@ const categories = [
     text: 'Wider networks that extend our reach and lift standards across the sector.',
   },
 ];
+
+const categories: PartnerCategory[] =
+  block.categories && block.categories.length > 0 ? block.categories : defaultCategories;
 ---
 
 <section id="partners" class="border-t border-ek-700/10 bg-white py-24">
@@ -66,9 +93,22 @@ const categories = [
       </h2>
       <span class="mb-5 block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500" aria-hidden="true"></span>
       <p class="text-lg text-ek-muted">
-        We don’t work alone. We build trusted relationships that bring coordination, shared
-        investment, and greater reach — so our work can grow and last.
+        {
+          block.description ??
+            'We don’t work alone. We build trusted relationships that bring coordination, shared investment, and greater reach — so our work can grow and last.'
+        }
       </p>
+      {
+        block.allPartnersLink && (
+          <a
+            href={block.allPartnersLink}
+            class="mt-5 inline-flex items-center gap-2 font-condensed text-[0.85rem] font-semibold uppercase tracking-[0.14em] text-ek-600 transition-colors duration-200 hover:text-ek-olive"
+          >
+            {block.allPartnersLabel ?? 'All partners'}
+            <span aria-hidden="true">→</span>
+          </a>
+        )
+      }
     </div>
 
     <div class="mb-[50px] grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -96,7 +136,7 @@ const categories = [
         {
           marqueeSets.map((isDuplicate) => (
             <div class="flex shrink-0 items-center gap-4 pr-4" aria-hidden={isDuplicate || undefined}>
-              {(logos.length > 0 ? logos : dummyLogos).map((p) => {
+              {marqueeItems.map((p) => {
                 const logo = p.logo?.url ? absoluteUrl(p.logo.url) : null;
                 return (
                   <div class="flex h-16 w-44 shrink-0 items-center justify-center rounded-md border border-ek-700/10 bg-ek-mist/60 px-5 transition-colors duration-200 hover:border-ek-500/40">

@@ -13,8 +13,19 @@
     "title": {
       "type": "string"
     },
+    "description": {
+      "type": "text"
+    },
     "allPartnersLink": {
       "type": "string"
+    },
+    "allPartnersLabel": {
+      "type": "string"
+    },
+    "categories": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.partner-category"
     },
     "logos": {
       "type": "component",
