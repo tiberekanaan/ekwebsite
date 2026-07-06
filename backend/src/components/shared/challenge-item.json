@@ -19,6 +19,10 @@
     },
     "statLabel": {
       "type": "string"
+    },
+    "icon": {
+      "type": "enumeration",
+      "enum": ["waves", "chart", "screen", "people"]
     }
   }
 }

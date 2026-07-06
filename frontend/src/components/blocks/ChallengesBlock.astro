@@ -12,6 +12,7 @@ interface ChallengeItem {
   caption: string | null;
   stat: string | null;
   statLabel: string | null;
+  icon?: string | null;
 }
 
 export interface ChallengesBlockData {
@@ -36,41 +37,47 @@ const PHOTOS = [photoClimate, photoWork, photoDigital, photoLeadership];
 
 const { block } = Astro.props;
 
-// Mockup line icons (inner SVG markup); cycle per card.
-const ICONS = [
-  '<path d="M3 14c2-2 4-2 6 0s4 2 6 0 4-2 6 0M3 18c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M12 3v6M9 6l3-3 3 3"/>',
-  '<path d="M4 20v-6M10 20v-9M16 20v-4M22 20H2"/><circle cx="16" cy="9" r="2"/>',
-  '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M8 10l-2 2 2 2M16 10l2 2-2 2"/>',
-  '<circle cx="12" cy="7" r="3"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/><path d="M3 11l2 2M21 11l-2 2"/>',
-];
+// Line icons (inner SVG markup), keyed by the Strapi `icon` enumeration on
+// shared.challenge-item; cards without a chosen icon cycle through the list.
+const ICONS: Record<string, string> = {
+  waves:
+    '<path d="M3 14c2-2 4-2 6 0s4 2 6 0 4-2 6 0M3 18c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M12 3v6M9 6l3-3 3 3"/>',
+  chart:
+    '<path d="M4 20v-6M10 20v-9M16 20v-4M22 20H2"/><circle cx="16" cy="9" r="2"/>',
+  screen:
+    '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M8 10l-2 2 2 2M16 10l2 2-2 2"/>',
+  people:
+    '<circle cx="12" cy="7" r="3"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/><path d="M3 11l2 2M21 11l-2 2"/>',
+};
+const ICON_CYCLE = Object.keys(ICONS);
 
 const defaults: Challenge[] = [
   {
     title: 'Climate change',
     caption:
       'Rising seas wash away shorelines and contaminate the freshwater and soil our communities depend on for survival.',
-    icon: ICONS[0],
+    icon: ICONS.waves,
     photo: PHOTOS[0],
   },
   {
     title: 'Unemployment',
     caption:
       'Few jobs and limited pathways into enterprise leave young people unable to earn, straining households and pushing many into vulnerable informal work.',
-    icon: ICONS[1],
+    icon: ICONS.chart,
     photo: PHOTOS[1],
   },
   {
     title: 'Limited digital participation',
     caption:
       'Gaps in access, awareness, and confidence lock people out of the tools needed to connect, learn, and earn safely online.',
-    icon: ICONS[2],
+    icon: ICONS.screen,
     photo: PHOTOS[2],
   },
   {
     title: 'Fragile local leadership',
     caption:
       'Progress too often rests on a few individuals or outside help, making it hard for communities to sustain long-term change on their own.',
-    icon: ICONS[3],
+    icon: ICONS.people,
     photo: PHOTOS[3],
   },
 ];
@@ -80,7 +87,7 @@ const challenges: Challenge[] =
     ? block.items.map((c, i) => ({
         title: c.title,
         caption: c.caption ?? '',
-        icon: ICONS[i % ICONS.length],
+        icon: (c.icon && ICONS[c.icon]) || ICONS[ICON_CYCLE[i % ICON_CYCLE.length]],
         photo: PHOTOS[i % PHOTOS.length],
       }))
     : defaults;
