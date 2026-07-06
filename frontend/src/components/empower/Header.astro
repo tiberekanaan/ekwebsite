@@ -2,19 +2,25 @@
 import { Image } from 'astro:assets';
 import logoFullColor from '@/assets/branding/empower-logo-full.webp';
 
+import type { NavLink } from '@/types/global';
+
 interface Props {
   /** Floats the navbar as an absolute pill over a full-bleed hero (landing only). */
   floating?: boolean;
+  /** Dynamic logo from Strapi Global settings; falls back to the bundled asset. */
+  logo?: { url: string; alternativeText?: string | null };
+  /** Dynamic navbar links from Strapi Global settings; falls back to the hard-coded nav. */
+  links?: NavLink[];
 }
 
-const { floating = false } = Astro.props;
+const { floating = false, logo, links } = Astro.props;
 
 interface NavItem {
   label: string;
   href: string;
 }
 
-const nav: NavItem[] = [
+const defaultNav: NavItem[] = [
   { label: 'About', href: '/about' },
   { label: 'Our Work', href: '/#our-work' },
   { label: 'Resources', href: '/resources' },
@@ -22,6 +28,11 @@ const nav: NavItem[] = [
   { label: 'Events', href: '/events' },
   { label: 'Contact', href: '/contact' },
 ];
+
+const nav: NavItem[] =
+  links && links.length > 0
+    ? links.map((link) => ({ label: link.label, href: link.url }))
+    : defaultNav;
 
 const currentPath = Astro.url.pathname;
 
@@ -45,15 +56,26 @@ const isActive = (href: string) => {
       class="inline-flex items-center transition-transform duration-300 hover:scale-[1.03]"
       aria-label="Empower Kiribati home"
     >
-      <Image
-        src={logoFullColor}
-        alt="Empower Kiribati"
-        height={56}
-        widths={[144, 216, 288]}
-        sizes="(min-width: 1024px) 216px, 168px"
-        class="h-12 w-auto sm:h-14"
-        loading="eager"
-      />
+      {
+        logo ? (
+          <img
+            src={logo.url}
+            alt={logo.alternativeText || 'Empower Kiribati'}
+            class="h-12 w-auto sm:h-14"
+            loading="eager"
+          />
+        ) : (
+          <Image
+            src={logoFullColor}
+            alt="Empower Kiribati"
+            height={56}
+            widths={[144, 216, 288]}
+            sizes="(min-width: 1024px) 216px, 168px"
+            class="h-12 w-auto sm:h-14"
+            loading="eager"
+          />
+        )
+      }
     </a>
 
     <nav class="hidden items-center gap-8 md:flex" aria-label="Primary">

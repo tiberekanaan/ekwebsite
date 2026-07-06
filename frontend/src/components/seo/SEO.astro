@@ -3,6 +3,8 @@ import siteConfig from '@/config/site.config';
 
 interface Props {
   title?: string;
+  /** Dynamic site name from Strapi Global settings; falls back to site.config. */
+  siteName?: string;
   description?: string;
   image?: string;
   imageAlt?: string;
@@ -18,6 +20,7 @@ interface Props {
 
 const {
   title,
+  siteName = siteConfig.name,
   description = siteConfig.description,
   image,
   imageAlt,
@@ -26,7 +29,7 @@ const {
   nofollow = false,
 } = Astro.props;
 
-const pageTitle = title && title !== siteConfig.name ? `${title} — ${siteConfig.name}` : siteConfig.name;
+const pageTitle = title && title !== siteName ? `${title} — ${siteName}` : siteName;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
@@ -78,7 +81,7 @@ const ogImageType = isGeneratedOgImage ? 'image/png' : getImageType(ogImage);
 <meta property="og:image" content={ogImage} />
 <meta property="og:url" content={canonicalURL.toString()} />
 <meta property="og:description" content={description} />
-<meta property="og:site_name" content={siteConfig.name} />
+<meta property="og:site_name" content={siteName} />
 <meta property="og:locale" content={locale} />
 <meta property="og:image:alt" content={imageAlt || pageTitle} />
 {isGeneratedOgImage && <meta property="og:image:width" content="1200" />}

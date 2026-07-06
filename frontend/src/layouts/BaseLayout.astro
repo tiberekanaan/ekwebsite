@@ -24,6 +24,10 @@ interface Props {
   noindex?: boolean;
   nofollow?: boolean;
   includeOrgSchema?: boolean;
+  /** Dynamic site name from Strapi Global settings; falls back to site.config. */
+  siteName?: string;
+  /** Dynamic favicon from Strapi Global settings; falls back to site.config. */
+  favicon?: { href: string; type?: string };
 }
 
 const {
@@ -35,6 +39,8 @@ const {
   noindex = false,
   nofollow = false,
   includeOrgSchema = false,
+  siteName,
+  favicon,
 } = Astro.props;
 
 // Build JSON-LD schemas
@@ -52,7 +58,11 @@ if (includeOrgSchema) {
     <meta name="generator" content={Astro.generator} />
 
     <!-- Favicon -->
-    <link rel="icon" type={siteConfig.branding.favicon.type} href={siteConfig.branding.favicon.href} />
+    <link
+      rel="icon"
+      type={favicon?.type ?? siteConfig.branding.favicon.type}
+      href={favicon?.href ?? siteConfig.branding.favicon.href}
+    />
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="theme-color" content={siteConfig.branding.colors.themeColor} />
 
@@ -65,6 +75,7 @@ if (includeOrgSchema) {
     <!-- SEO -->
     <SEO
       title={title}
+      siteName={siteName}
       description={description}
       image={image}
       imageAlt={imageAlt}

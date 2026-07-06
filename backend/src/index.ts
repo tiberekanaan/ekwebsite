@@ -16,6 +16,7 @@ const PUBLIC_READ_ACTIONS = [
   'api::blog.blog.find',
   'api::blog.blog.findOne',
   'api::homepage.homepage.find',
+  'api::global.global.find',
 ];
 
 // Strapi's ISO locale list has no Gilbertese ("gil"); "en-KI" is the only

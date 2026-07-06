@@ -4,6 +4,8 @@ import Header from '@/components/empower/Header.astro';
 import Footer from '@/components/empower/Footer.astro';
 import Motion from '@/components/empower/Motion.astro';
 import Search from '@/components/empower/Search.astro';
+import { STRAPI_URL } from 'astro:env/server';
+import type { GlobalSettings } from '@/types/global';
 
 interface Props {
   title?: string;
@@ -34,6 +36,32 @@ const {
   includeOrgSchema,
   floatingHeader = false,
 } = Astro.props;
+
+// Global settings from Strapi (site name, favicon, logo, navbar links);
+// null when Strapi is down or the single type is unpublished — every
+// consumer falls back to its hard-coded default.
+let global: GlobalSettings | null = null;
+try {
+  const res = await fetch(`${STRAPI_URL}/api/global?populate=*`);
+  if (res.ok) {
+    const { data } = (await res.json()) as { data: GlobalSettings | null };
+    global = data;
+  }
+} catch {
+  global = null;
+}
+
+const absoluteUrl = (path?: string | null) =>
+  path ? (path.startsWith('http') ? path : `${STRAPI_URL}${path}`) : undefined;
+
+const favicon =
+  global?.favicon?.url !== undefined
+    ? { href: absoluteUrl(global.favicon!.url)!, type: global.favicon!.mime }
+    : undefined;
+
+const logo = global?.logo?.url
+  ? { url: absoluteUrl(global.logo.url)!, alternativeText: global.logo.alternativeText }
+  : undefined;
 ---
 
 <BaseLayout
@@ -45,8 +73,10 @@ const {
   noindex={noindex}
   nofollow={nofollow}
   includeOrgSchema={includeOrgSchema}
+  siteName={global?.siteName ?? undefined}
+  favicon={favicon}
 >
-  <Header slot="header" floating={floatingHeader} />
+  <Header slot="header" floating={floatingHeader} logo={logo} links={global?.navbarLinks ?? undefined} />
 
   <slot />
 
