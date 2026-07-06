@@ -1,15 +1,15 @@
-import { c as createComponent, V as VALID_INPUT_FORMATS } from './_astro_assets_De93nOwO.mjs';
+import { c as createComponent, V as VALID_INPUT_FORMATS } from './_astro_assets_AC_fZIIY.mjs';
 import 'piccolore';
-import { n as generateCspDigest, s as spreadAttributes, u as unescapeHTML, e as renderTemplate, o as removeBase, i as isRemotePath, k as AstroError, U as UnknownContentCollectionError, c as renderComponent, m as maybeRenderHead, h as addAttribute } from './server_B71wUxTc.mjs';
-import { $ as $$Layout, a as $$PageHeader } from './PageHeader_3joNX9At.mjs';
-import { r as resolveLang, S as STRAPI_LOCALES, $ as $$LanguageToggle } from './LanguageToggle_Bu6fekBL.mjs';
+import { n as generateCspDigest, s as spreadAttributes, u as unescapeHTML, e as renderTemplate, o as removeBase, i as isRemotePath, k as AstroError, U as UnknownContentCollectionError, c as renderComponent, m as maybeRenderHead, h as addAttribute } from './server_ZGudQw4a.mjs';
+import { $ as $$Layout, a as $$PageHeader } from './PageHeader_axbbYy51.mjs';
+import { r as resolveLang, S as STRAPI_LOCALES, $ as $$LanguageToggle } from './LanguageToggle_DMKvl83p.mjs';
 import 'html-escaper';
 import { Traverse } from 'neotraverse/modern';
 import * as z from 'zod/v4';
 import 'clsx';
 import * as devalue from 'devalue';
 import { marked } from 'marked';
-import { S as STRAPI_URL } from './server_Cnanraoi.mjs';
+import { S as STRAPI_URL } from './server_B9JDO9Nt.mjs';
 
 function createSvgComponent({ meta, attributes, children, styles }) {
   const hasStyles = styles.length > 0;
