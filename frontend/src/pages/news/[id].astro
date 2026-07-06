@@ -1,5 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
 import LanguageToggle from '@/components/empower/LanguageToggle.astro';
 import { marked } from 'marked';
 import { STRAPI_URL } from 'astro:env/server';
@@ -54,62 +55,52 @@ const contentHtml = content ? marked.parse(content) : '';
 const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
 ---
 
-<Layout title={title} description={summary ?? `${title} — News update from Empower Kiribati`}>
-  <div class="mx-auto max-w-3xl px-6 py-16 lg:py-24">
-    <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
-      <a
-        href="/"
-        class="inline-flex items-center gap-1 text-sm font-semibold text-slate-500 transition-colors hover:text-teal-700"
-      >
-        ← Back to home
-      </a>
-      {hasTranslation && <LanguageToggle current={currentLang} path={Astro.url.pathname} />}
-    </div>
-
-    {
-      photo && (
-        <figure class="mb-10 overflow-hidden rounded-2xl shadow-xl shadow-slate-900/10" data-reveal>
-          <img
-            src={absoluteUrl(photo.url)}
-            alt={photo.alternativeText ?? title}
-            class="aspect-[16/9] w-full object-cover"
-            loading="eager"
-          />
-        </figure>
-      )
-    }
-
-    <header class="mb-10" data-reveal>
-      <p class="mb-3 font-accent text-3xl leading-none text-slate-700">News</p>
-      <h1
-        class="font-display text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl"
-      >
-        {title}
-      </h1>
-      <time class="mt-4 block text-sm font-semibold uppercase tracking-widest text-slate-500">
+<Layout
+  title={title}
+  description={summary ?? `${title} — News update from Empower Kiribati`}
+  floatingHeader
+>
+  <PageHeader
+    eyebrow="News"
+    title={title}
+    description={summary ?? undefined}
+    backHref="/"
+    backLabel="Back to home"
+  >
+    <div class="mt-6 flex flex-wrap items-center gap-4" data-reveal data-reveal-delay="200">
+      <time class="text-sm font-semibold uppercase tracking-widest text-[#9fb9b4]">
         {formattedDate}
       </time>
-    </header>
+      {hasTranslation && <LanguageToggle current={currentLang} path={Astro.url.pathname} />}
+    </div>
+  </PageHeader>
+  <div class="mx-auto max-w-7xl px-8 py-12">
+    <div class="max-w-3xl">
+      {
+        photo && (
+          <figure
+            class="mb-10 overflow-hidden rounded-2xl shadow-xl shadow-slate-900/10"
+            data-reveal
+          >
+            <img
+              src={absoluteUrl(photo.url)}
+              alt={photo.alternativeText ?? title}
+              class="aspect-[16/9] w-full object-cover"
+              loading="eager"
+            />
+          </figure>
+        )
+      }
 
-    {
-      summary && (
-        <p
-          class="mb-10 border-l-4 border-teal-500 pl-5 text-lg leading-relaxed text-slate-700"
-          data-reveal
-        >
-          {summary}
-        </p>
-      )
-    }
-
-    {
-      contentHtml && (
-        <article
-          class="prose prose-slate prose-lg max-w-none prose-headings:font-display prose-a:text-teal-700 hover:prose-a:text-teal-900"
-          set:html={contentHtml}
-          data-reveal
-        />
-      )
-    }
+      {
+        contentHtml && (
+          <article
+            class="prose prose-slate prose-lg max-w-none prose-headings:font-display prose-a:text-teal-700 hover:prose-a:text-teal-900"
+            set:html={contentHtml}
+            data-reveal
+          />
+        )
+      }
+    </div>
   </div>
 </Layout>

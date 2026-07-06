@@ -6,39 +6,68 @@ interface Props {
   description?: string;
   /** Optional small accent label shown above the title. */
   eyebrow?: string;
+  /** Optional back link rendered above the eyebrow. */
+  backHref?: string;
+  /** Label for the back link; defaults to "Back". */
+  backLabel?: string;
 }
 
-const { title, description, eyebrow } = Astro.props;
+const { title, description, eyebrow, backHref, backLabel } = Astro.props;
 ---
 
 <header
-  class="w-full bg-gradient-to-br from-slate-900 to-teal-900 px-8 pt-40 pb-20 text-white"
+  class="relative overflow-hidden bg-ek-900 bg-[radial-gradient(1200px_600px_at_75%_-10%,rgba(42,128,137,0.55),transparent_60%),linear-gradient(160deg,var(--color-ek-800)_0%,var(--color-ek-900)_70%)] pt-40 pb-16 text-white"
 >
-  <div class="mx-auto max-w-6xl">
+  <svg
+    class="pointer-events-none absolute -top-[10%] right-[-6%] z-0 w-[420px] opacity-[0.06]"
+    viewBox="0 0 200 200"
+    aria-hidden="true"
+  >
+    <path d="M100 20c-25 0-45 20-45 50s20 60 45 60 45-30 45-60-20-50-45-50z" fill="#aecb3a" />
+  </svg>
+
+  <div class="relative z-[2] mx-auto w-full max-w-7xl px-8">
+    {
+      backHref && (
+        <a
+          href={backHref}
+          class="mb-7 inline-flex items-center gap-1 text-sm font-semibold text-[#9fb9b4] transition-colors hover:text-ek-lime-bright"
+          data-reveal
+        >
+          ← {backLabel ?? 'Back'}
+        </a>
+      )
+    }
     {
       eyebrow && (
-        <p class="mb-3 font-accent text-3xl leading-none text-lime-300" data-reveal>
+        <p
+          class="mb-4 font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-lime-bright"
+          data-reveal
+        >
           {eyebrow}
         </p>
       )
     }
     <h1
-      class="font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
+      class="max-w-4xl bg-gradient-to-br from-white via-white to-ek-lime-bright bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl lg:text-6xl"
       data-reveal
       data-reveal-delay="80"
     >
       {title}
     </h1>
+    <span
+      class="mt-5 block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500"
+      aria-hidden="true"
+      data-reveal
+      data-reveal-delay="120"
+    ></span>
     {
       description && (
-        <p
-          class="mt-5 max-w-2xl text-lg leading-relaxed text-slate-300"
-          data-reveal
-          data-reveal-delay="160"
-        >
+        <p class="mt-5 max-w-[38em] text-lg text-[#cfe0db]" data-reveal data-reveal-delay="160">
           {description}
         </p>
       )
     }
+    <slot />
   </div>
 </header>

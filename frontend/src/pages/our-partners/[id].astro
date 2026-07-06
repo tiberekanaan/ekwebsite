@@ -1,5 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { STRAPI_URL } from 'astro:env/server';
 
@@ -24,52 +25,50 @@ const projectSlugById = new Map(allProjects.map((p) => [p.id, p.data.slug]));
 const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
 ---
 
-<Layout title={name} description={`${name} — Empower Kiribati partner`}>
-  <div class="mx-auto max-w-3xl px-6 py-16">
-    <a
-      href="/our-partners"
-      class="mb-8 inline-block text-sm text-slate-500 transition-colors hover:text-teal-700"
-    >
-      ← Back to partners
-    </a>
-
-    <header class="mb-12 flex flex-col gap-6 sm:flex-row sm:items-center">
-      <div class="flex h-28 w-28 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50">
+<Layout title={name} description={`${name} — Empower Kiribati partner`} floatingHeader>
+  <PageHeader
+    eyebrow="Partner"
+    title={name}
+    backHref="/our-partners"
+    backLabel="Back to partners"
+  >
+    <div class="mt-7 flex flex-wrap items-center gap-5" data-reveal data-reveal-delay="200">
+      <div class="flex h-24 w-24 shrink-0 items-center justify-center rounded-xl bg-white ring-1 ring-white/20">
         {
           logo ? (
             <img
               src={absoluteUrl(logo.url)}
               alt={logo.alternativeText ?? `${name} logo`}
-              class="max-h-24 max-w-[85%] object-contain"
+              class="max-h-20 max-w-[85%] object-contain"
             />
           ) : (
-            <span class="text-xs font-bold uppercase tracking-widest text-slate-400">{name}</span>
+            <span class="text-center text-xs font-bold uppercase tracking-widest text-slate-400">
+              {name}
+            </span>
           )
         }
       </div>
-      <div>
-        <p class="mb-2 font-accent text-3xl leading-none text-slate-700">Partner</p>
-        <h1 class="font-display text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-          {name}
-        </h1>
-        {
-          website_url && (
-            <a
-              href={website_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-teal-700 hover:text-teal-900"
-            >
-              Visit website
-              <span aria-hidden="true">↗</span>
-            </a>
-          )
-        }
-      </div>
-    </header>
-
-    <section>
-      <h2 class="mb-6 font-accent text-3xl leading-none text-slate-700">
+      {
+        website_url && (
+          <a
+            href={website_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1 text-sm font-semibold text-ek-lime-bright transition-colors hover:text-white"
+          >
+            Visit website
+            <span aria-hidden="true">↗</span>
+          </a>
+        )
+      }
+    </div>
+  </PageHeader>
+  <div class="mx-auto max-w-7xl px-8 py-12">
+    <section class="max-w-3xl">
+      <p class="mb-4 font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
+        Projects
+      </p>
+      <h2 class="mb-6 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-3xl font-bold tracking-tight text-transparent">
         Associated Projects
       </h2>
       {

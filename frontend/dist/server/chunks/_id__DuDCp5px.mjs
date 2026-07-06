@@ -1,10 +1,10 @@
-import { c as createComponent } from './_astro_assets_CvTB0Yt1.mjs';
+import { c as createComponent } from './_astro_assets_CL3KYVc9.mjs';
 import 'piccolore';
-import { c as renderComponent, e as renderTemplate, m as maybeRenderHead, u as unescapeHTML } from './server_Da8U92e3.mjs';
-import { $ as $$Layout } from './Layout_DaDp118r.mjs';
-import { r as resolveLang, S as STRAPI_LOCALES, $ as $$LanguageToggle } from './LanguageToggle_CPJu_rDs.mjs';
+import { c as renderComponent, e as renderTemplate, m as maybeRenderHead, u as unescapeHTML } from './server_D-XiJHcZ.mjs';
+import { $ as $$Layout } from './Layout_uAHwrxxZ.mjs';
+import { r as resolveLang, S as STRAPI_LOCALES, $ as $$PageHeader, a as $$LanguageToggle } from './LanguageToggle_Cka-B2q5.mjs';
 import { marked } from 'marked';
-import { S as STRAPI_URL } from './server_DbHZgDme.mjs';
+import { S as STRAPI_URL } from './server_B5dqAppw.mjs';
 
 const prerender = false;
 const $$id = createComponent(async ($$result, $$props, $$slots) => {
@@ -37,9 +37,7 @@ const $$id = createComponent(async ($$result, $$props, $$slots) => {
     day: "numeric"
   }) : "";
   const contentHtml = content ? marked.parse(content) : "";
-  return renderTemplate`${renderComponent($$result, "Layout", $$Layout, { "title": title, "description": `${title} — Blog` }, { "default": async ($$result2) => renderTemplate` ${maybeRenderHead()}<div class="mx-auto max-w-3xl px-6 py-16"> <div class="mb-8 flex flex-wrap items-center justify-between gap-4"> <a href="/blog" class="text-foreground-muted hover:text-brand-500 inline-block text-sm transition-colors">
-← Back to blog
-</a> ${hasTranslation && renderTemplate`${renderComponent($$result2, "LanguageToggle", $$LanguageToggle, { "current": currentLang, "path": Astro2.url.pathname })}`} </div> <header class="mb-10"> <h1 class="font-display text-foreground mb-4 text-4xl font-bold leading-tight"> ${title} </h1> ${formattedDate && renderTemplate`<time class="text-foreground-muted text-sm">${formattedDate}</time>`} </header> <article class="text-foreground prose prose-neutral dark:prose-invert max-w-none leading-relaxed">${unescapeHTML(contentHtml)}</article> </div> ` })}`;
+  return renderTemplate`${renderComponent($$result, "Layout", $$Layout, { "title": title, "description": `${title} — Blog`, "floatingHeader": true }, { "default": async ($$result2) => renderTemplate` ${renderComponent($$result2, "PageHeader", $$PageHeader, { "eyebrow": "Blog", "title": title, "backHref": "/blog", "backLabel": "Back to blog" }, { "default": async ($$result3) => renderTemplate` ${maybeRenderHead()}<div class="mt-6 flex flex-wrap items-center gap-4" data-reveal data-reveal-delay="200"> ${formattedDate && renderTemplate`<time class="text-sm font-semibold uppercase tracking-widest text-[#9fb9b4]"> ${formattedDate} </time>`} ${hasTranslation && renderTemplate`${renderComponent($$result3, "LanguageToggle", $$LanguageToggle, { "current": currentLang, "path": Astro2.url.pathname })}`} </div> ` })} <div class="mx-auto max-w-7xl px-8 py-12"> <article class="text-foreground prose prose-neutral dark:prose-invert max-w-3xl leading-relaxed">${unescapeHTML(contentHtml)}</article> </div> ` })}`;
 }, "/Users/tibereritobakanaan/Projects/ekwebsite/frontend/src/pages/blog/[id].astro", void 0);
 
 const $$file = "/Users/tibereritobakanaan/Projects/ekwebsite/frontend/src/pages/blog/[id].astro";

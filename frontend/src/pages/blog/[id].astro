@@ -1,5 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import PageHeader from '@/components/PageHeader.astro';
 import LanguageToggle from '@/components/empower/LanguageToggle.astro';
 import { marked } from 'marked';
 import { STRAPI_URL } from 'astro:env/server';
@@ -54,31 +55,26 @@ const formattedDate = displayDate
 const contentHtml = content ? marked.parse(content) : '';
 ---
 
-<Layout title={title} description={`${title} — Blog`}>
-  <div class="mx-auto max-w-3xl px-6 py-16">
-    <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
-      <a
-        href="/blog"
-        class="text-foreground-muted hover:text-brand-500 inline-block text-sm transition-colors"
-      >
-        ← Back to blog
-      </a>
-      {hasTranslation && <LanguageToggle current={currentLang} path={Astro.url.pathname} />}
-    </div>
-
-    <header class="mb-10">
-      <h1 class="font-display text-foreground mb-4 text-4xl font-bold leading-tight">
-        {title}
-      </h1>
+<Layout title={title} description={`${title} — Blog`} floatingHeader>
+  <PageHeader eyebrow="Blog" title={title} backHref="/blog" backLabel="Back to blog">
+    <div
+      class="mt-6 flex flex-wrap items-center gap-4"
+      data-reveal
+      data-reveal-delay="200"
+    >
       {
         formattedDate && (
-          <time class="text-foreground-muted text-sm">{formattedDate}</time>
+          <time class="text-sm font-semibold uppercase tracking-widest text-[#9fb9b4]">
+            {formattedDate}
+          </time>
         )
       }
-    </header>
-
+      {hasTranslation && <LanguageToggle current={currentLang} path={Astro.url.pathname} />}
+    </div>
+  </PageHeader>
+  <div class="mx-auto max-w-7xl px-8 py-12">
     <article
-      class="text-foreground prose prose-neutral dark:prose-invert max-w-none leading-relaxed"
+      class="text-foreground prose prose-neutral dark:prose-invert max-w-3xl leading-relaxed"
       set:html={contentHtml}
     />
   </div>

@@ -1,9 +1,9 @@
-import { c as createComponent } from './_astro_assets_CvTB0Yt1.mjs';
+import { c as createComponent } from './_astro_assets_CL3KYVc9.mjs';
 import 'piccolore';
-import { c as renderComponent, e as renderTemplate, m as maybeRenderHead, h as addAttribute } from './server_Da8U92e3.mjs';
-import { $ as $$Layout } from './Layout_DaDp118r.mjs';
-import { r as resolveLang, S as STRAPI_LOCALES, $ as $$LanguageToggle } from './LanguageToggle_CPJu_rDs.mjs';
-import { S as STRAPI_URL } from './server_DbHZgDme.mjs';
+import { c as renderComponent, e as renderTemplate, m as maybeRenderHead, h as addAttribute } from './server_D-XiJHcZ.mjs';
+import { $ as $$Layout } from './Layout_uAHwrxxZ.mjs';
+import { r as resolveLang, S as STRAPI_LOCALES, $ as $$PageHeader, a as $$LanguageToggle } from './LanguageToggle_Cka-B2q5.mjs';
+import { S as STRAPI_URL } from './server_B5dqAppw.mjs';
 
 const prerender = false;
 const $$id = createComponent(async ($$result, $$props, $$slots) => {
@@ -61,9 +61,7 @@ const $$id = createComponent(async ($$result, $$props, $$slots) => {
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
-  return renderTemplate`${renderComponent($$result, "Layout", $$Layout, { "title": title, "description": description ?? `${title} — Community Resource` }, { "default": async ($$result2) => renderTemplate` ${maybeRenderHead()}<div class="mx-auto max-w-3xl px-6 py-16"> <div class="mb-8 flex flex-wrap items-center justify-between gap-4"> <a href="/resources" class="inline-block text-sm text-slate-500 transition-colors hover:text-teal-700">
-← Back to resources
-</a> ${hasTranslation && renderTemplate`${renderComponent($$result2, "LanguageToggle", $$LanguageToggle, { "current": currentLang, "path": Astro2.url.pathname })}`} </div> <header class="mb-10"> <p class="mb-2 font-accent text-3xl leading-none text-slate-700">Resource</p> <h1 class="font-display text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl"> ${title} </h1> ${description && renderTemplate`<p class="mt-4 text-base text-slate-600">${description}</p>`} </header> ${content_blocks.length > 0 && renderTemplate`<section class="flex flex-col gap-6"> ${content_blocks.map((block) => {
+  return renderTemplate`${renderComponent($$result, "Layout", $$Layout, { "title": title, "description": description ?? `${title} — Community Resource`, "floatingHeader": true }, { "default": async ($$result2) => renderTemplate` ${renderComponent($$result2, "PageHeader", $$PageHeader, { "eyebrow": "Resource", "title": title, "description": description ?? void 0, "backHref": "/resources", "backLabel": "Back to resources" }, { "default": async ($$result3) => renderTemplate`${hasTranslation && renderTemplate`${maybeRenderHead()}<div class="mt-6" data-reveal data-reveal-delay="200"> ${renderComponent($$result3, "LanguageToggle", $$LanguageToggle, { "current": currentLang, "path": Astro2.url.pathname })} </div>`}` })} <div class="mx-auto max-w-7xl px-8 py-12"> ${content_blocks.length > 0 && renderTemplate`<section class="flex max-w-3xl flex-col gap-6"> ${content_blocks.map((block) => {
     if (block.__component === "content-blocks.video") {
       const embed = toEmbedUrl(block.url);
       if (embed) {
