@@ -1,8 +1,8 @@
-import { c as createComponent, $ as $$Font, b as $$Image } from './_astro_assets_Dn3aq6HU.mjs';
+import { c as createComponent, $ as $$Font, b as $$Image } from './_astro_assets_CvTB0Yt1.mjs';
 import 'piccolore';
-import { q as createRenderInstruction, h as addAttribute, e as renderTemplate, u as unescapeHTML, m as maybeRenderHead, c as renderComponent, t as renderSlot, v as renderHead } from './server_CNBOL231.mjs';
+import { q as createRenderInstruction, h as addAttribute, e as renderTemplate, u as unescapeHTML, m as maybeRenderHead, c as renderComponent, t as renderSlot, v as renderHead } from './server_Da8U92e3.mjs';
 import { clsx } from 'clsx';
-import { G as GOOGLE_SITE_VERIFICATION, B as BING_SITE_VERIFICATION, c as SITE_URL } from './server_ocxaiVY8.mjs';
+import { G as GOOGLE_SITE_VERIFICATION, B as BING_SITE_VERIFICATION, c as SITE_URL, S as STRAPI_URL } from './server_DbHZgDme.mjs';
 import { twMerge } from 'tailwind-merge';
 import 'react/jsx-runtime';
 import 'react';
@@ -57,6 +57,7 @@ const $$SEO = createComponent(($$result, $$props, $$slots) => {
   Astro2.self = $$SEO;
   const {
     title,
+    siteName = siteConfig.name,
     description = siteConfig.description,
     image,
     imageAlt,
@@ -64,7 +65,7 @@ const $$SEO = createComponent(($$result, $$props, $$slots) => {
     noindex = false,
     nofollow = false
   } = Astro2.props;
-  const pageTitle = title && title !== siteConfig.name ? `${title} — ${siteConfig.name}` : siteConfig.name;
+  const pageTitle = title && title !== siteName ? `${title} — ${siteName}` : siteName;
   const canonicalURL = new URL(Astro2.url.pathname, Astro2.site);
   let ogImage;
   if (image) {
@@ -107,7 +108,7 @@ const $$SEO = createComponent(($$result, $$props, $$slots) => {
     return ext ? extToMime[ext] : void 0;
   }
   const ogImageType = isGeneratedOgImage ? "image/png" : getImageType(ogImage);
-  return renderTemplate`<!-- Primary Meta Tags --><title>${pageTitle}</title><meta name="description"${addAttribute(description, "content")}><link rel="canonical"${addAttribute(canonicalURL.toString(), "href")}><meta name="robots"${addAttribute(robotsContent, "content")}><!-- Open Graph --><meta property="og:title"${addAttribute(pageTitle, "content")}><meta property="og:type"${addAttribute(article ? "article" : "website", "content")}><meta property="og:image"${addAttribute(ogImage, "content")}><meta property="og:url"${addAttribute(canonicalURL.toString(), "content")}><meta property="og:description"${addAttribute(description, "content")}><meta property="og:site_name"${addAttribute(siteConfig.name, "content")}><meta property="og:locale"${addAttribute(locale, "content")}><meta property="og:image:alt"${addAttribute(imageAlt || pageTitle, "content")}>${isGeneratedOgImage && renderTemplate`<meta property="og:image:width" content="1200">`}${isGeneratedOgImage && renderTemplate`<meta property="og:image:height" content="630">`}${ogImageType && renderTemplate`<meta property="og:image:type"${addAttribute(ogImageType, "content")}>`}<!-- Article Metadata -->${article?.publishedTime && renderTemplate`<meta property="article:published_time"${addAttribute(article.publishedTime.toISOString(), "content")}>`}${article?.modifiedTime && renderTemplate`<meta property="article:modified_time"${addAttribute(article.modifiedTime.toISOString(), "content")}>`}${article?.authors?.map((author) => renderTemplate`<meta property="article:author"${addAttribute(author, "content")}>`)}${article?.tags?.map((tag) => renderTemplate`<meta property="article:tag"${addAttribute(tag, "content")}>`)}<!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title"${addAttribute(pageTitle, "content")}><meta name="twitter:description"${addAttribute(description, "content")}><meta name="twitter:image"${addAttribute(ogImage, "content")}>${siteConfig.twitter?.site && renderTemplate`<meta name="twitter:site"${addAttribute(siteConfig.twitter.site, "content")}>`}${siteConfig.twitter?.creator && renderTemplate`<meta name="twitter:creator"${addAttribute(siteConfig.twitter.creator, "content")}>`}<!-- Verification -->${siteConfig.verification?.google}${siteConfig.verification?.bing}`;
+  return renderTemplate`<!-- Primary Meta Tags --><title>${pageTitle}</title><meta name="description"${addAttribute(description, "content")}><link rel="canonical"${addAttribute(canonicalURL.toString(), "href")}><meta name="robots"${addAttribute(robotsContent, "content")}><!-- Open Graph --><meta property="og:title"${addAttribute(pageTitle, "content")}><meta property="og:type"${addAttribute(article ? "article" : "website", "content")}><meta property="og:image"${addAttribute(ogImage, "content")}><meta property="og:url"${addAttribute(canonicalURL.toString(), "content")}><meta property="og:description"${addAttribute(description, "content")}><meta property="og:site_name"${addAttribute(siteName, "content")}><meta property="og:locale"${addAttribute(locale, "content")}><meta property="og:image:alt"${addAttribute(imageAlt || pageTitle, "content")}>${isGeneratedOgImage && renderTemplate`<meta property="og:image:width" content="1200">`}${isGeneratedOgImage && renderTemplate`<meta property="og:image:height" content="630">`}${ogImageType && renderTemplate`<meta property="og:image:type"${addAttribute(ogImageType, "content")}>`}<!-- Article Metadata -->${article?.publishedTime && renderTemplate`<meta property="article:published_time"${addAttribute(article.publishedTime.toISOString(), "content")}>`}${article?.modifiedTime && renderTemplate`<meta property="article:modified_time"${addAttribute(article.modifiedTime.toISOString(), "content")}>`}${article?.authors?.map((author) => renderTemplate`<meta property="article:author"${addAttribute(author, "content")}>`)}${article?.tags?.map((tag) => renderTemplate`<meta property="article:tag"${addAttribute(tag, "content")}>`)}<!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title"${addAttribute(pageTitle, "content")}><meta name="twitter:description"${addAttribute(description, "content")}><meta name="twitter:image"${addAttribute(ogImage, "content")}>${siteConfig.twitter?.site && renderTemplate`<meta name="twitter:site"${addAttribute(siteConfig.twitter.site, "content")}>`}${siteConfig.twitter?.creator && renderTemplate`<meta name="twitter:creator"${addAttribute(siteConfig.twitter.creator, "content")}>`}<!-- Verification -->${siteConfig.verification?.google}${siteConfig.verification?.bing}`;
 }, "/Users/tibereritobakanaan/Projects/ekwebsite/frontend/src/components/seo/SEO.astro", void 0);
 
 var __freeze$1 = Object.freeze;
@@ -594,13 +595,15 @@ const $$BaseLayout = createComponent(($$result, $$props, $$slots) => {
     article,
     noindex = false,
     nofollow = false,
-    includeOrgSchema = false
+    includeOrgSchema = false,
+    siteName,
+    favicon
   } = Astro2.props;
   const schemas = [createWebsiteSchema()];
   if (includeOrgSchema) {
     schemas.push(createOrganizationSchema());
   }
-  return renderTemplate(_a || (_a = __template(['<html lang="en" class="scroll-smooth"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator"', '><!-- Favicon --><link rel="icon"', "", '><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color"', "><!-- Fonts (Astro Fonts API: emits @font-face + preload, self-hosted) -->", "", "", "", "<!-- SEO -->", '<!-- RSS Feed --><link rel="alternate" type="application/rss+xml"', ' href="/rss.xml"><!-- JSON-LD Structured Data -->', "<!-- Analytics (loads if PUBLIC_GA_MEASUREMENT_ID or PUBLIC_GTM_ID is set) -->", "<!-- Client-side routing for view transitions -->", "<!-- Theme script (runs before render to prevent flash) --><script>\n      (function () {\n        const theme = localStorage.getItem('theme');\n        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;\n\n        if (theme === 'dark' || (!theme && systemDark)) {\n          document.documentElement.classList.add('dark');\n        } else {\n          document.documentElement.classList.remove('dark');\n        }\n      })();\n    <\/script>", '</head> <body class="font-sans flex min-h-screen flex-col bg-background text-foreground antialiased"> <!-- Skip to content link --> <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">\nSkip to content\n</a> ', ' <main id="main-content" class="flex-1" data-pagefind-body> ', " </main> ", " ", " </body></html>"])), addAttribute(Astro2.generator, "content"), addAttribute(siteConfig.branding.favicon.type, "type"), addAttribute(siteConfig.branding.favicon.href, "href"), addAttribute(siteConfig.branding.colors.themeColor, "content"), renderComponent($$result, "Font", $$Font, { "cssVariable": "--font-inter", "preload": true }), renderComponent($$result, "Font", $$Font, { "cssVariable": "--font-ubuntu", "preload": true }), renderComponent($$result, "Font", $$Font, { "cssVariable": "--font-saira", "preload": true }), renderComponent($$result, "Font", $$Font, { "cssVariable": "--font-playfair", "preload": true }), renderComponent($$result, "SEO", $$SEO, { "title": title, "description": description, "image": image, "imageAlt": imageAlt, "article": article, "noindex": noindex, "nofollow": nofollow }), addAttribute(`${siteConfig.name} RSS Feed`, "title"), renderComponent($$result, "JsonLd", $$JsonLd, { "schema": schemas }), renderComponent($$result, "Analytics", $$Analytics, {}), renderComponent($$result, "ClientRouter", $$ClientRouter, {}), renderHead(), renderSlot($$result, $$slots["header"]), renderSlot($$result, $$slots["default"]), renderSlot($$result, $$slots["footer"]), renderComponent($$result, "ConsentBanner", $$ConsentBanner, {}));
+  return renderTemplate(_a || (_a = __template(['<html lang="en" class="scroll-smooth"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator"', '><!-- Favicon --><link rel="icon"', "", '><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color"', "><!-- Fonts (Astro Fonts API: emits @font-face + preload, self-hosted) -->", "", "", "", "<!-- SEO -->", '<!-- RSS Feed --><link rel="alternate" type="application/rss+xml"', ' href="/rss.xml"><!-- JSON-LD Structured Data -->', "<!-- Analytics (loads if PUBLIC_GA_MEASUREMENT_ID or PUBLIC_GTM_ID is set) -->", "<!-- Client-side routing for view transitions -->", "<!-- Theme script (runs before render to prevent flash) --><script>\n      (function () {\n        const theme = localStorage.getItem('theme');\n        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;\n\n        if (theme === 'dark' || (!theme && systemDark)) {\n          document.documentElement.classList.add('dark');\n        } else {\n          document.documentElement.classList.remove('dark');\n        }\n      })();\n    <\/script>", '</head> <body class="font-sans flex min-h-screen flex-col bg-background text-foreground antialiased"> <!-- Skip to content link --> <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">\nSkip to content\n</a> ', ' <main id="main-content" class="flex-1" data-pagefind-body> ', " </main> ", " ", " </body></html>"])), addAttribute(Astro2.generator, "content"), addAttribute(favicon?.type ?? siteConfig.branding.favicon.type, "type"), addAttribute(favicon?.href ?? siteConfig.branding.favicon.href, "href"), addAttribute(siteConfig.branding.colors.themeColor, "content"), renderComponent($$result, "Font", $$Font, { "cssVariable": "--font-inter", "preload": true }), renderComponent($$result, "Font", $$Font, { "cssVariable": "--font-ubuntu", "preload": true }), renderComponent($$result, "Font", $$Font, { "cssVariable": "--font-saira", "preload": true }), renderComponent($$result, "Font", $$Font, { "cssVariable": "--font-playfair", "preload": true }), renderComponent($$result, "SEO", $$SEO, { "title": title, "siteName": siteName, "description": description, "image": image, "imageAlt": imageAlt, "article": article, "noindex": noindex, "nofollow": nofollow }), addAttribute(`${siteConfig.name} RSS Feed`, "title"), renderComponent($$result, "JsonLd", $$JsonLd, { "schema": schemas }), renderComponent($$result, "Analytics", $$Analytics, {}), renderComponent($$result, "ClientRouter", $$ClientRouter, {}), renderHead(), renderSlot($$result, $$slots["header"]), renderSlot($$result, $$slots["default"]), renderSlot($$result, $$slots["footer"]), renderComponent($$result, "ConsentBanner", $$ConsentBanner, {}));
 }, "/Users/tibereritobakanaan/Projects/ekwebsite/frontend/src/layouts/BaseLayout.astro", void 0);
 
 const logoFullColor = new Proxy({"src":"/_astro/empower-logo-full.HCEy9XcC.webp","width":3000,"height":1637,"format":"webp"}, {
@@ -619,8 +622,8 @@ const logoFullColor = new Proxy({"src":"/_astro/empower-logo-full.HCEy9XcC.webp"
 const $$Header = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$props, $$slots);
   Astro2.self = $$Header;
-  const { floating = false } = Astro2.props;
-  const nav = [
+  const { floating = false, logo, links } = Astro2.props;
+  const defaultNav = [
     { label: "About", href: "/about" },
     { label: "Our Work", href: "/#our-work" },
     { label: "Resources", href: "/resources" },
@@ -628,6 +631,7 @@ const $$Header = createComponent(($$result, $$props, $$slots) => {
     { label: "Events", href: "/events" },
     { label: "Contact", href: "/contact" }
   ];
+  const nav = links && links.length > 0 ? links.map((link) => ({ label: link.label, href: link.url })) : defaultNav;
   const currentPath = Astro2.url.pathname;
   const isActive = (href) => {
     if (href.startsWith("#") || href.startsWith("/#")) return false;
@@ -636,7 +640,7 @@ const $$Header = createComponent(($$result, $$props, $$slots) => {
   };
   return renderTemplate`${maybeRenderHead()}<header${addAttribute([
     floating ? "absolute inset-x-0 top-6 z-50 mx-auto w-[96%] max-w-[1600px] rounded-xl bg-white px-8 py-4 shadow-md" : "sticky top-0 z-40 w-full border-b border-slate-200 bg-white/95 backdrop-blur"
-  ], "class:list")}> <div${addAttribute(["flex items-center justify-between", !floating && "mx-auto max-w-7xl px-6 py-3"], "class:list")}> <a href="/" class="inline-flex items-center transition-transform duration-300 hover:scale-[1.03]" aria-label="Empower Kiribati home"> ${renderComponent($$result, "Image", $$Image, { "src": logoFullColor, "alt": "Empower Kiribati", "height": 56, "widths": [144, 216, 288], "sizes": "(min-width: 1024px) 216px, 168px", "class": "h-12 w-auto sm:h-14", "loading": "eager" })} </a> <nav class="hidden items-center gap-8 md:flex" aria-label="Primary"> ${nav.map((item) => renderTemplate`<a${addAttribute(item.href, "href")}${addAttribute(isActive(item.href) ? "page" : void 0, "aria-current")}${addAttribute([
+  ], "class:list")}> <div${addAttribute(["flex items-center justify-between", !floating && "mx-auto max-w-7xl px-6 py-3"], "class:list")}> <a href="/" class="inline-flex items-center transition-transform duration-300 hover:scale-[1.03]" aria-label="Empower Kiribati home"> ${logo ? renderTemplate`<img${addAttribute(logo.url, "src")}${addAttribute(logo.alternativeText || "Empower Kiribati", "alt")} class="h-12 w-auto sm:h-14" loading="eager">` : renderTemplate`${renderComponent($$result, "Image", $$Image, { "src": logoFullColor, "alt": "Empower Kiribati", "height": 56, "widths": [144, 216, 288], "sizes": "(min-width: 1024px) 216px, 168px", "class": "h-12 w-auto sm:h-14", "loading": "eager" })}`} </a> <nav class="hidden items-center gap-8 md:flex" aria-label="Primary"> ${nav.map((item) => renderTemplate`<a${addAttribute(item.href, "href")}${addAttribute(isActive(item.href) ? "page" : void 0, "aria-current")}${addAttribute([
     "relative font-serif text-sm font-medium transition-colors after:absolute after:inset-x-0 after:-bottom-1 after:h-0.5 after:origin-left after:scale-x-0 after:bg-lime-400 after:transition-transform after:duration-300 hover:after:scale-x-100",
     isActive(item.href) ? "text-slate-900 after:scale-x-100" : "text-slate-700 hover:text-slate-900"
   ], "class:list")}> ${item.label} </a>`)} </nav> <div class="flex items-center gap-3"> <button type="button" data-search-open class="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900" aria-label="Search the site"> <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35M17 11a6 6 0 1 1-12 0 6 6 0 0 1 12 0Z"></path> </svg> </button> <a href="/our-programs" class="hidden rounded-full bg-lime-300 px-5 py-2.5 text-sm font-semibold text-slate-900 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-lime-400 hover:shadow-md hover:shadow-lime-400/40 sm:inline-flex">
@@ -710,7 +714,7 @@ const $$Search = createComponent(async ($$result, $$props, $$slots) => {
   return renderTemplate`${maybeRenderHead()}<div id="search-modal" class="fixed inset-0 z-[100] hidden items-start justify-center bg-slate-900/60 px-4 pt-24 backdrop-blur-sm sm:pt-32" role="dialog" aria-modal="true" aria-label="Site search"> <div class="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-slate-200" data-search-panel> <div class="flex items-center justify-between border-b border-slate-100 px-5 py-3"> <span class="text-xs font-bold uppercase tracking-widest text-slate-500">Search</span> <button type="button" data-search-close class="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900" aria-label="Close search"> <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"></path> </svg> </button> </div> <div class="max-h-[70vh] overflow-y-auto p-5"> <div id="pagefind-search"></div> </div> </div> </div> ${renderScript($$result, "/Users/tibereritobakanaan/Projects/ekwebsite/frontend/src/components/empower/Search.astro?astro&type=script&index=0&lang.ts")}`;
 }, "/Users/tibereritobakanaan/Projects/ekwebsite/frontend/src/components/empower/Search.astro", void 0);
 
-const $$Layout = createComponent(($$result, $$props, $$slots) => {
+const $$Layout = createComponent(async ($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$props, $$slots);
   Astro2.self = $$Layout;
   const {
@@ -724,7 +728,20 @@ const $$Layout = createComponent(($$result, $$props, $$slots) => {
     includeOrgSchema,
     floatingHeader = false
   } = Astro2.props;
-  return renderTemplate`${renderComponent($$result, "BaseLayout", $$BaseLayout, { "title": title, "description": description, "image": image, "imageAlt": imageAlt, "article": article, "noindex": noindex, "nofollow": nofollow, "includeOrgSchema": includeOrgSchema }, { "default": ($$result2) => renderTemplate`  ${renderSlot($$result2, $$slots["default"])}  ${renderComponent($$result2, "Search", $$Search, {})} ${renderComponent($$result2, "Motion", $$Motion, {})} `, "footer": ($$result2) => renderTemplate`${renderComponent($$result2, "Footer", $$Footer, { "slot": "footer" })}`, "header": ($$result2) => renderTemplate`${renderComponent($$result2, "Header", $$Header, { "slot": "header", "floating": floatingHeader })}` })}`;
+  let global = null;
+  try {
+    const res = await fetch(`${STRAPI_URL}/api/global?populate=*`);
+    if (res.ok) {
+      const { data } = await res.json();
+      global = data;
+    }
+  } catch {
+    global = null;
+  }
+  const absoluteUrl = (path) => path ? path.startsWith("http") ? path : `${STRAPI_URL}${path}` : void 0;
+  const favicon = global?.favicon?.url !== void 0 ? { href: absoluteUrl(global.favicon.url), type: global.favicon.mime } : void 0;
+  const logo = global?.logo?.url ? { url: absoluteUrl(global.logo.url), alternativeText: global.logo.alternativeText } : void 0;
+  return renderTemplate`${renderComponent($$result, "BaseLayout", $$BaseLayout, { "title": title, "description": description, "image": image, "imageAlt": imageAlt, "article": article, "noindex": noindex, "nofollow": nofollow, "includeOrgSchema": includeOrgSchema, "siteName": global?.siteName ?? void 0, "favicon": favicon }, { "default": async ($$result2) => renderTemplate`  ${renderSlot($$result2, $$slots["default"])}  ${renderComponent($$result2, "Search", $$Search, {})} ${renderComponent($$result2, "Motion", $$Motion, {})} `, "footer": async ($$result2) => renderTemplate`${renderComponent($$result2, "Footer", $$Footer, { "slot": "footer" })}`, "header": async ($$result2) => renderTemplate`${renderComponent($$result2, "Header", $$Header, { "slot": "header", "floating": floatingHeader, "logo": logo, "links": global?.navbarLinks ?? void 0 })}` })}`;
 }, "/Users/tibereritobakanaan/Projects/ekwebsite/frontend/src/layouts/Layout.astro", void 0);
 
 export { $$Layout as $ };

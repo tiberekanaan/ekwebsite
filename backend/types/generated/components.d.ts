@@ -61,6 +61,8 @@ export interface BlocksImpact extends Struct.ComponentSchema {
     description: Schema.Attribute.Text;
     eyebrow: Schema.Attribute.String;
     metrics: Schema.Attribute.Component<'shared.impact-metric', true>;
+    outcomes: Schema.Attribute.Component<'shared.outcome-item', true>;
+    photos: Schema.Attribute.Media<'images', true>;
     title: Schema.Attribute.String;
   };
 }
@@ -73,7 +75,10 @@ export interface BlocksPartners extends Struct.ComponentSchema {
     icon: 'apps';
   };
   attributes: {
+    allPartnersLabel: Schema.Attribute.String;
     allPartnersLink: Schema.Attribute.String;
+    categories: Schema.Attribute.Component<'shared.partner-category', true>;
+    description: Schema.Attribute.Text;
     eyebrow: Schema.Attribute.String;
     logos: Schema.Attribute.Component<'shared.partner-logo', true>;
     title: Schema.Attribute.String;
@@ -173,6 +178,7 @@ export interface SharedChallengeItem extends Struct.ComponentSchema {
   };
   attributes: {
     caption: Schema.Attribute.Text;
+    icon: Schema.Attribute.Enumeration<['waves', 'chart', 'screen', 'people']>;
     stat: Schema.Attribute.String;
     statLabel: Schema.Attribute.String;
     title: Schema.Attribute.String & Schema.Attribute.Required;
@@ -200,9 +206,48 @@ export interface SharedImpactMetric extends Struct.ComponentSchema {
     icon: 'chartCircle';
   };
   attributes: {
+    badge: Schema.Attribute.String;
     description: Schema.Attribute.Text;
     label: Schema.Attribute.String & Schema.Attribute.Required;
     number: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface SharedLink extends Struct.ComponentSchema {
+  collectionName: 'components_shared_links';
+  info: {
+    description: 'A navigation link (label + url).';
+    displayName: 'Link';
+    icon: 'link';
+  };
+  attributes: {
+    label: Schema.Attribute.String & Schema.Attribute.Required;
+    url: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface SharedOutcomeItem extends Struct.ComponentSchema {
+  collectionName: 'components_shared_outcome_items';
+  info: {
+    description: 'A single qualitative outcome for the impact checklist.';
+    displayName: 'Outcome Item';
+    icon: 'check';
+  };
+  attributes: {
+    text: Schema.Attribute.Text & Schema.Attribute.Required;
+  };
+}
+
+export interface SharedPartnerCategory extends Struct.ComponentSchema {
+  collectionName: 'components_shared_partner_categories';
+  info: {
+    description: 'A single partner-category card (title + short text).';
+    displayName: 'Partner Category';
+    icon: 'grid';
+  };
+  attributes: {
+    text: Schema.Attribute.Text;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 
@@ -229,6 +274,8 @@ export interface SharedThreatItem extends Struct.ComponentSchema {
   attributes: {
     answerText: Schema.Attribute.Text;
     answerTitle: Schema.Attribute.String & Schema.Attribute.Required;
+    ctaLabel: Schema.Attribute.String;
+    ctaUrl: Schema.Attribute.String;
     threatLabel: Schema.Attribute.String & Schema.Attribute.Required;
     threatText: Schema.Attribute.Text;
   };
@@ -264,6 +311,9 @@ declare module '@strapi/strapi' {
       'shared.challenge-item': SharedChallengeItem;
       'shared.future-stat': SharedFutureStat;
       'shared.impact-metric': SharedImpactMetric;
+      'shared.link': SharedLink;
+      'shared.outcome-item': SharedOutcomeItem;
+      'shared.partner-category': SharedPartnerCategory;
       'shared.partner-logo': SharedPartnerLogo;
       'shared.threat-item': SharedThreatItem;
       'shared.value-item': SharedValueItem;
