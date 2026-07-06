@@ -20,6 +20,12 @@
     },
     "answerText": {
       "type": "text"
+    },
+    "ctaLabel": {
+      "type": "string"
+    },
+    "ctaUrl": {
+      "type": "string"
     }
   }
 }

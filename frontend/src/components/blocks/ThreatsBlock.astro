@@ -6,6 +6,8 @@ interface ThreatItem {
   threatText: string | null;
   answerTitle: string;
   answerText: string | null;
+  ctaLabel?: string | null;
+  ctaUrl?: string | null;
 }
 
 export interface ThreatsBlockData {
@@ -189,10 +191,10 @@ const resolveAnswerHref = (answerTitle: string) => {
                 </h3>
                 {item.answerText && <p class="text-[1.02rem] leading-relaxed text-slate-600">{item.answerText}</p>}
                 <a
-                  href={resolveAnswerHref(item.answerTitle)}
+                  href={item.ctaUrl || resolveAnswerHref(item.answerTitle)}
                   class="group/link mt-6 inline-flex items-center gap-2 rounded-full bg-ek-800 px-5 py-2.5 font-condensed text-[0.8rem] font-semibold uppercase tracking-[0.1em] text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-ek-700"
                 >
-                  Explore this pillar
+                  {item.ctaLabel || 'Explore this pillar'}
                   <span aria-hidden="true" class="transition-transform duration-200 group-hover/link:translate-x-1">→</span>
                 </a>
               </div>
