@@ -5,6 +5,7 @@ import { STRAPI_URL } from 'astro:env/server';
 interface PartnerLogo {
   name: string;
   logo?: { url: string; alternativeText?: string | null } | null;
+  href?: string;
 }
 
 interface PartnerCategory {
@@ -38,7 +39,7 @@ const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_U
 // alphabetical. The block's own `logos` list, when filled, overrides it.
 const partnerEntries = await getCollection('partners');
 const collectionLogos: PartnerLogo[] = partnerEntries
-  .map((p) => ({ name: p.data.name, logo: p.data.logo ?? null }))
+  .map((p) => ({ name: p.data.name, logo: p.data.logo ?? null, href: `/our-partners/${p.id}` }))
   .sort((a, b) => a.name.localeCompare(b.name));
 
 // Fictional wordmarks, shown only while no partners exist in the CMS at all.
@@ -138,8 +139,14 @@ const categories: PartnerCategory[] =
             <div class="flex shrink-0 items-center gap-4 pr-4" aria-hidden={isDuplicate || undefined}>
               {marqueeItems.map((p) => {
                 const logo = p.logo?.url ? absoluteUrl(p.logo.url) : null;
+                const Chip = p.href ? 'a' : 'div';
                 return (
-                  <div class="flex h-16 w-44 shrink-0 items-center justify-center rounded-md border border-ek-700/10 bg-ek-mist/60 px-5 transition-colors duration-200 hover:border-ek-500/40">
+                  <Chip
+                    href={p.href}
+                    aria-label={p.href ? p.name : undefined}
+                    tabindex={p.href && isDuplicate ? -1 : undefined}
+                    class="flex h-16 w-44 shrink-0 items-center justify-center rounded-md border border-ek-700/10 bg-ek-mist/60 px-5 transition-colors duration-200 hover:border-ek-500/40"
+                  >
                     {logo ? (
                       <img
                         src={logo}
@@ -152,7 +159,7 @@ const categories: PartnerCategory[] =
                         {p.name}
                       </span>
                     )}
-                  </div>
+                  </Chip>
                 );
               })}
             </div>
