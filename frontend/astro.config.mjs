@@ -2,7 +2,7 @@ import { defineConfig, envField, fontProviders } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import react from '@astrojs/react';
-import node from '@astrojs/node';
+import vercel from '@astrojs/vercel';
 import tailwindcss from '@tailwindcss/vite';
 
 // Dev only: re-runs the Strapi content loaders when admin edits are detected,
@@ -131,7 +131,7 @@ export default defineConfig({
     },
   ],
 
-  adapter: node({ mode: 'standalone' }),
+  adapter: vercel(),
 
   integrations: [
     react(),
