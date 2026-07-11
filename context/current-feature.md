@@ -1,18 +1,17 @@
 # Current Feature
 
-**Feature:** CMS-editable Our Partners page (landing aesthetic redesign)
+**Feature:** Disable "Coming Soon" Buttons
 
 ## Status
-- ✅ Completed 2026-07-07 on branch `feature/partners-page-cms`. See History.
+- ✅ Completed 2026-07-11. Both buttons are disabled functionally and visually.
 
 ## Goals
-1. **New `partners-page` single type** (Strapi): `eyebrow`, `title`, `description` (banner subtitle), `introHeading`, `intro` richtext, `image` (single media), `ctaHeading`, `ctaText`, `ctaLabel`, `ctaUrl`. Public `find` + published entry seeded idempotently in bootstrap with the current hardcoded copy.
-2. **CMS wiring**: `our-partners/index.astro` fetches the single type null-safely (about.astro pattern) and falls back to the current copy when Strapi is down/unpublished; hardcoded intro paragraphs removed.
-3. **Landing-aesthetic redesign**: keep the PageHeader banner (now CMS-fed); `01 ·` white magazine intro section with richtext prose + offset image (CMS image, bundled community photo fallback); `02 ·` mist partner grid — white cards with mist logo tiles, serif names, `ek-900` project-count pill, hover lift, reveal stagger; dark gradient closing CTA band (CMS heading/text/CTA with fallbacks).
-4. **Keep data flow**: partner cards still come from the build-time `partners` collection (`getCollection`), alphabetical, linking to `/our-partners/[id]`.
-
+1. **Frontend (Navbar):** Locate the main Header/Navbar component (e.g., `src/components/Header.astro`). Find the "Build your skills" link/button. Disable it using Tailwind v4 classes (`pointer-events-none opacity-50 cursor-not-allowed`). If it is an `<a>` tag, remove its `href` attribute or set it to `#`.
+2. **Frontend (Hero):** Open `src/components/blocks/Hero.astro`. Locate the vision strategy button. Apply the exact same disabled Tailwind utilities and remove its functional link.
 
 ## History
+
+- 2026-07-11 — **Disabled "Coming Soon" buttons**. `Header.astro`: both "Build your skills" CTAs (desktop pill + mobile menu) lost their `href`, gained `pointer-events-none opacity-50 cursor-not-allowed` + `aria-disabled="true"`, hover/lift utilities removed. `HeroBlock.astro`: the "See our 2026–2030 vision" secondary button got the same disabled treatment; unused `secondaryLink` const removed (CMS `secondaryButtonLink` field stays in the schema for re-enabling later). Verified via dev server (all three anchors render disabled, no stray `href`); production build passes. Branch `feature/disable-upcoming-buttons`.
 
 - 2026-07-07 — **CMS-editable Our Partners page + landing-aesthetic redesign**. Strapi: new `partners-page` single type (`backend/src/api/partners-page/` — `eyebrow`, `title`, `description`, `introHeading`, `intro` richtext, `image` single media, `ctaHeading`/`ctaText`/`ctaLabel`/`ctaUrl`; Draft & Publish on). Bootstrap adds `api::partners-page.partners-page.find` to Public seeding and `seedPartnersPage` (idempotent `findFirst` → create + publish with the page's previous hardcoded copy). Frontend: `our-partners/index.astro` rebuilt — null-safe fetch of `/api/partners-page?populate=*` (about.astro pattern, hardcoded fallbacks for every field); PageHeader banner now CMS-fed; `01 · Why partnership` white magazine section (gradient serif h2 from `introHeading`, `intro` via `marked` prose, 4:5 sticky image — CMS upload or bundled `impact-engagement-01.jpg` fallback — with an overlapping `ek-900` stat chip showing partner count + unique joint-project count); `02 · Who we work with` mist partner grid (white rounded-2xl cards, mist logo tiles with condensed text fallback, serif names, `ek-900` project-count pill with lime text + arrow nudge, hover lift, per-row 80ms reveal stagger); `03 · Work with us` dark gradient CTA band (CMS heading/text/label/url, secondary outline pill → `/our-programs`). Partner cards still sourced from the build-time `partners` collection. Verified: production build passes, desktop screenshot via headless Chrome through `astro preview`, and a flip-test (sqlite title change → rendered through `astro dev` → reverted) proving the page reads live CMS data. Note: 390px headless-Chrome screenshots show a right-edge cut on *all* pages (no mobile emulation in old headless) — artifact, not a layout bug. Branch `feature/partners-page-cms`.
 
