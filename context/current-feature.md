@@ -1,15 +1,18 @@
 # Current Feature
 
-**Feature:** Disable "Coming Soon" Buttons
+**Feature:** Vercel Web Analytics
 
 ## Status
-- ✅ Completed 2026-07-11. Both buttons are disabled functionally and visually.
+- ✅ Completed 2026-07-11. Verified locally; tracker renders on every page.
 
 ## Goals
-1. **Frontend (Navbar):** Locate the main Header/Navbar component (e.g., `src/components/Header.astro`). Find the "Build your skills" link/button. Disable it using Tailwind v4 classes (`pointer-events-none opacity-50 cursor-not-allowed`). If it is an `<a>` tag, remove its `href` attribute or set it to `#`.
-2. **Frontend (Hero):** Open `src/components/blocks/Hero.astro`. Locate the vision strategy button. Apply the exact same disabled Tailwind utilities and remove its functional link.
+1. Install `@vercel/analytics` in `frontend/` (via pnpm — pnpm-lock.yaml is the tracked lockfile).
+2. Render the package's Astro component (`@vercel/analytics/astro`) in `BaseLayout.astro` `<head>` so every page is tracked (all other layouts wrap BaseLayout).
+3. No env vars or config needed — the script is served by Vercel at `/_vercel/insights/script.js` in production and no-ops locally. Web Analytics must be enabled in the Vercel dashboard.
 
 ## History
+
+- 2026-07-11 — **Vercel Web Analytics**. Installed `@vercel/analytics@2.0.1` via pnpm (npm errors on a pre-existing `@astrojs/vercel@11` ↔ Astro 6 peer conflict; pnpm-lock.yaml is the tracked lockfile). `BaseLayout.astro` head renders `<VercelAnalytics />` from `@vercel/analytics/astro` beside the GA/GTM `Analytics.astro` — all layouts wrap BaseLayout, so coverage is site-wide. Script no-ops locally and is served by Vercel at `/_vercel/insights/script.js` in production; Web Analytics must be enabled in the Vercel dashboard. Build passes; tracker confirmed in built HTML. Branch `feature/vercel-analytics`.
 
 - 2026-07-11 — **Disabled "Coming Soon" buttons**. `Header.astro`: both "Build your skills" CTAs (desktop pill + mobile menu) lost their `href`, gained `pointer-events-none opacity-50 cursor-not-allowed` + `aria-disabled="true"`, hover/lift utilities removed. `HeroBlock.astro`: the "See our 2026–2030 vision" secondary button got the same disabled treatment; unused `secondaryLink` const removed (CMS `secondaryButtonLink` field stays in the schema for re-enabling later). Verified via dev server (all three anchors render disabled, no stray `href`); production build passes. Branch `feature/disable-upcoming-buttons`.
 
