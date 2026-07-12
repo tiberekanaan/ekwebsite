@@ -1,11 +1,13 @@
 # Current Feature
 
-**Feature:** Fully functional site search (dev + Vercel production)
+**Feature:** Remove footer top border line (landing page)
 
 ## Status
-- ✅ Completed 2026-07-12. Search works in dev and ships to Vercel production; verified locally by the user.
+- ✅ Completed 2026-07-12. Line gone; verified locally by the user, merged and pushed.
 
 ## History
+
+- 2026-07-12 — **Removed footer top border line**. One-line fix: `frontend/src/components/empower/Footer.astro` had `border-t border-slate-200` on the `<footer>` element — a light gray full-width hairline that was visible on the landing page where the dark FutureBlock meets the dark footer (invisible against white sections on inner pages). Removed the border classes. Branch `fix/footer-top-border` ff-merged to `main` (commit `edbc5ce`), deleted, pushed.
 
 - 2026-07-12 — **Fully functional site search (dev + Vercel production)**. Root causes: (1) production search was dead — the old `postbuild` (`pagefind --site dist/client`) indexed `dist/client`, but the Vercel adapter serves `.vercel/output/static`, which never got a `pagefind/` dir; (2) dev had no index at all (Pagefind only indexes built HTML). Fixes: new `frontend/scripts/build-search-index.mjs` (Pagefind Node API — one index of `dist/client` written to both `dist/client/pagefind` and `.vercel/output/static/pagefind`), chained directly into the `build` script (`astro build && node …`, `postbuild` removed) so it runs identically under local npm and Vercel's `pnpm run build`; `pagefindDev` integration in `astro.config.mjs` rebuilds the index from the last build on dev-server start (fire-and-forget, ~1s) and serves `/pagefind/*` via middleware (HEAD-aware, path-traversal guarded) — dev search reflects the last `npm run build`, rerun to refresh. `Search.astro` redesigned to ek tokens (ek-900 blurred backdrop, mist/olive accents, lime `mark` highlights, kbd-hint footer) with ⌘K/Ctrl+K toggle, `/` opens (guarded against typing in fields), Esc closes, focus returns to the trigger, mobile-friendly sheet. Latent bugs fixed: document-level keydown was re-bound on every `astro:page-load` (stacked handlers) — now bound once at module scope; Pagefind's `ui.css` was imported inside the `<script>` so ClientRouter swaps dropped the JS-injected style tag, leaving the input unstyled after navigating from a result — moved to frontmatter so it's in the persistent page CSS bundle. Gotcha: `astro preview` doesn't work with the Vercel adapter — test search in dev. Branch `feature/site-search`.
 
