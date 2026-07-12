@@ -1,16 +1,15 @@
 # Current Feature
 
-**Feature:** Vercel Web Analytics
+**Feature:** Fully functional site search (dev + Vercel production)
 
 ## Status
-- ✅ Completed 2026-07-11. Verified locally; tracker renders on every page.
-
-## Goals
-1. Install `@vercel/analytics` in `frontend/` (via pnpm — pnpm-lock.yaml is the tracked lockfile).
-2. Render the package's Astro component (`@vercel/analytics/astro`) in `BaseLayout.astro` `<head>` so every page is tracked (all other layouts wrap BaseLayout).
-3. No env vars or config needed — the script is served by Vercel at `/_vercel/insights/script.js` in production and no-ops locally. Web Analytics must be enabled in the Vercel dashboard.
+- ✅ Completed 2026-07-12. Search works in dev and ships to Vercel production; verified locally by the user.
 
 ## History
+
+- 2026-07-12 — **Fully functional site search (dev + Vercel production)**. Root causes: (1) production search was dead — the old `postbuild` (`pagefind --site dist/client`) indexed `dist/client`, but the Vercel adapter serves `.vercel/output/static`, which never got a `pagefind/` dir; (2) dev had no index at all (Pagefind only indexes built HTML). Fixes: new `frontend/scripts/build-search-index.mjs` (Pagefind Node API — one index of `dist/client` written to both `dist/client/pagefind` and `.vercel/output/static/pagefind`), chained directly into the `build` script (`astro build && node …`, `postbuild` removed) so it runs identically under local npm and Vercel's `pnpm run build`; `pagefindDev` integration in `astro.config.mjs` rebuilds the index from the last build on dev-server start (fire-and-forget, ~1s) and serves `/pagefind/*` via middleware (HEAD-aware, path-traversal guarded) — dev search reflects the last `npm run build`, rerun to refresh. `Search.astro` redesigned to ek tokens (ek-900 blurred backdrop, mist/olive accents, lime `mark` highlights, kbd-hint footer) with ⌘K/Ctrl+K toggle, `/` opens (guarded against typing in fields), Esc closes, focus returns to the trigger, mobile-friendly sheet. Latent bugs fixed: document-level keydown was re-bound on every `astro:page-load` (stacked handlers) — now bound once at module scope; Pagefind's `ui.css` was imported inside the `<script>` so ClientRouter swaps dropped the JS-injected style tag, leaving the input unstyled after navigating from a result — moved to frontmatter so it's in the persistent page CSS bundle. Gotcha: `astro preview` doesn't work with the Vercel adapter — test search in dev. Branch `feature/site-search`.
+
+- 2026-07-12 — **Strapi → Vercel rebuild webhook (event fix)**. No code changes — dashboard config + diagnosis only. Findings: the pipeline was actually working — a Vercel deploy hook `strapi-content` (branch `main`, created 2026-07-11) exists on project `ekwebsite`, and Strapi Cloud's webhook (admin → Settings → Webhooks) POSTs to it; hook-triggered builds refetch all Strapi content (loaders are array-returning, no content-layer cache issue; build logs showed clean content sync). The perceived failure was that edits made *before* the hook existed never triggered builds, plus the ~1–2 min build delay. Real defect: each publish fired **two** deployments because the Strapi webhook was subscribed to `entry.update`/`entry.create` in addition to `entry.publish` (a publish emits update + publish). Fix (done in Strapi Cloud admin UI): events trimmed to `entry.publish` / `entry.unpublish` / `entry.delete` only — draft saves no longer burn build minutes. Verified: republish triggered exactly one deploy-hook build (07-12 03:20 UTC) → READY. Gotchas: Strapi webhooks live in the production DB (admin JWT required — content API tokens 401 on `/admin/*`); the `STRAPI_API_TOKEN` in `frontend/.env` 401s even on the content API, likely stale; Vercel env vars are `sensitive`-type (values not readable via CLI/API — empty strings are masking, not misconfig).
 
 - 2026-07-11 — **Vercel Web Analytics**. Installed `@vercel/analytics@2.0.1` via pnpm (npm errors on a pre-existing `@astrojs/vercel@11` ↔ Astro 6 peer conflict; pnpm-lock.yaml is the tracked lockfile). `BaseLayout.astro` head renders `<VercelAnalytics />` from `@vercel/analytics/astro` beside the GA/GTM `Analytics.astro` — all layouts wrap BaseLayout, so coverage is site-wide. Script no-ops locally and is served by Vercel at `/_vercel/insights/script.js` in production; Web Analytics must be enabled in the Vercel dashboard. Build passes; tracker confirmed in built HTML. Branch `feature/vercel-analytics`.
 

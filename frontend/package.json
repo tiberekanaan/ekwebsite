@@ -27,8 +27,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
-    "postbuild": "pagefind --site dist/client",
+    "build": "astro build && node ./scripts/build-search-index.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "lint": "eslint .",

@@ -1,3 +1,6 @@
+import { existsSync, createReadStream } from 'node:fs';
+import { join, normalize, extname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { defineConfig, envField, fontProviders } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
@@ -58,6 +61,51 @@ const strapiAutoRefresh = {
     },
     'astro:server:done'() {
       clearInterval(strapiRefreshTimer);
+    },
+  },
+};
+
+// Dev only: Pagefind indexes built HTML, so `astro dev` normally has no search.
+// On server start we (re)build the index from the last `dist/client` build and
+// serve `/pagefind/*` from it, so search works in dev with the latest built
+// content. Run `npm run build` once (or after big content changes) to refresh.
+const CLIENT_DIR = fileURLToPath(new URL('./dist/client', import.meta.url));
+
+const PAGEFIND_MIME = {
+  '.js': 'text/javascript',
+  '.mjs': 'text/javascript',
+  '.css': 'text/css',
+  '.json': 'application/json',
+};
+
+const pagefindDev = {
+  name: 'pagefind-dev',
+  hooks: {
+    'astro:server:setup'({ server, logger }) {
+      // Rebuild the index from the last build (fire-and-forget; ~1s).
+      (async () => {
+        if (!existsSync(join(CLIENT_DIR, 'index.html'))) return;
+        try {
+          const pagefind = await import('pagefind');
+          const { index } = await pagefind.createIndex();
+          const { page_count: pageCount } = await index.addDirectory({ path: CLIENT_DIR });
+          await index.writeFiles({ outputPath: join(CLIENT_DIR, 'pagefind') });
+          await pagefind.close();
+          logger.info(`pagefind: dev search index ready (${pageCount} pages from last build)`);
+        } catch (err) {
+          logger.warn(`pagefind: could not build dev index — ${err.message}`);
+        }
+      })();
+
+      server.middlewares.use('/pagefind', (req, res, next) => {
+        const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
+        const file = normalize(join(CLIENT_DIR, 'pagefind', pathname));
+        if (!file.startsWith(join(CLIENT_DIR, 'pagefind')) || !existsSync(file)) return next();
+        res.statusCode = 200;
+        res.setHeader('Content-Type', PAGEFIND_MIME[extname(file)] ?? 'application/octet-stream');
+        if (req.method === 'HEAD') return res.end();
+        createReadStream(file).pipe(res);
+      });
     },
   },
 };
@@ -138,6 +186,7 @@ export default defineConfig({
     mdx(),
     sitemap(),
     strapiAutoRefresh,
+    pagefindDev,
   ],
 
   vite: {
