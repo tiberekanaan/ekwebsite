@@ -110,4 +110,50 @@ export const server = {
       return { documentId: json.data.documentId, swallowed: false as const };
     },
   }),
+
+  subscribe: defineAction({
+    accept: 'form',
+    input: z.object({
+      email: z.email('Please enter a valid email address'),
+      honeypot: z.string().max(0).optional(),
+    }),
+    handler: async ({ email, honeypot }) => {
+      if (honeypot) {
+        return { subscribed: true as const };
+      }
+
+      const bearer = STRAPI_API_TOKEN ?? STRAPI_TOKEN;
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      if (bearer) headers['Authorization'] = `Bearer ${bearer}`;
+
+      const res = await fetch(`${STRAPI_URL}/api/subscribers`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ data: { email } }),
+      });
+
+      if (!res.ok) {
+        const body = await res.text().catch(() => '');
+        // The email attribute is unique — treat re-subscribing as success.
+        if (res.status === 400 && /unique/i.test(body)) {
+          return { subscribed: true as const };
+        }
+        if (res.status === 401 || res.status === 403) {
+          throw new ActionError({
+            code: 'FORBIDDEN',
+            message:
+              'Subscriptions are not currently accepted. Grant the Public role `create` on subscriber in Strapi, or set STRAPI_API_TOKEN.',
+          });
+        }
+        throw new ActionError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: `Strapi rejected the subscription (${res.status} ${res.statusText})${body ? `: ${body}` : ''}`,
+        });
+      }
+
+      return { subscribed: true as const };
+    },
+  }),
 };

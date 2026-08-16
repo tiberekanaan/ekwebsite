@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import { actions } from 'astro:actions';
 import logoWhite from '@/assets/branding/empower-logo-white.webp';
 
 interface NavItem {
@@ -106,9 +107,13 @@ const year = new Date().getFullYear();
         <p class="mt-2 text-sm text-slate-400">
           Get programme updates, partner stories, and event invites from the team.
         </p>
+        {/* method/action are the no-JS fallback; the module script below
+            intercepts submit and calls the action client-side. */}
         <form
           class="mt-4 flex flex-col gap-2 sm:flex-row"
           name="newsletter"
+          method="POST"
+          action={actions.subscribe}
           data-newsletter-form
         >
           <label for="newsletter-email" class="sr-only">Email address</label>
@@ -120,14 +125,22 @@ const year = new Date().getFullYear();
             placeholder="you@example.com"
             class="w-full rounded-full border border-slate-700 bg-slate-800 px-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/40"
           />
+          <input
+            type="text"
+            name="honeypot"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+            class="hidden"
+          />
           <button
             type="submit"
-            class="inline-flex items-center justify-center rounded-full bg-lime-300 px-5 py-2.5 text-sm font-semibold text-slate-900 transition-colors hover:bg-lime-400"
+            class="inline-flex items-center justify-center rounded-full bg-lime-300 px-5 py-2.5 text-sm font-semibold text-slate-900 transition-colors hover:bg-lime-400 disabled:cursor-not-allowed disabled:opacity-60"
           >
             Subscribe
           </button>
         </form>
-        <p data-newsletter-message class="mt-2 hidden text-xs text-lime-300" role="status"></p>
+        <p data-newsletter-message class="mt-2 hidden text-xs" role="status" aria-live="polite"></p>
       </div>
     </div>
 
@@ -141,13 +154,41 @@ const year = new Date().getFullYear();
 </footer>
 
 <script>
-  const form = document.querySelector<HTMLFormElement>('[data-newsletter-form]');
-  const status = document.querySelector<HTMLParagraphElement>('[data-newsletter-message]');
-  form?.addEventListener('submit', (e) => {
-    e.preventDefault();
+  import { actions, isInputError } from 'astro:actions';
+
+  function showStatus(form: HTMLFormElement, message: string, ok: boolean) {
+    const status = form.parentElement?.querySelector<HTMLParagraphElement>(
+      '[data-newsletter-message]'
+    );
     if (!status) return;
-    status.textContent = 'Thanks — we will be in touch soon.';
-    status.classList.remove('hidden');
-    form.reset();
+    status.textContent = message;
+    status.classList.remove('hidden', 'text-lime-300', 'text-red-300');
+    status.classList.add(ok ? 'text-lime-300' : 'text-red-300');
+  }
+
+  // Delegated once at module scope — the footer DOM is replaced on every
+  // ClientRouter swap, so per-element listeners would go stale.
+  document.addEventListener('submit', async (e) => {
+    const form = e.target as HTMLFormElement;
+    if (!form.matches('[data-newsletter-form]')) return;
+    e.preventDefault();
+
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    if (button) button.disabled = true;
+
+    const { error } = await actions.subscribe(new FormData(form));
+
+    if (button) button.disabled = false;
+
+    if (!error) {
+      form.reset();
+      showStatus(form, 'Thanks for subscribing!', true);
+      return;
+    }
+
+    const message = isInputError(error)
+      ? (error.fields.email?.[0] ?? 'Please enter a valid email address.')
+      : 'Subscription failed. Please try again later.';
+    showStatus(form, message, false);
   });
 </script>

@@ -1,6 +1,6 @@
 import type { Core } from '@strapi/strapi';
 
-const PUBLIC_READ_ACTIONS = [
+const PUBLIC_ACTIONS = [
   'api::testimonial.testimonial.find',
   'api::testimonial.testimonial.findOne',
   'api::news-update.news-update.find',
@@ -18,6 +18,9 @@ const PUBLIC_READ_ACTIONS = [
   'api::homepage.homepage.find',
   'api::global.global.find',
   'api::partners-page.partners-page.find',
+  // Write access: the footer subscribe form posts through an Astro action
+  // without an API token; email uniqueness caps abuse at one row per address.
+  'api::subscriber.subscriber.create',
 ];
 
 // Strapi's ISO locale list has no Gilbertese ("gil"); "en-KI" is the only
@@ -80,14 +83,14 @@ async function seedPartnersPage(strapi: Core.Strapi) {
     .publish({ documentId: created.documentId });
 }
 
-async function ensurePublicReadPermissions(strapi: Core.Strapi) {
+async function ensurePublicPermissions(strapi: Core.Strapi) {
   const publicRole = await strapi.db
     .query('plugin::users-permissions.role')
     .findOne({ where: { type: 'public' } });
 
   if (!publicRole) return;
 
-  for (const action of PUBLIC_READ_ACTIONS) {
+  for (const action of PUBLIC_ACTIONS) {
     const existing = await strapi.db
       .query('plugin::users-permissions.permission')
       .findOne({ where: { action, role: publicRole.id } });
@@ -139,7 +142,7 @@ export default {
   register(/* { strapi }: { strapi: Core.Strapi } */) {},
 
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
-    await ensurePublicReadPermissions(strapi);
+    await ensurePublicPermissions(strapi);
     await ensureKiribatiLocale(strapi);
     await seedDefaultPillars(strapi);
     await seedPartnersPage(strapi);
