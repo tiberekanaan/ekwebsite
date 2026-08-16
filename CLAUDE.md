@@ -52,3 +52,15 @@ When generating or modifying backend code, adhere to the following Strapi 5 stan
 - **DRY RUN FIRST**: If a task requires structural changes, outline the plan in 3 bullet points and wait for my confirmation before writing code.
 - **ACKNOWLEDGE**: Acknowledge with "Ready." and nothing else.
 ```
+
+## Architecture & Hosting
+- **Frontend:** Astro (Automatically deployed and hosted on Vercel).
+- **Backend:** Strapi 5 (Automatically deployed and hosted on Strapi Cloud).
+
+## Git & Deployment Workflow
+When asked to implement a new feature, fix a bug, or modify the codebase, strictly adhere to the following workflow:
+1. **Branching:** Do not commit directly to the `main` branch. Always create and switch to a new feature branch first (e.g., `git checkout -b feature/name-of-feature`).
+2. **Implementation:** Make the requested code changes on the feature branch.
+3. **Local Testing:** Wait for the user to test and verify the changes locally using their independently running development servers. Do not attempt to run or restart servers yourself.
+4. **Merge:** Once the user confirms the changes are working as expected, commit the changes, switch back to `main`, and merge the feature branch.
+5. **Auto-Deployment:** Push the `main` branch to GitHub (`git push origin main`). Acknowledge to the user that pushing to GitHub will automatically trigger the production deployments on Vercel and Strapi Cloud.

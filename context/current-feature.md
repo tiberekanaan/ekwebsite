@@ -1,11 +1,27 @@
 # Current Feature
 
-**Feature:** Remove footer top border line (landing page)
+**Feature:** Footer Newsletter Subscription
 
 ## Status
-- ✅ Completed 2026-07-12. Line gone; verified locally by the user, merged and pushed.
+- ✅ Completed 2026-08-17. Verified locally by the user, merged and pushed.
+
+## Goals
+1. **Backend (Strapi):** 
+   - Generate a new Collection Type named `Subscriber`.
+   - Add an `email` field (type: email, required, unique).
+2. **Frontend (Astro Actions):** 
+   - Create or update `src/actions/index.ts`.
+   - Define a `subscribe` action that accepts form data. Use Zod to validate that the input is a valid email string.
+   - In the action handler, securely make a `POST` request to the Strapi `/api/subscribers` endpoint using the `STRAPI_API_TOKEN` to save the email.
+3. **Frontend (UI):** 
+   - Open `src/components/Footer.astro` (or wherever the subscribe form lives).
+   - Wrap the email input and subscribe button in a `<form>` element.
+   - Set the form to use the Astro action (e.g., `method="POST" action={actions.subscribe}`).
+   - Add UI feedback (e.g., a success message) when `Astro.getActionResult(actions.subscribe)` returns successfully.
 
 ## History
+
+- 2026-08-17 — **Footer newsletter subscription → Strapi CRM**. Strapi: new `subscriber` collection type (`backend/src/api/subscriber/` — `email` email/required/unique, Draft & Publish off); bootstrap constant renamed `PUBLIC_READ_ACTIONS` → `PUBLIC_ACTIONS` (fn `ensurePublicPermissions`) and now seeds Public `create` on subscriber — required because the `STRAPI_API_TOKEN` in `frontend/.env` is stale (401s); the action still prefers the token when one is set. Frontend: `subscribe` Astro action in `src/actions/index.ts` (Zod `z.email()`, honeypot silently succeeds, duplicate-email 400 from the unique constraint treated as success, `FORBIDDEN` ActionError explains the permission fix); `Footer.astro` form gained `method="POST" action={actions.subscribe}` as no-JS fallback + hidden honeypot input, submit intercepted by a module-scope delegated listener (ClientRouter-safe) that calls `actions.subscribe(new FormData(form))`, disables the button while pending, and shows lime success / red error via `isInputError`. Deleted the Velocity stub `src/pages/api/newsletter.ts` (only logged emails; sole referencer is the unused `patterns/NewsletterForm.astro`). Same day, separately merged: hero photo (`feature/hero-photo`, commit `0b45a0b`) — real community photo cropped 4:5/1200×1500, mozjpeg q80, ek-500 soft-light grade, replacing `hero-placeholder.png`. Branch `feature/footer-subscription`.
 
 - 2026-07-12 — **Removed footer top border line**. One-line fix: `frontend/src/components/empower/Footer.astro` had `border-t border-slate-200` on the `<footer>` element — a light gray full-width hairline that was visible on the landing page where the dark FutureBlock meets the dark footer (invisible against white sections on inner pages). Removed the border classes. Branch `fix/footer-top-border` ff-merged to `main` (commit `edbc5ce`), deleted, pushed.
 
