@@ -1,0 +1,54 @@
+{
+  "kind": "collectionType",
+  "collectionName": "articles",
+  "info": {
+    "singularName": "article",
+    "pluralName": "articles",
+    "displayName": "Article",
+    "description": "Long-form resource article (e.g. the grants and funding guides), rendered at /resources/articles/[slug]."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "category": {
+      "type": "string"
+    },
+    "excerpt": {
+      "type": "text"
+    },
+    "meta_description": {
+      "type": "text"
+    },
+    "body": {
+      "type": "richtext"
+    },
+    "author": {
+      "type": "string",
+      "default": "Empower Kiribati"
+    },
+    "reading_time": {
+      "type": "integer",
+      "min": 1
+    },
+    "last_reviewed": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "articles"
+    }
+  }
+}

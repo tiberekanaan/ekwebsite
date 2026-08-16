@@ -285,6 +285,41 @@ const resources = defineCollection({
   }),
 });
 
+const tagRef = z.object({
+  documentId: z.string(),
+  id: z.number().optional(),
+  name: z.string(),
+  group: z.enum(['stage', 'topic', 'audience']),
+});
+
+export type TagRef = z.infer<typeof tagRef>;
+
+const articles = defineCollection({
+  loader: async () => {
+    const entries = await softFetchStrapi('/api/articles?populate=*');
+    return entries.map(({ documentId, id: _strapiNumericId, ...rest }) => ({
+      id: documentId,
+      ...rest,
+    }));
+  },
+  schema: z.object({
+    title: z.string(),
+    slug: z.string(),
+    category: z.string().nullable().optional(),
+    excerpt: z.string().nullable().optional(),
+    meta_description: z.string().nullable().optional(),
+    body: z.string().nullable().optional(),
+    author: z.string().nullable().optional(),
+    reading_time: z.number().nullable().optional(),
+    last_reviewed: z.string().nullable().optional(),
+    tags: z.array(tagRef).default([]),
+    publishedAt: z.coerce.date().nullable().optional(),
+    createdAt: z.coerce.date().optional(),
+    updatedAt: z.coerce.date().optional(),
+    locale: z.string().optional(),
+  }),
+});
+
 // Local Markdown/JSON collections shipped with the Velocity boilerplate
 const blog = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
@@ -346,6 +381,7 @@ export const collections = {
   blogs,
   events,
   resources,
+  articles,
   partners,
   projects,
   pillars,

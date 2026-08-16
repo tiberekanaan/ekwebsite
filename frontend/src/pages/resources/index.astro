@@ -8,6 +8,12 @@ const resources = (await getCollection('resources')).sort((a, b) => {
   const bDate = b.data.publishedAt?.valueOf() ?? b.data.createdAt?.valueOf() ?? 0;
   return bDate - aDate;
 });
+
+const articles = (await getCollection('articles')).sort((a, b) => {
+  const aDate = a.data.publishedAt?.valueOf() ?? a.data.createdAt?.valueOf() ?? 0;
+  const bDate = b.data.publishedAt?.valueOf() ?? b.data.createdAt?.valueOf() ?? 0;
+  return bDate - aDate;
+});
 ---
 
 <Layout
@@ -22,9 +28,63 @@ const resources = (await getCollection('resources')).sort((a, b) => {
   />
   <div class="mx-auto max-w-7xl px-8 py-12">
     {
-      resources.length === 0 ? (
+      articles.length > 0 && (
+        <section class="mb-14">
+          <h2
+            class="mb-6 font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-600"
+            data-reveal
+          >
+            Guides &amp; articles
+          </h2>
+          <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {articles.map((article, index) => (
+              <li>
+                <a
+                  href={`/resources/articles/${article.data.slug}`}
+                  class="group flex h-full flex-col gap-3 rounded-xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-ek-500 hover:shadow-md"
+                  data-reveal
+                  data-reveal-delay={String((index % 3) * 80)}
+                >
+                  {article.data.category && (
+                    <p class="font-condensed text-[0.68rem] font-bold uppercase tracking-[0.12em] text-ek-600">
+                      {article.data.category}
+                    </p>
+                  )}
+                  <h3 class="font-serif text-xl font-bold leading-snug text-ek-900 group-hover:text-ek-600">
+                    {article.data.title}
+                  </h3>
+                  {article.data.excerpt && (
+                    <p class="text-sm leading-relaxed text-ek-muted">{article.data.excerpt}</p>
+                  )}
+                  <span class="mt-auto inline-flex items-center gap-1 pt-2 text-xs font-bold uppercase tracking-wider text-ek-900">
+                    {article.data.reading_time
+                      ? `${article.data.reading_time} minute read`
+                      : 'Read article'}
+                    <span aria-hidden="true" class="transition-transform group-hover:translate-x-0.5">
+                      →
+                    </span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+    {
+      articles.length > 0 && resources.length > 0 && (
+        <h2
+          class="mb-6 font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-600"
+          data-reveal
+        >
+          Videos, downloads &amp; links
+        </h2>
+      )
+    }
+    {
+      resources.length === 0 && articles.length === 0 ? (
         <p class="py-16 text-center text-slate-500">No resources published yet.</p>
-      ) : (
+      ) : resources.length === 0 ? null : (
         <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {resources.map((resource) => (
             <li>

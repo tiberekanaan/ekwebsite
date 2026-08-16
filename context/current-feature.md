@@ -1,25 +1,29 @@
 # Current Feature
 
-**Feature:** Footer Newsletter Subscription
+**Feature:** Grants & Funding Resource Articles (long-form guides with tags + related articles)
 
 ## Status
 - ✅ Completed 2026-08-17. Verified locally by the user, merged and pushed.
 
+## Source material
+- `~/Downloads/article-01-what-is-a-grant.md` — first article ("What a grant is, and what it is not") with frontmatter (title, slug, excerpt, meta_description, tags, reading_time, last_reviewed).
+- `~/Downloads/tag-guide.md` — closed tag vocabulary in three groups (stage / topic / funder-and-audience) plus the related-articles ranking rule.
+- `~/Downloads/article-01-preview.html` — design mock (treated as a spec, not embedded literally).
+
 ## Goals
-1. **Backend (Strapi):** 
-   - Generate a new Collection Type named `Subscriber`.
-   - Add an `email` field (type: email, required, unique).
-2. **Frontend (Astro Actions):** 
-   - Create or update `src/actions/index.ts`.
-   - Define a `subscribe` action that accepts form data. Use Zod to validate that the input is a valid email string.
-   - In the action handler, securely make a `POST` request to the Strapi `/api/subscribers` endpoint using the `STRAPI_API_TOKEN` to save the email.
-3. **Frontend (UI):** 
-   - Open `src/components/Footer.astro` (or wherever the subscribe form lives).
-   - Wrap the email input and subscribe button in a `<form>` element.
-   - Set the form to use the Astro action (e.g., `method="POST" action={actions.subscribe}`).
-   - Add UI feedback (e.g., a success message) when `Astro.getActionResult(actions.subscribe)` returns successfully.
+1. **Backend (Strapi):**
+   - New `tag` collection (`name` unique, `group` enum stage/topic/audience, M2M `articles`). Draft & Publish off.
+   - New `article` collection (`title`, `slug` uid, `category`, `excerpt`, `meta_description`, `body` richtext, `author`, `reading_time`, `last_reviewed`, M2M `tags`). Draft & Publish on.
+   - Bootstrap: seed Public `find`/`findOne` for both; idempotently seed the closed tag vocabulary and the first article (seed data in `backend/src/seed/grants-articles.ts`).
+2. **Frontend (Astro):**
+   - `articles` collection in `content.config.ts` (softFetch `/api/articles?populate=*`).
+   - Prerendered article template `/resources/articles/[slug].astro` in the landing (ek) aesthetic: PageHeader banner (category eyebrow, byline, tag chips), markdown body via `marked` with styled callouts (`> **Label**` blockquotes), comparison table, pull-question.
+   - Related-articles resolver (`src/lib/related-articles.ts`): same stage tag → shared topic tag → tagged `grants`, max 4 — rendered as a card grid at the end of the article.
+   - `/resources` index gains a "Guides & articles" section listing articles above the existing video/download/link resources.
 
 ## History
+
+- 2026-08-17 — **Grants & funding resource articles (tags + related articles)**. Strapi: new `tag` collection (`name` unique, `group` enum stage/topic/audience, D&P off) and `article` collection (`title`, `slug` uid, `category`, `excerpt`, `meta_description`, `body` richtext, `author`, `reading_time`, `last_reviewed`, M2M `tags`, D&P on); bootstrap seeds Public `find`/`findOne` for both, the 18-tag closed vocabulary, and the first published article ("What a grant is, and what it is not") from `backend/src/seed/grants-articles.ts`; the two new types were hand-added to `types/generated/contentTypes.d.ts` (Strapi regenerates identically on dev start). Frontend: `articles` collection in `content.config.ts` (softFetch `/api/articles?populate=*`); prerendered `/resources/articles/[slug].astro` in the ek aesthetic — PageHeader (category eyebrow, byline, lime tag chips), `marked` body with post-processing (`> **Label**` blockquotes → mist callout panels w/ condensed labels, tables wrapped in `.table-wrap` for x-scroll, whole-bold paragraphs classed `pullout` so the standfirst renders as a lead and standalone questions as ek-paper cards — a `:has(> strong:only-child)` selector was rejected because glossary `**Term.** text` paras match it, text nodes don't count for `:only-child`); related-articles resolver in `src/lib/related-articles.ts` implements the tag-guide rule (same stage tag → shared topic tag → tagged `grants`, cap 4); `/resources` index gained a "Guides & articles" card section above the legacy grid. Source material spec'd from `~/Downloads/article-01-{preview.html,what-is-a-grant.md}` + `tag-guide.md` (preview treated as design spec, not embedded). Deliberately out of scope: tag browse pages (chips are non-links), i18n on articles. Branch `feature/grants-articles`.
 
 - 2026-08-17 — **Footer newsletter subscription → Strapi CRM**. Strapi: new `subscriber` collection type (`backend/src/api/subscriber/` — `email` email/required/unique, Draft & Publish off); bootstrap constant renamed `PUBLIC_READ_ACTIONS` → `PUBLIC_ACTIONS` (fn `ensurePublicPermissions`) and now seeds Public `create` on subscriber — required because the `STRAPI_API_TOKEN` in `frontend/.env` is stale (401s); the action still prefers the token when one is set. Frontend: `subscribe` Astro action in `src/actions/index.ts` (Zod `z.email()`, honeypot silently succeeds, duplicate-email 400 from the unique constraint treated as success, `FORBIDDEN` ActionError explains the permission fix); `Footer.astro` form gained `method="POST" action={actions.subscribe}` as no-JS fallback + hidden honeypot input, submit intercepted by a module-scope delegated listener (ClientRouter-safe) that calls `actions.subscribe(new FormData(form))`, disables the button while pending, and shows lime success / red error via `isInputError`. Deleted the Velocity stub `src/pages/api/newsletter.ts` (only logged emails; sole referencer is the unused `patterns/NewsletterForm.astro`). Same day, separately merged: hero photo (`feature/hero-photo`, commit `0b45a0b`) — real community photo cropped 4:5/1200×1500, mozjpeg q80, ek-500 soft-light grade, replacing `hero-placeholder.png`. Branch `feature/footer-subscription`.
 

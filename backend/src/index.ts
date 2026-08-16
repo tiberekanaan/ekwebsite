@@ -1,4 +1,5 @@
 import type { Core } from '@strapi/strapi';
+import { TAG_VOCABULARY, GRANT_ARTICLES } from './seed/grants-articles';
 
 const PUBLIC_ACTIONS = [
   'api::testimonial.testimonial.find',
@@ -18,6 +19,10 @@ const PUBLIC_ACTIONS = [
   'api::homepage.homepage.find',
   'api::global.global.find',
   'api::partners-page.partners-page.find',
+  'api::article.article.find',
+  'api::article.article.findOne',
+  'api::tag.tag.find',
+  'api::tag.tag.findOne',
   // Write access: the footer subscribe form posts through an Astro action
   // without an API token; email uniqueness caps abuse at one row per address.
   'api::subscriber.subscriber.create',
@@ -138,6 +143,44 @@ async function seedDefaultPillars(strapi: Core.Strapi) {
   }
 }
 
+async function seedTags(strapi: Core.Strapi) {
+  for (const tag of TAG_VOCABULARY) {
+    const existing = await strapi.documents('api::tag.tag').findFirst({
+      filters: { name: tag.name },
+    });
+    if (!existing) {
+      await strapi.documents('api::tag.tag').create({ data: tag });
+    }
+  }
+}
+
+async function seedGrantArticles(strapi: Core.Strapi) {
+  for (const article of GRANT_ARTICLES) {
+    const existing = await strapi.documents('api::article.article').findFirst({
+      filters: { slug: article.slug },
+      status: 'draft',
+    });
+    if (existing) continue;
+
+    const tags = await strapi.documents('api::tag.tag').findMany({
+      filters: { name: { $in: article.tags } },
+      pagination: { limit: -1 },
+    });
+
+    const { tags: _tagNames, ...fields } = article;
+    const created = await strapi.documents('api::article.article').create({
+      data: {
+        ...fields,
+        tags: { connect: tags.map((t) => t.documentId) },
+      },
+    });
+
+    await strapi
+      .documents('api::article.article')
+      .publish({ documentId: created.documentId });
+  }
+}
+
 export default {
   register(/* { strapi }: { strapi: Core.Strapi } */) {},
 
@@ -146,5 +189,7 @@ export default {
     await ensureKiribatiLocale(strapi);
     await seedDefaultPillars(strapi);
     await seedPartnersPage(strapi);
+    await seedTags(strapi);
+    await seedGrantArticles(strapi);
   },
 };
