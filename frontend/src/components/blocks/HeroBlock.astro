@@ -1,8 +1,8 @@
 ---
 import { Image } from 'astro:assets';
-// Placeholder photography — overwrite this file with the real hero photo
-// (same path/filename) and update the alt text below.
-import heroPhoto from '@/assets/images/hero-placeholder.png';
+// Real photo, pre-cropped 4:5 and graded to the ek palette — regenerate via
+// sharp (1200x1500, teal soft-light overlay) if the source photo changes.
+import heroPhoto from '@/assets/images/hero-photo.jpg';
 
 export interface HeroBlockData {
   title?: string | null;
@@ -94,13 +94,11 @@ const secondaryText = block.secondaryButtonText ?? 'See our 2026–2030 vision';
       </div>
     </div>
 
-    {/* Plain photo slot — overwrite src/assets/images/hero-placeholder.png with
-        the real photo (same filename) and set a meaningful alt text. */}
     <div class="relative hidden justify-center pb-4 lg:flex" data-reveal data-reveal-delay="200">
       <div class="relative aspect-[4/5] w-[min(100%,400px)] overflow-hidden rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.4)] ring-1 ring-white/15">
         <Image
           src={heroPhoto}
-          alt=""
+          alt="Children laughing together in a game under the roof of a maneaba in Kiribati"
           widths={[400, 800]}
           sizes="(min-width: 1024px) 400px, 100vw"
           class="absolute inset-0 h-full w-full object-cover"
