@@ -1,7 +1,5 @@
 ---
 import { Image } from 'astro:assets';
-// Placeholder photography — overwrite these files with real photos of each
-// challenge (same path/filename) and give each card a meaningful alt below.
 import photoClimate from '@/assets/images/community/challenge-climate.jpg';
 import photoWork from '@/assets/images/community/challenge-work.jpg';
 import photoDigital from '@/assets/images/community/challenge-digital.jpg';
@@ -31,9 +29,17 @@ interface Challenge {
   caption: string;
   icon: string;
   photo: ImageMetadata;
+  photoAlt: string;
 }
 
+// Photos pair with cards by position: climate, work, digital, leadership.
 const PHOTOS = [photoClimate, photoWork, photoDigital, photoLeadership];
+const PHOTO_ALTS = [
+  'Rocks and eroded sand on a Kiribati shoreline where rising seas wear away the beach',
+  'Young people lining up on an open village field between coconut palms',
+  'A remote outer-island village of thatched homes on the sand',
+  'Community members gathered for a meeting in a local hall',
+];
 
 const { block } = Astro.props;
 
@@ -58,6 +64,7 @@ const defaults: Challenge[] = [
       'Rising seas wash away shorelines and contaminate the freshwater and soil our communities depend on for survival.',
     icon: ICONS.waves,
     photo: PHOTOS[0],
+    photoAlt: PHOTO_ALTS[0],
   },
   {
     title: 'Unemployment',
@@ -65,6 +72,7 @@ const defaults: Challenge[] = [
       'Few jobs and limited pathways into enterprise leave young people unable to earn, straining households and pushing many into vulnerable informal work.',
     icon: ICONS.chart,
     photo: PHOTOS[1],
+    photoAlt: PHOTO_ALTS[1],
   },
   {
     title: 'Limited digital participation',
@@ -72,6 +80,7 @@ const defaults: Challenge[] = [
       'Gaps in access, awareness, and confidence lock people out of the tools needed to connect, learn, and earn safely online.',
     icon: ICONS.screen,
     photo: PHOTOS[2],
+    photoAlt: PHOTO_ALTS[2],
   },
   {
     title: 'Fragile local leadership',
@@ -79,6 +88,7 @@ const defaults: Challenge[] = [
       'Progress too often rests on a few individuals or outside help, making it hard for communities to sustain long-term change on their own.',
     icon: ICONS.people,
     photo: PHOTOS[3],
+    photoAlt: PHOTO_ALTS[3],
   },
 ];
 
@@ -89,6 +99,7 @@ const challenges: Challenge[] =
         caption: c.caption ?? '',
         icon: (c.icon && ICONS[c.icon]) || ICONS[ICON_CYCLE[i % ICON_CYCLE.length]],
         photo: PHOTOS[i % PHOTOS.length],
+        photoAlt: PHOTO_ALTS[i % PHOTO_ALTS.length],
       }))
     : defaults;
 ---
@@ -122,7 +133,7 @@ const challenges: Challenge[] =
             <div class="relative aspect-[3/2] overflow-hidden">
               <Image
                 src={c.photo}
-                alt=""
+                alt={c.photoAlt}
                 widths={[400, 800]}
                 sizes="(min-width: 1024px) 270px, (min-width: 640px) 50vw, 100vw"
                 class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"

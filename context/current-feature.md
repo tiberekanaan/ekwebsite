@@ -1,9 +1,18 @@
 # Current Feature
 
-**Feature:** Grants & Funding Resource Articles (long-form guides with tags + related articles)
+**Feature:** Real photos for "The threats to our roots" (ChallengesBlock)
 
 ## Status
-- ✅ Completed 2026-08-17. Verified locally by the user, merged and pushed.
+- ✅ Completed 2026-08-24. Verified by the user in the dev server, merged and pushed.
+
+## Goals
+- Replace the four duotone placeholder JPGs in `frontend/src/assets/images/community/` with real photos from `~/Downloads` (`climate change.jpeg`, `unemployment.jpeg`, `limited digital participation.jpeg`, `fragile leadership.jpeg`).
+- Optimize: 1200×800 (3:2 card ratio), attention crop, saturation 0.88 + `#2a8089` (ek-500) soft-light wash, mozjpeg q80 — matching the hero-photo treatment. Indoor leadership shot gets brightness 1.14 to match the outdoor shots.
+- Add meaningful alt texts (photos pair with cards positionally; CMS item order verified to match: climate, unemployment, digital, leadership).
+
+---
+
+**Previous:** Grants & Funding Resource Articles — ✅ completed 2026-08-17, see History.
 
 ## Source material
 - `~/Downloads/article-01-what-is-a-grant.md` — first article ("What a grant is, and what it is not") with frontmatter (title, slug, excerpt, meta_description, tags, reading_time, last_reviewed).
@@ -22,6 +31,8 @@
    - `/resources` index gains a "Guides & articles" section listing articles above the existing video/download/link resources.
 
 ## History
+
+- 2026-08-24 — **Real photos in "The threats to our roots" (ChallengesBlock)**. Overwrote the four duotone placeholders in `frontend/src/assets/images/community/` with real photos: `challenge-climate.jpg` ← eroding rocky shoreline, `challenge-work.jpg` ← youth on a village field, `challenge-digital.jpg` ← outer-island thatched village, `challenge-leadership.jpg` ← community meeting indoors. Treatment (sharp, matches hero photo): 1200×800 attention crop, saturation 0.88, `#2a8089` ek-500 soft-light wash, mozjpeg q80; the indoor leadership shot additionally brightness 1.14 to match the outdoor exposure. `ChallengesBlock.astro`: new positional `PHOTO_ALTS` array wired through defaults + CMS mapping, `<Image alt>` no longer empty; production CMS item order verified to match the photo order (climate, unemployment, digital, leadership). Gotcha: querying Strapi with bracketed populate params via curl needs `-g` (globbing eats the brackets). Branch `feature/challenge-photos`.
 
 - 2026-08-17 — **Grants & funding resource articles (tags + related articles)**. Strapi: new `tag` collection (`name` unique, `group` enum stage/topic/audience, D&P off) and `article` collection (`title`, `slug` uid, `category`, `excerpt`, `meta_description`, `body` richtext, `author`, `reading_time`, `last_reviewed`, M2M `tags`, D&P on); bootstrap seeds Public `find`/`findOne` for both, the 18-tag closed vocabulary, and the first published article ("What a grant is, and what it is not") from `backend/src/seed/grants-articles.ts`; the two new types were hand-added to `types/generated/contentTypes.d.ts` (Strapi regenerates identically on dev start). Frontend: `articles` collection in `content.config.ts` (softFetch `/api/articles?populate=*`); prerendered `/resources/articles/[slug].astro` in the ek aesthetic — PageHeader (category eyebrow, byline, lime tag chips), `marked` body with post-processing (`> **Label**` blockquotes → mist callout panels w/ condensed labels, tables wrapped in `.table-wrap` for x-scroll, whole-bold paragraphs classed `pullout` so the standfirst renders as a lead and standalone questions as ek-paper cards — a `:has(> strong:only-child)` selector was rejected because glossary `**Term.** text` paras match it, text nodes don't count for `:only-child`); related-articles resolver in `src/lib/related-articles.ts` implements the tag-guide rule (same stage tag → shared topic tag → tagged `grants`, cap 4); `/resources` index gained a "Guides & articles" card section above the legacy grid. Source material spec'd from `~/Downloads/article-01-{preview.html,what-is-a-grant.md}` + `tag-guide.md` (preview treated as design spec, not embedded). Deliberately out of scope: tag browse pages (chips are non-links), i18n on articles. Branch `feature/grants-articles`.
 
