@@ -1,20 +1,17 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import PageHeader from '@/components/PageHeader.astro';
+import EventCard from '@/components/events/EventCard.astro';
 import { getCollection } from 'astro:content';
-import { STRAPI_URL } from 'astro:env/server';
 
-const events = (await getCollection('events')).sort(
-  (a, b) => a.data.date.valueOf() - b.data.date.valueOf(),
-);
-
-const formatDate = (d: Date) =>
-  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-
-const absoluteImageUrl = (url?: string | null) => {
-  if (!url) return null;
-  return url.startsWith('http') ? url : `${STRAPI_URL}${url}`;
-};
+const allEvents = await getCollection('events');
+const now = new Date();
+const upcoming = allEvents
+  .filter((e) => e.data.date.valueOf() >= now.valueOf())
+  .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
+const past = allEvents
+  .filter((e) => e.data.date.valueOf() < now.valueOf())
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
 <Layout title="Events" description="Upcoming and recent events" floatingHeader>
@@ -25,37 +22,38 @@ const absoluteImageUrl = (url?: string | null) => {
   />
   <div class="mx-auto max-w-7xl px-8 py-12">
     {
-      events.length === 0 ? (
-        <p class="text-foreground-muted py-16 text-center">No events scheduled.</p>
+      upcoming.length === 0 ? (
+        <p class="text-foreground-muted py-16 text-center">
+          No upcoming events scheduled — check back soon.
+        </p>
       ) : (
         <div class="grid gap-6 md:grid-cols-2">
-          {events.map((event) => {
-            const img = absoluteImageUrl(event.data.image?.url);
-            const alt = event.data.image?.alternativeText ?? '';
-            return (
-              <a
-                href={`/events/${event.id}`}
-                class="border-border bg-surface-secondary hover:border-brand-500 group flex flex-col overflow-hidden rounded-xl border transition-colors"
-              >
-                {img && (
-                  <img
-                    src={img}
-                    alt={alt}
-                    class="aspect-video w-full object-cover"
-                    loading="lazy"
-                  />
-                )}
-                <div class="flex flex-col gap-2 p-6">
-                  <time class="text-brand-500 text-sm font-medium">
-                    {formatDate(event.data.date)}
-                  </time>
-                  <h2 class="text-foreground text-xl font-semibold">
-                    {event.data.location}
-                  </h2>
-                </div>
-              </a>
-            );
-          })}
+          {upcoming.map((event) => (
+            <EventCard
+              id={event.id}
+              date={event.data.date}
+              location={event.data.location}
+              image={event.data.image}
+            />
+          ))}
+        </div>
+      )
+    }
+
+    {
+      past.length > 0 && (
+        <div class="mt-16">
+          <h2 class="text-foreground mb-6 text-xl font-semibold">Past events</h2>
+          <div class="grid gap-6 md:grid-cols-2">
+            {past.map((event) => (
+              <EventCard
+                id={event.id}
+                date={event.data.date}
+                location={event.data.location}
+                image={event.data.image}
+              />
+            ))}
+          </div>
         </div>
       )
     }
