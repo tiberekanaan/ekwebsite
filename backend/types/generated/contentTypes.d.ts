@@ -440,6 +440,52 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiActivityActivity extends Struct.CollectionTypeSchema {
+  collectionName: 'activities';
+  info: {
+    description: 'One workshop, session or event: a date, a venue, a topic, how many came. Listed on its programme page; never gets its own URL.';
+    displayName: 'Activity';
+    pluralName: 'activities';
+    singularName: 'activity';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    attendance: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    count_method: Schema.Attribute.Enumeration<['register', 'estimate']> &
+      Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    date: Schema.Attribute.Date & Schema.Attribute.Required;
+    delivered: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    end_date: Schema.Attribute.Date;
+    island: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'South Tarawa'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::activity.activity'
+    > &
+      Schema.Attribute.Private;
+    not_delivered_reason: Schema.Attribute.String;
+    programme: Schema.Attribute.Relation<'manyToOne', 'api::project.project'>;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    venue: Schema.Attribute.String;
+  };
+}
+
 export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
   collectionName: 'articles';
   info: {
@@ -788,8 +834,8 @@ export interface ApiPartnersPagePartnersPage extends Struct.SingleTypeSchema {
 export interface ApiPillarPillar extends Struct.CollectionTypeSchema {
   collectionName: 'pillars';
   info: {
-    description: "A strategic pillar of Empower Kiribati's work. Each Pillar groups related Projects (the 'PROGRAMS' surface on the landing page).";
-    displayName: 'Pillar';
+    description: 'One of the four approved areas from the 2026-2030 strategy. Fixed set of four; groups Programmes and gives the homepage its four cards.';
+    displayName: 'Strategy';
     pluralName: 'pillars';
     singularName: 'pillar';
   };
@@ -819,8 +865,8 @@ export interface ApiPillarPillar extends Struct.CollectionTypeSchema {
 export interface ApiProjectProject extends Struct.CollectionTypeSchema {
   collectionName: 'projects';
   info: {
-    description: 'A program or initiative run by Empower Kiribati, optionally backed by one or more partners.';
-    displayName: 'Project';
+    description: 'A named, funded body of work with a start and an end, anchored to one strategy.';
+    displayName: 'Programme';
     pluralName: 'projects';
     singularName: 'project';
   };
@@ -833,6 +879,10 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
+    activities: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::activity.activity'
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -868,8 +918,11 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
       }>;
     partners: Schema.Attribute.Relation<'manyToMany', 'api::partner.partner'>;
     pillars: Schema.Attribute.Relation<'manyToMany', 'api::pillar.pillar'>;
-    project_status: Schema.Attribute.Enumeration<['completed', 'on-going']>;
+    project_status: Schema.Attribute.Enumeration<
+      ['running', 'completed', 'planned', 'agreed_not_started']
+    >;
     publishedAt: Schema.Attribute.DateTime;
+    strategy: Schema.Attribute.Relation<'manyToOne', 'api::pillar.pillar'>;
     testimonials: Schema.Attribute.Relation<
       'oneToMany',
       'api::testimonial.testimonial'
@@ -1581,6 +1634,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::activity.activity': ApiActivityActivity;
       'api::article.article': ApiArticleArticle;
       'api::basic-page.basic-page': ApiBasicPageBasicPage;
       'api::blog.blog': ApiBlogBlog;

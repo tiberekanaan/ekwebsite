@@ -1,45 +1,46 @@
 # Current Feature
 
-**Feature:** Landing page content v3 (donor-review rewrite — 9 sections → 6, CMS-driven)
+**Feature:** Content spine — Strategy → Programme → Activity (Phase 1 of the amended content-structure plan)
 
 ## Status
-- 🚧 In progress on branch `feature/landing-content-v3` (branched off `fix/donor-review-quick-fixes`, whose events past/upcoming split it carries; its other two fixes are superseded by this rewrite). Build passes; homepage currently renders the hardcoded v3 fallbacks because production Strapi 400s on the new populate keys until the schema deploys. Awaiting user browser review, then merge → deploy → run `backend/apply-landing-v3.js` against production → publish Homepage + Global in the Strapi Cloud admin.
+- 🚧 In progress on branch `feature/content-spine`. Build passes; verified against the local backend with example activities. Awaiting user browser review (dev server must run with `STRAPI_URL=http://localhost:1337` — see gotcha below), then merge → deploy → run `backend/apply-spine.js` against production → enter real activities in the admin.
 
 ## Source material
-- `~/Downloads/CONTENT-IMPLEMENTATION.md` — the binding brief: final copy (verbatim, British spelling), section order, and ten content rules from the donor review (name funders never amounts, no 2030 targets on the landing page, South Tarawa never "across Kiribati", quotes by role + month never name, no donate/subscribe CTAs, no dead links, no em dashes in body copy…).
-- `~/Downloads/empower-landing-v3.html` — standalone reference render (markup/section order only; its Saira-Condensed styling was NOT adopted — the existing ek landing aesthetic is kept, per user instruction "design is fine, focus on content").
+- The "Content Structure" artifact (`b4c43e38`) as amended by the approved plan in `~/.claude/plans/please-read-this-and-streamed-blanket.md`: three-level spine, activities as rows not pages, migration map instead of greenfield builds.
 
-## Section mapping (9 → 6)
-| v3 section | Implementation |
-|---|---|
-| Hero | `blocks.hero` + new `eyebrow`/`heritage` fields; "Thriving, resilient futures" headline; secondary CTA re-enabled as "Partner with us" → `/contact`; primary "See our work" → `#our-work` |
-| What we do | new `blocks.what-we-do` (+ `shared.area-item`) — four approved 2026-2030 strategies, NOT five (livelihoods is cross-cutting, do not re-add) |
-| Where we are | `blocks.impact` rewritten — real delivery figures (5 / 40+ / 1,500+ / 3), **static, no count-up** (removed `data-countup`), new `note` field (attendance-register honesty note); badges/outcomes/photos band dropped from render (schema fields kept) |
-| Voice | `blocks.testimonials` gains `quote`/`attribution`/`note` — single pull quote ("A faith leader · July 2026"), carousel/3-card grid removed, anonymity note below |
-| Our work | new `blocks.programmes` (+ `shared.programme-item`: title, description, `partnerLine`, `programmeStatus` enum running/completed — `status` is reserved in Strapi — `statusYear`); section carries `id="our-work"` so existing `/#our-work` links (about, pillars back-link) still resolve; "All our work" → `/our-programs` |
-| Close | new `blocks.close` — "Bwabwai is not grown in a day", "Get in touch" → `/contact` |
-| Challenges / Threats / Partners / Future | **dropped from homepage** (components + Astro blocks kept in repo for later reuse on About / Our Work — the brief's "move to About/Our Work" is a separate job) |
+## What changed
+- **Strapi** (`backend/src/`):
+  - `project` displayName → **Programme**; `project_status` enum → `running / completed / planned / agreed_not_started` (legacy `on-going` migrated to `running`); new `strategy` manyToOne → pillar (the deprecated `pillars` M2M is kept this phase so the migration can copy from it — removal is a later cleanup); new `activities` oneToMany.
+  - `pillar` displayName → **Strategy** (same four seeded entries; no pages of their own any more).
+  - New `activity` collection (D&P off): title, `date`/`end_date`, venue, `island` (default South Tarawa), attendance, **`count_method` enum register/estimate (required)**, `delivered` + `not_delivered_reason` (a cancelled workshop is a row with a reason, not a gap). Public find/findOne seeded in bootstrap.
+  - `backend/apply-spine.js` — idempotent data migration (status mapping + strategy from `pillars[0]`); run against local ✓, production pending schema deploy.
+- **Frontend** (`frontend/src/`):
+  - `/our-programs` rebuilt in the ek aesthetic: programmes **grouped under their strategies** (numbered "Area of work" headings), status pills, honest intro (old boilerplate intro with "across Kiribati's atolls" removed).
+  - Detail page moved `/projects/[slug]` → `/our-programs/[slug]` (redirect kept via `astro.config.mjs` `redirects`; `/pillars/*` 301s to `/our-programs` via a catch-all route — Astro redirects can't drop params). Strategy shown as the PageHeader eyebrow; new **Delivery record** section: dated activity rows (venue, attendance with `~` for estimates, cancellations with reason) + derived totals sentence ("N sessions delivered, M attendances recorded, as of <date>") + register/estimate honesty note. i18n machinery untouched (retirement is Phase 4).
+  - `src/lib/programme-status.ts` — shared status label/pill mapping (tolerates legacy `on-going` until the production migration runs).
+  - `content.config.ts`: projects schema gains `strategy`, `activities`, widened status enum; `activities` added to the dev auto-refresh fingerprint list in `astro.config.mjs` (new activity rows otherwise never trigger a content refresh).
+  - Boilerplate config fixed: `site.config.ts` had Velocity demo data (Dallas address, hello@example.com, "across Kiribati" site description) → real contact details + brief-compliant description; `astro.config.mjs` site fallback `example.com` → `empower.org.ki`.
 
-## Nav + footer (per user decisions)
-- Nav: Our Work (`/our-programs`) · Resources · Blog · About; **Contact is now the header CTA pill** (replaces disabled "Build your skills"). Kiribati language link omitted until the page exists (no dead links). Events dropped from nav (page still exists, still linked from footer).
-- Footer: newsletter subscribe form **removed** (subscriber collection + `subscribe` action kept in codebase, unused); v3 columns (Our work: Programmes/Partners — "Where we work" omitted, no page; Learn: Resources/Blog/Events); real contact block (`externalaffairs@empower.org.ki`, +686 7300 5227, Te Kimatore CS Compound, Bikenibeu); Digital Kiribati Inc legal identity line above copyright; socials trimmed to Facebook + LinkedIn.
+## Gotchas found this session
+- `frontend/.env` `STRAPI_URL` points at **production** — dev-server checks of new backend features silently read production data. Override with `STRAPI_URL=http://localhost:1337 npm run dev` when reviewing schema-dependent work.
+- `frontend/.env` had `SITE_URL=https://example.com` (fixed locally) and **Vercel's SITE_URL is `https://ekwebsite-mu.vercel.app`** — live canonicals/OG URLs point at the vercel.app domain. Fix in the Vercel dashboard env vars → `https://empower.org.ki` (user action).
+- Local example activities (3 rows on American Spaces incl. one cancelled) exist in the local DB only, for review; real data entry happens in production admin.
 
-## Content sync (`backend/apply-landing-v3.js`)
-- Replaces the homepage dynamic zone wholesale with the six v3 blocks (`__component` first key per block, per [[strapi-dz-put-component-first]]) and sets Global `navbarLinks` to the four v3 links. Hero `title` deliberately null so the frontend's styled `<em>` default renders.
-- **Run order matters**: target Strapi must have the new schema first (local: restart dev server; production: after the merge deploys to Strapi Cloud). Then `node apply-landing-v3.js` locally, and `STRAPI_URL=https://determined-strength-17a6de9eef.strapiapp.com STRAPI_API_TOKEN=xxx node apply-landing-v3.js` for production, then publish Homepage + Global in the admin. Until then the live/local site renders the fallback defaults — which ARE the v3 copy, so the interim state is correct.
-- `backend/fix-impact-labels.js` deleted (never run; superseded).
+## Production rollout (after review + merge)
+1. Push main → Strapi Cloud deploys spine schema (+ Vercel deploys frontend; redirects keep old URLs alive).
+2. `STRAPI_URL=https://determined-strength-17a6de9eef.strapiapp.com STRAPI_API_TOKEN=xxx node backend/apply-spine.js` (mint a fresh token — the one used for landing v3 should be deleted, it was pasted in chat).
+3. Enter real activities per programme in the admin; homepage figures stay hand-typed per the landing brief — derived totals appear on programme pages only.
 
-## Verified
-- `npm run build` passes; built homepage has zero em dashes in body copy, zero `href="#"`, no Donate/Subscribe strings, no `hello@empowerkiribati.org` anywhere in src.
-
-## Out of scope (brief items needing user action, not code)
-- Rotating the credentials exposed on the Notion "Website Planning" page (brief §0 — do before any deploy), confirming `externalaffairs@` is monitored, real Facebook/LinkedIn URLs (kept existing guessed slugs), logo SVG redraw, Kiribati-language page, moving Challenges/Future to About and Partners to Our Work, prerender/performance pass (brief §5).
+## Next phases (approved plan, not started)
+2. People & partners (person type, partner role/consent_to_name). 3. Consent & records (testimonial consent gating, policy type, resource kind). 4. Cleanup (news-update→blog, basic-page→singletons, drop navbarLinks, dead-link build check, retire per-entry i18n once /ki exists). 5. Event/Measurement later.
 
 ---
 
-**Previous:** Donor-review quick fixes — partially absorbed: events past/upcoming split (`events/index.astro` + `EventCard.astro`) rides along on this branch; impact-labels script and partner-marquee threshold superseded by this rewrite. Grants & Funding Resource Articles — ✅ completed 2026-08-17, see History.
+**Previous:** Landing page content v3 — ✅ completed 2026-08-25, live on empower.org.ki (see History).
 
 ## History
+
+- 2026-08-25 — **Landing page content v3 (donor-review rewrite)**. Nine sections → six with final approved copy from ~/Downloads/CONTENT-IMPLEMENTATION.md (verbatim, British spelling), rendered in the existing ek aesthetic: hero ("Thriving, resilient futures", CMS eyebrow/heritage fields, secondary CTA re-enabled as "Partner with us"), new blocks.what-we-do (four strategies, not five), blocks.impact rewritten to real delivery figures (5 / 40+ / 1,500+ / 3, static, no countup, honesty note), testimonials → single role-attributed pull quote ("A faith leader · July 2026") + anonymity note, new blocks.programmes (status pills, id="our-work"), new blocks.close; Challenges/Threats/Partners/Future dropped from the homepage (components kept). Nav → Our Work(/our-programs)/Resources/Blog/About with Contact as the header CTA pill; footer lost the newsletter form, gained real contact block + Digital Kiribati Inc legal line. backend/apply-landing-v3.js replaced homepage blocks + global nav wholesale on local and production (REST PUT published directly — no admin publish needed; the publish webhook triggered the final Vercel rebuild). Verified live on empower.org.ki. Gotchas: frontend populate keys for unknown components 400 until the schema deploys (page falls back to hardcoded defaults — which were set to the v3 copy, so the interim deploy state was correct); expired local API token fixed by nulling lifespan/expires_at in .tmp/data.db. Events past/upcoming split from the absorbed fix/donor-review-quick-fixes branch shipped in the same merge. Branch feature/landing-content-v3, merged ff (891997c), deleted.
 
 - 2026-08-24 — **Real photos in "The threats to our roots" (ChallengesBlock)**. Overwrote the four duotone placeholders in `frontend/src/assets/images/community/` with real photos: `challenge-climate.jpg` ← eroding rocky shoreline, `challenge-work.jpg` ← youth on a village field, `challenge-digital.jpg` ← outer-island thatched village, `challenge-leadership.jpg` ← community meeting indoors. Treatment (sharp, matches hero photo): 1200×800 attention crop, saturation 0.88, `#2a8089` ek-500 soft-light wash, mozjpeg q80; the indoor leadership shot additionally brightness 1.14 to match the outdoor exposure. `ChallengesBlock.astro`: new positional `PHOTO_ALTS` array wired through defaults + CMS mapping, `<Image alt>` no longer empty; production CMS item order verified to match the photo order (climate, unemployment, digital, leadership). Gotcha: querying Strapi with bracketed populate params via curl needs `-g` (globbing eats the brackets). Branch `feature/challenge-photos`.
 

@@ -3,6 +3,7 @@ import Layout from '@/layouts/Layout.astro';
 import PageHeader from '@/components/PageHeader.astro';
 import { getCollection } from 'astro:content';
 import { STRAPI_URL } from 'astro:env/server';
+import { statusLabel, statusPillClass } from '@/lib/programme-status';
 
 const projects = (await getCollection('projects')).sort((a, b) => {
   const aDate = a.data.publishedAt?.valueOf() ?? a.data.createdAt?.valueOf() ?? 0;
@@ -10,97 +11,135 @@ const projects = (await getCollection('projects')).sort((a, b) => {
   return bDate - aDate;
 });
 
+// The four strategies, in their seeded order, group the programmes.
+// A programme's strategy is the new manyToOne; the legacy pillars M2M is the
+// fallback until the data migration has run everywhere.
+const strategies = await getCollection('pillars');
+
+const strategyOf = (p: (typeof projects)[number]) =>
+  p.data.strategy?.documentId ?? p.data.pillars[0]?.documentId ?? null;
+
+const groups = strategies
+  .map((s) => ({
+    strategy: s,
+    programmes: projects.filter((p) => strategyOf(p) === s.id),
+  }))
+  .filter((g) => g.programmes.length > 0);
+
+const ungrouped = projects.filter((p) => !strategies.some((s) => s.id === strategyOf(p)));
+
 const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
 ---
 
 <Layout
-  title="Empowering Leaders & Communities"
-  description="Capability-building, mentorship, and local leadership pathways that help communities lead their own change across Kiribati's atolls."
+  title="Our work"
+  description="The programmes Empower Kiribati is running now and has delivered, grouped under our four areas of work."
   floatingHeader
 >
-  <PageHeader eyebrow="Programs" title="Empowering Leaders & Communities" />
+  <PageHeader eyebrow="Our work" title="What we are running" />
   <section class="bg-white">
     <div class="mx-auto max-w-7xl px-8 py-12">
-      <div class="max-w-3xl">
-        <div
-          class="space-y-6 text-base leading-relaxed text-slate-700 sm:text-lg"
-          data-reveal
-        >
-          <p>
-            We believe lasting change in Kiribati must be led locally — by people who understand the
-            rhythms of island life, the realities of outer atolls, and the strengths already present
-            in community networks. When leadership is rooted in culture and community priorities,
-            solutions are more relevant, more trusted, and far more likely to endure beyond a single
-            project or funding cycle.
-          </p>
-          <p>
-            That's why we invest in building capability and leadership pathways: training,
-            mentorship, and practical opportunities that help emerging leaders gain confidence,
-            skills, and support. By strengthening local organizations, youth and women's leadership,
-            and community decision-making, we help communities move from being recipients of support
-            to being designers and drivers of their own development.
-          </p>
-          <p>
-            Empowered communities are also better prepared to navigate climate pressures, economic
-            uncertainty, and the rapid shift to digital services. When people have the knowledge,
-            tools, and voice to advocate for themselves, they can protect what matters, take
-            informed risks, and build inclusive opportunities for the next generation — on their own
-            terms.
-          </p>
-        </div>
+      <div class="max-w-3xl" data-reveal>
+        <p class="text-lg leading-relaxed text-ek-muted">
+          Each of our programmes belongs to one of four areas of work from our 2026 to 2030
+          strategy. A programme is a named, funded body of work with a start and an end. The
+          workshops and sessions it delivers are listed on its own page, with dates attached.
+        </p>
       </div>
 
       {
         projects.length === 0 ? (
-          <p class="mt-16 text-center text-slate-500">No programs published yet.</p>
+          <p class="mt-16 text-center text-ek-muted">No programmes published yet.</p>
         ) : (
-          <ul class="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project) => {
-              const { title, description, image, partners: linkedPartners } = project.data;
-              return (
-                <li
-                  data-reveal
-                  class="relative flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-teal-300 hover:shadow-xl hover:shadow-slate-900/10"
-                >
-                  <div class="aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-slate-100 to-teal-50">
-                    {image && (
-                      <img
-                        src={absoluteUrl(image.url)}
-                        alt={image.alternativeText ?? title}
-                        class="h-full w-full object-cover"
-                        loading="lazy"
-                      />
-                    )}
-                  </div>
-                  <div class="flex flex-1 flex-col gap-3 p-6">
-                    <h2 class="text-xl font-bold leading-snug text-slate-900">
-                      <a
-                        href={`/projects/${project.data.slug}`}
-                        class="transition-colors hover:text-teal-700 after:absolute after:inset-0 after:content-['']"
+          <Fragment>
+            {groups.map((group, gi) => (
+              <section class="mt-16">
+                <div class="mb-8 max-w-[640px]" data-reveal>
+                  <span class="mb-3 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
+                    {String(gi + 1).padStart(2, '0')} · Area of work
+                  </span>
+                  <h2 class="bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-3xl font-bold leading-[1.1] text-transparent sm:text-4xl">
+                    {group.strategy.data.title}
+                  </h2>
+                  <span
+                    class="mt-4 block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500"
+                    aria-hidden="true"
+                  />
+                </div>
+                <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {group.programmes.map((project) => {
+                    const { title, description, image, project_status, partners: linkedPartners } =
+                      project.data;
+                    return (
+                      <li
+                        data-reveal
+                        class="relative flex h-full flex-col overflow-hidden rounded-2xl border border-ek-700/10 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_38px_rgba(15,50,58,0.1)]"
                       >
-                        {title}
+                        <div class="aspect-[16/9] w-full overflow-hidden bg-ek-mist">
+                          {image && (
+                            <img
+                              src={absoluteUrl(image.url)}
+                              alt={image.alternativeText ?? title}
+                              class="h-full w-full object-cover"
+                              loading="lazy"
+                            />
+                          )}
+                        </div>
+                        <div class="flex flex-1 flex-col gap-3 p-6">
+                          {project_status && (
+                            <span
+                              class={`self-start whitespace-nowrap rounded-full px-3 py-1 font-condensed text-[0.72rem] font-semibold uppercase tracking-[0.14em] ${statusPillClass(project_status)}`}
+                            >
+                              {statusLabel(project_status)}
+                            </span>
+                          )}
+                          <h3 class="font-serif text-xl font-bold leading-snug text-ek-800">
+                            <a
+                              href={`/our-programs/${project.data.slug}`}
+                              class="transition-colors hover:text-ek-600 after:absolute after:inset-0 after:content-['']"
+                            >
+                              {title}
+                            </a>
+                          </h3>
+                          {description && (
+                            <p class="line-clamp-3 text-sm text-ek-muted">{description}</p>
+                          )}
+                          {linkedPartners.length > 0 && (
+                            <div class="mt-auto flex flex-wrap gap-2 pt-2">
+                              {linkedPartners.map((partner) => (
+                                <a
+                                  href={`/our-partners/${partner.documentId}`}
+                                  class="relative z-10 rounded-full bg-ek-mist px-3 py-1 text-xs font-semibold text-ek-700 transition-colors hover:bg-ek-500/15 hover:text-ek-800"
+                                >
+                                  {partner.name}
+                                </a>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            ))}
+
+            {ungrouped.length > 0 && (
+              <section class="mt-16" data-reveal>
+                <p class="text-sm text-ek-muted">
+                  Not yet assigned to an area of work:{' '}
+                  {ungrouped.map((p, i) => (
+                    <Fragment>
+                      {i > 0 && ' · '}
+                      <a class="font-semibold text-ek-700" href={`/our-programs/${p.data.slug}`}>
+                        {p.data.title}
                       </a>
-                    </h2>
-                    {description && (
-                      <p class="line-clamp-3 text-sm text-slate-600">{description}</p>
-                    )}
-                    {linkedPartners.length > 0 && (
-                      <div class="mt-auto flex flex-wrap gap-2 pt-2">
-                        {linkedPartners.map((partner) => (
-                          <a
-                            href={`/our-partners/${partner.documentId}`}
-                            class="relative z-10 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 transition-colors hover:bg-teal-100 hover:text-teal-800"
-                          >
-                            {partner.name}
-                          </a>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+                    </Fragment>
+                  ))}
+                </p>
+              </section>
+            )}
+          </Fragment>
         )
       }
     </div>

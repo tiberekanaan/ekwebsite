@@ -19,6 +19,7 @@ const STRAPI_COLLECTIONS = [
   'resources',
   'partners',
   'projects',
+  'activities',
   'pillars',
   'testimonials',
   'news-updates',
@@ -111,7 +112,7 @@ const pagefindDev = {
 };
 
 export default defineConfig({
-  site: process.env.SITE_URL || 'https://example.com',
+  site: process.env.SITE_URL || 'https://empower.org.ki',
 
   env: {
     schema: {
@@ -180,6 +181,12 @@ export default defineConfig({
   ],
 
   adapter: vercel(),
+
+  // Old routes from before the programme/strategy restructure; keeps
+  // published links alive. Activities and strategies get no URLs of their own.
+  redirects: {
+    '/projects/[slug]': '/our-programs/[slug]',
+  },
 
   integrations: [
     react(),

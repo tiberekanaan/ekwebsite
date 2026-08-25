@@ -4,8 +4,8 @@
   "info": {
     "singularName": "project",
     "pluralName": "projects",
-    "displayName": "Project",
-    "description": "A program or initiative run by Empower Kiribati, optionally backed by one or more partners."
+    "displayName": "Programme",
+    "description": "A named, funded body of work with a start and an end, anchored to one strategy."
   },
   "options": {
     "draftAndPublish": true
@@ -41,7 +41,7 @@
     },
     "project_status": {
       "type": "enumeration",
-      "enum": ["completed", "on-going"]
+      "enum": ["running", "completed", "planned", "agreed_not_started"]
     },
     "objectives": {
       "type": "richtext",
@@ -73,11 +73,22 @@
       "target": "api::partner.partner",
       "mappedBy": "projects"
     },
+    "strategy": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::pillar.pillar"
+    },
     "pillars": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::pillar.pillar",
       "mappedBy": "projects"
+    },
+    "activities": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::activity.activity",
+      "mappedBy": "programme"
     },
     "testimonials": {
       "type": "relation",

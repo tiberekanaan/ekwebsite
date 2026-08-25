@@ -4,8 +4,8 @@
   "info": {
     "singularName": "pillar",
     "pluralName": "pillars",
-    "displayName": "Pillar",
-    "description": "A strategic pillar of Empower Kiribati's work. Each Pillar groups related Projects (the 'PROGRAMS' surface on the landing page)."
+    "displayName": "Strategy",
+    "description": "One of the four approved areas from the 2026-2030 strategy. Fixed set of four; groups Programmes and gives the homepage its four cards."
   },
   "options": {
     "draftAndPublish": true

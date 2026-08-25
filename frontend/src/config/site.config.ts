@@ -51,22 +51,23 @@ export interface SiteConfig {
 
 const siteConfig: SiteConfig = {
   name: 'Empower Kiribati',
-  description: 'Empower Kiribati — building skills, partnerships, and digital participation for communities across Kiribati',
-  url: SITE_URL || 'https://example.com',
+  description:
+    'Empower Kiribati is a platform for community initiatives. We partner with ministries, funders and community organisations to design, deliver and measure work that cultivates the conditions for a resilient Kiribati.',
+  url: SITE_URL || 'https://empower.org.ki',
   ogImage: '/og-default.png',
-  author: 'Southwell Media',
-  // Demo contact info - replace with your actual business details
-  email: 'hello@example.com',
-  phone: '+1 (555) 123-4567',
+  author: 'Empower Kiribati',
+  email: 'externalaffairs@empower.org.ki',
+  phone: '+686 7300 5227',
   address: {
-    street: '123 Main St',
-    city: 'Dallas',
-    state: 'TX',
-    zip: '75001',
-    country: 'US',
+    street: 'Te Kimatore CS Compound',
+    city: 'Bikenibeu, South Tarawa',
+    state: '',
+    zip: '',
+    country: 'KI',
   },
   socialLinks: [
-    'https://github.com/southwellmedia',
+    'https://facebook.com/empowerkiribati',
+    'https://linkedin.com/company/empowerkiribati',
   ],
   // Twitter metadata - update with your actual handles or remove
   // twitter: {

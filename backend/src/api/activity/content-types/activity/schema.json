@@ -1,0 +1,55 @@
+{
+  "kind": "collectionType",
+  "collectionName": "activities",
+  "info": {
+    "singularName": "activity",
+    "pluralName": "activities",
+    "displayName": "Activity",
+    "description": "One workshop, session or event: a date, a venue, a topic, how many came. Listed on its programme page; never gets its own URL."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "date": {
+      "type": "date",
+      "required": true
+    },
+    "end_date": {
+      "type": "date"
+    },
+    "venue": {
+      "type": "string"
+    },
+    "island": {
+      "type": "string",
+      "default": "South Tarawa"
+    },
+    "attendance": {
+      "type": "integer",
+      "min": 0
+    },
+    "count_method": {
+      "type": "enumeration",
+      "enum": ["register", "estimate"],
+      "required": true
+    },
+    "delivered": {
+      "type": "boolean",
+      "default": true
+    },
+    "not_delivered_reason": {
+      "type": "string"
+    },
+    "programme": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::project.project",
+      "inversedBy": "activities"
+    }
+  }
+}

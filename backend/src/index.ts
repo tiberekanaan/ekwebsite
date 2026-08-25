@@ -14,6 +14,8 @@ const PUBLIC_ACTIONS = [
   'api::resource.resource.findOne',
   'api::project.project.find',
   'api::project.project.findOne',
+  'api::activity.activity.find',
+  'api::activity.activity.findOne',
   'api::blog.blog.find',
   'api::blog.blog.findOne',
   'api::homepage.homepage.find',

@@ -6,6 +6,7 @@ import { getCollection } from 'astro:content';
 import { marked } from 'marked';
 import { STRAPI_URL } from 'astro:env/server';
 import { STRAPI_LOCALES, resolveLang, type Lang } from '@/lib/i18n';
+import { statusLabel, statusPillClass, type ProgrammeStatus } from '@/lib/programme-status';
 
 export const prerender = false;
 
@@ -14,7 +15,7 @@ interface LocalizedProject {
   locale: string;
   title: string;
   description: string | null;
-  project_status: 'completed' | 'on-going' | null;
+  project_status: ProgrammeStatus | null;
   objectives: string | null;
   location: string | null;
   metrics: string | null;
@@ -47,7 +48,8 @@ if (!localized && lang !== 'en') localized = await fetchLocalized(STRAPI_LOCALES
 
 // relations and media are shared across locales — keep them from the build-time
 // collection entry; only the localized text fields come from the runtime fetch
-const { image, partners, testimonials } = project.data;
+const { image, partners, testimonials, strategy, pillars, activities } = project.data;
+const strategyTitle = strategy?.title ?? pillars[0]?.title ?? null;
 const title = localized?.title ?? project.data.title;
 const description = localized?.description ?? project.data.description;
 const status = localized?.project_status ?? project.data.project_status;
@@ -68,13 +70,37 @@ const descriptionHtml = description ? marked.parse(fixOrphanHeadings(description
 const objectivesHtml = objectives ? marked.parse(fixOrphanHeadings(objectives)) : '';
 const metricsHtml = metrics ? marked.parse(fixOrphanHeadings(metrics)) : '';
 
-const statusStyles =
-  status === 'completed'
-    ? 'border-teal-200 bg-teal-50 text-teal-800'
-    : 'border-lime-300 bg-lime-50 text-lime-800';
-const statusLabel = status === 'completed' ? 'Completed' : 'On-going';
-
 const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
+
+// Delivery record: most recent first; totals count delivered sessions only.
+const sortedActivities = [...activities].sort((a, b) => b.date.valueOf() - a.date.valueOf());
+const deliveredActivities = sortedActivities.filter((a) => a.delivered !== false);
+const totalAttendance = deliveredActivities.reduce((sum, a) => sum + (a.attendance ?? 0), 0);
+const hasEstimates = deliveredActivities.some(
+  (a) => a.attendance != null && a.count_method === 'estimate',
+);
+const asOf = deliveredActivities[0]?.date ?? null;
+
+const totalsSentence = asOf
+  ? [
+      `${deliveredActivities.length} ${deliveredActivities.length === 1 ? 'session' : 'sessions'} delivered`,
+      totalAttendance > 0 ? `${totalAttendance.toLocaleString('en-GB')} attendances recorded` : null,
+    ]
+      .filter(Boolean)
+      .join(', ')
+  : null;
+
+const formatDate = (d: Date) =>
+  d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+// "18 to 19 June 2026" when the range stays in one month, else both in full.
+const formatRange = (start: Date, end?: Date | null) => {
+  if (!end || end.valueOf() === start.valueOf()) return formatDate(start);
+  if (start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear()) {
+    return `${start.getDate()} to ${formatDate(end)}`;
+  }
+  return `${formatDate(start)} to ${formatDate(end)}`;
+};
 ---
 
 <Layout
@@ -83,19 +109,19 @@ const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_U
   floatingHeader
 >
   <PageHeader
-    eyebrow="Program"
+    eyebrow={strategyTitle ?? 'Programme'}
     title={title}
     backHref="/our-programs"
-    backLabel="Back to Programs"
+    backLabel="Back to Our work"
   >
     <div class="mt-6 flex flex-wrap items-center gap-2.5" data-reveal data-reveal-delay="200">
       {
         status && (
           <span
-            class={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider ${statusStyles}`}
+            class={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-condensed text-xs font-semibold uppercase tracking-[0.14em] ${statusPillClass(status)}`}
           >
             <span aria-hidden="true" class="h-1.5 w-1.5 rounded-full bg-current" />
-            {statusLabel}
+            {statusLabel(status)}
           </span>
         )
       }
@@ -219,6 +245,57 @@ const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_U
                 set:html={objectivesHtml}
               />
             </div>
+          </section>
+        )
+      }
+      {
+        sortedActivities.length > 0 && (
+          <section class="mt-16" data-reveal>
+            <p class="mb-4 font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
+              Delivery record
+            </p>
+            <h2 class="bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-3xl font-bold tracking-tight text-transparent">
+              What this programme has delivered
+            </h2>
+            {totalsSentence && asOf && (
+              <p class="mt-4 max-w-[46em] text-ek-muted">
+                {totalsSentence}, as of {formatDate(asOf)}.
+              </p>
+            )}
+            <div class="mt-8 border-t border-ek-700/10">
+              {sortedActivities.map((a) => (
+                <div class="grid items-baseline gap-1 border-b border-ek-700/10 py-4 md:grid-cols-[190px_1fr_auto] md:gap-6">
+                  <div class="font-condensed text-[0.85rem] font-semibold uppercase tracking-[0.08em] text-ek-olive">
+                    {formatRange(a.date, a.end_date)}
+                  </div>
+                  <div>
+                    <span class="font-semibold text-ek-ink">{a.title}</span>
+                    {a.venue && <span class="text-ek-muted"> · {a.venue}</span>}
+                    {a.island && a.island !== 'South Tarawa' && (
+                      <span class="text-ek-muted"> · {a.island}</span>
+                    )}
+                    {a.delivered === false && (
+                      <span class="text-ek-muted">
+                        {' '}
+                        · Not delivered{a.not_delivered_reason && `: ${a.not_delivered_reason}`}
+                      </span>
+                    )}
+                  </div>
+                  {a.delivered !== false && a.attendance != null && (
+                    <div class="whitespace-nowrap text-sm text-ek-muted md:justify-self-end">
+                      {a.count_method === 'estimate' && '~'}
+                      {a.attendance.toLocaleString('en-GB')} attended
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            {hasEstimates && (
+              <p class="mt-4 max-w-[46em] text-sm text-ek-muted">
+                Figures marked ~ are estimates from sessions too large to count person by person.
+                All other figures are from signed attendance registers.
+              </p>
+            )}
           </section>
         )
       }

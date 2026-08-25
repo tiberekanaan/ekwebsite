@@ -138,6 +138,20 @@ const pillarRef = z.object({
   title: z.string(),
 });
 
+const activityRef = z.object({
+  documentId: z.string(),
+  id: z.number().optional(),
+  title: z.string(),
+  date: z.coerce.date(),
+  end_date: z.coerce.date().nullable().optional(),
+  venue: z.string().nullable().optional(),
+  island: z.string().nullable().optional(),
+  attendance: z.number().nullable().optional(),
+  count_method: z.enum(['register', 'estimate']).nullable().optional(),
+  delivered: z.boolean().nullable().optional(),
+  not_delivered_reason: z.string().nullable().optional(),
+});
+
 const testimonialRef = z.object({
   documentId: z.string(),
   id: z.number().optional(),
@@ -191,12 +205,19 @@ const projects = defineCollection({
     slug: z.string(),
     description: z.string().nullable().optional(),
     image: strapiImage,
-    project_status: z.enum(['completed', 'on-going']).nullable().optional(),
+    // 'on-going' is the pre-spine value; tolerated until the data migration
+    // (backend/apply-spine.js) has run against the target Strapi.
+    project_status: z
+      .enum(['running', 'completed', 'planned', 'agreed_not_started', 'on-going'])
+      .nullable()
+      .optional(),
     objectives: z.string().nullable().optional(),
     location: z.string().nullable().optional(),
     metrics: z.string().nullable().optional(),
     partners: z.array(partnerRef).default([]),
+    strategy: pillarRef.nullable().optional(),
     pillars: z.array(pillarRef).default([]),
+    activities: z.array(activityRef).default([]),
     testimonials: z.array(testimonialRef).default([]),
     publishedAt: z.coerce.date().nullable().optional(),
     createdAt: z.coerce.date().optional(),
