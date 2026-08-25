@@ -121,4 +121,15 @@
   };
 
   document.addEventListener('astro:page-load', init);
+
+  // ClientRouter sets history.scrollRestoration = 'manual' and drops the
+  // browser's native jump to a #fragment, both on first load and after a
+  // swap — without this, cross-page anchor links land at the top.
+  document.addEventListener('astro:page-load', () => {
+    if (!location.hash) return;
+    const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    // 'instant' sidesteps the global scroll-behavior: smooth, whose animation
+    // the router's own scroll bookkeeping can cancel mid-flight.
+    if (target && Math.abs(window.scrollY) < 1) target.scrollIntoView({ behavior: 'instant' });
+  });
 </script>
