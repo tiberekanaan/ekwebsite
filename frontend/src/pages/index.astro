@@ -31,7 +31,7 @@ type Block =
 // Explicitly populate the dynamic zone, its nested components, relations and media.
 const POPULATE = [
   'populate[blocks][on][blocks.hero][populate]=*',
-  'populate[blocks][on][blocks.what-we-do][populate]=*',
+  'populate[blocks][on][blocks.what-we-do][populate][items][populate]=*',
   'populate[blocks][on][blocks.programmes][populate]=*',
   'populate[blocks][on][blocks.close][populate]=*',
   'populate[blocks][on][blocks.challenges][populate]=*',
