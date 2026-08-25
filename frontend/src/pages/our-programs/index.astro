@@ -53,7 +53,7 @@ const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_U
         ) : (
           <Fragment>
             {groups.map((group, gi) => (
-              <section class="mt-16">
+              <section id={group.strategy.data.slug} class="mt-16 scroll-mt-28">
                 <div class="mb-8 max-w-[640px]" data-reveal>
                   <span class="mb-3 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
                     {String(gi + 1).padStart(2, '0')} · Area of work
