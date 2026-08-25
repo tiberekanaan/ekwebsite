@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import logoFullColor from '@/assets/branding/empower-logo-full.webp';
+import logoWhite from '@/assets/branding/empower-logo-white.webp';
 
 import type { NavLink } from '@/types/global';
 
@@ -42,20 +43,50 @@ const isActive = (href: string) => {
 ---
 
 <header
+  data-floating={floating || undefined}
   class:list={[
     floating
-      ? 'absolute inset-x-0 top-6 z-50 mx-auto w-[96%] max-w-[1600px] rounded-xl bg-white px-8 py-4 shadow-md'
+      ? 'group fixed inset-x-0 top-0 z-50 px-6 pt-5 transition-[padding,background-color,box-shadow] duration-300 data-[scrolled]:bg-white/95 data-[scrolled]:pt-0 data-[scrolled]:shadow-[0_8px_30px_rgba(15,50,58,0.1)] data-[scrolled]:backdrop-blur-md'
       : 'sticky top-0 z-40 w-full border-b border-slate-200 bg-white/95 backdrop-blur',
   ]}
 >
-  <div class:list={['flex items-center justify-between', !floating && 'mx-auto max-w-7xl px-6 py-3']}>
+  <div
+    class:list={[
+      'relative flex items-center',
+      floating ? 'mx-auto max-w-7xl py-2' : 'mx-auto max-w-7xl justify-between px-6 py-3',
+    ]}
+  >
     <a
       href="/"
       class="inline-flex items-center transition-transform duration-300 hover:scale-[1.03]"
       aria-label="Empower Kiribati home"
     >
       {
-        logo ? (
+        floating ? (
+          // Over the hero the bar is transparent on a dark scene, so the
+          // bundled white logo wins (a full-colour CMS upload would vanish);
+          // the colour version crossfades in once the bar scrolls to white.
+          <span class="relative inline-flex">
+            <Image
+              src={logoWhite}
+              alt="Empower Kiribati"
+              height={56}
+              widths={[144, 216, 288]}
+              sizes="(min-width: 640px) 200px, 170px"
+              class="h-12 w-auto drop-shadow-[0_2px_12px_rgba(2,20,25,0.5)] transition-opacity duration-300 group-data-[scrolled]:opacity-0 sm:h-14"
+              loading="eager"
+            />
+            <Image
+              src={logoFullColor}
+              alt=""
+              height={56}
+              widths={[144, 216, 288]}
+              sizes="(min-width: 640px) 200px, 170px"
+              class="absolute left-0 top-0 h-12 w-auto opacity-0 transition-opacity duration-300 group-data-[scrolled]:opacity-100 sm:h-14"
+              loading="eager"
+            />
+          </span>
+        ) : logo ? (
           <img
             src={logo.url}
             alt={logo.alternativeText || 'Empower Kiribati'}
@@ -76,17 +107,29 @@ const isActive = (href: string) => {
       }
     </a>
 
-    <nav class="hidden items-center gap-8 md:flex" aria-label="Primary">
+    <nav
+      class:list={['hidden items-center md:flex', floating ? 'ml-auto gap-1' : 'gap-8']}
+      aria-label="Primary"
+    >
       {
         nav.map((item) => (
           <a
             href={item.href}
             aria-current={isActive(item.href) ? 'page' : undefined}
             class:list={[
-              'relative font-serif text-sm font-medium transition-colors after:absolute after:inset-x-0 after:-bottom-1 after:h-0.5 after:origin-left after:scale-x-0 after:bg-lime-400 after:transition-transform after:duration-300 hover:after:scale-x-100',
-              isActive(item.href)
-                ? 'text-slate-900 after:scale-x-100'
-                : 'text-slate-700 hover:text-slate-900',
+              floating
+                ? [
+                    'rounded-full px-4 py-2 font-serif text-sm font-medium transition-colors',
+                    isActive(item.href)
+                      ? 'bg-white/10 text-ek-lime-bright group-data-[scrolled]:bg-ek-mist group-data-[scrolled]:text-ek-700'
+                      : 'text-white/85 hover:bg-white/10 hover:text-white group-data-[scrolled]:text-ek-ink group-data-[scrolled]:hover:bg-ek-900 group-data-[scrolled]:hover:text-white',
+                  ]
+                : [
+                    'relative font-serif text-sm font-medium transition-colors after:absolute after:inset-x-0 after:-bottom-1 after:h-0.5 after:origin-left after:scale-x-0 after:bg-lime-400 after:transition-transform after:duration-300 hover:after:scale-x-100',
+                    isActive(item.href)
+                      ? 'text-slate-900 after:scale-x-100'
+                      : 'text-slate-700 hover:text-slate-900',
+                  ],
             ]}
           >
             {item.label}
@@ -95,11 +138,16 @@ const isActive = (href: string) => {
       }
     </nav>
 
-    <div class="flex items-center gap-3">
+    <div class:list={['flex items-center', floating ? 'ml-auto gap-1 pl-2 md:ml-0' : 'gap-3']}>
       <button
         type="button"
         data-search-open
-        class="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900"
+        class:list={[
+          'inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors',
+          floating
+            ? 'text-white/85 hover:bg-white/10 hover:text-white group-data-[scrolled]:text-ek-ink group-data-[scrolled]:hover:bg-ek-900 group-data-[scrolled]:hover:text-white'
+            : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900',
+        ]}
         aria-label="Search the site"
       >
         <svg
@@ -117,14 +165,24 @@ const isActive = (href: string) => {
 
       <a
         href="/contact"
-        class="hidden rounded-full bg-lime-300 px-5 py-2.5 text-sm font-semibold text-slate-900 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-lime-400 sm:inline-flex"
+        class:list={[
+          'hidden rounded-full text-sm font-semibold text-ek-900 shadow-sm transition-all duration-200 hover:-translate-y-0.5 sm:inline-flex',
+          floating
+            ? 'bg-ek-lime px-4 py-2 font-condensed text-[0.85rem] font-semibold uppercase tracking-[0.06em] hover:bg-ek-lime-bright'
+            : 'bg-lime-300 px-5 py-2.5 text-slate-900 hover:bg-lime-400',
+        ]}
       >
         Contact
       </a>
 
       <button
         type="button"
-        class="inline-flex items-center justify-center rounded-md p-2 text-slate-700 hover:bg-slate-100 md:hidden"
+        class:list={[
+          'inline-flex items-center justify-center p-2 md:hidden',
+          floating
+            ? 'rounded-full text-white/85 hover:bg-white/10 hover:text-white group-data-[scrolled]:text-ek-ink group-data-[scrolled]:hover:bg-ek-900 group-data-[scrolled]:hover:text-white'
+            : 'rounded-md text-slate-700 hover:bg-slate-100',
+        ]}
         aria-controls="empower-mobile-nav"
         aria-expanded="false"
         data-mobile-toggle
@@ -147,14 +205,24 @@ const isActive = (href: string) => {
 
   <div
     id="empower-mobile-nav"
-    class:list={['hidden border-t border-slate-200 bg-white md:hidden', floating && 'rounded-b-3xl']}
+    class:list={[
+      'hidden md:hidden',
+      floating
+        ? 'mx-auto mt-2 w-full max-w-sm rounded-2xl bg-ek-900/90 ring-1 ring-white/15 backdrop-blur-md'
+        : 'border-t border-slate-200 bg-white',
+    ]}
   >
     <nav class="flex flex-col gap-1 px-6 py-4" aria-label="Mobile">
       {
         nav.map((item) => (
           <a
             href={item.href}
-            class="rounded-md px-3 py-2 font-serif text-base font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+            class:list={[
+              'rounded-md px-3 py-2 font-serif text-base font-medium',
+              floating
+                ? 'text-white/90 hover:bg-white/10 hover:text-white'
+                : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900',
+            ]}
           >
             {item.label}
           </a>
@@ -162,7 +230,12 @@ const isActive = (href: string) => {
       }
       <a
         href="/contact"
-        class="mt-2 inline-flex w-full items-center justify-center rounded-full bg-lime-300 px-5 py-2.5 text-sm font-semibold text-slate-900 hover:bg-lime-400 sm:hidden"
+        class:list={[
+          'mt-2 inline-flex w-full items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold sm:hidden',
+          floating
+            ? 'bg-ek-lime text-ek-900 hover:bg-ek-lime-bright'
+            : 'bg-lime-300 text-slate-900 hover:bg-lime-400',
+        ]}
       >
         Contact
       </a>
@@ -173,6 +246,8 @@ const isActive = (href: string) => {
 <script>
   // re-bind on every ClientRouter swap — the header DOM is replaced on each
   // navigation, so a once-only listener goes dead after the first page change
+  let onScroll: (() => void) | undefined;
+
   const init = () => {
     const btn = document.querySelector<HTMLButtonElement>('[data-mobile-toggle]');
     const panel = document.getElementById('empower-mobile-nav');
@@ -180,6 +255,15 @@ const isActive = (href: string) => {
       const open = panel?.classList.toggle('hidden') === false;
       btn.setAttribute('aria-expanded', String(open));
     });
+
+    // the floating bar turns white once the hero scrolls away; swap the old
+    // handler out so listeners don't stack across ClientRouter navigations
+    if (onScroll) window.removeEventListener('scroll', onScroll);
+    const header = document.querySelector<HTMLElement>('header[data-floating]');
+    if (!header) return;
+    onScroll = () => header.toggleAttribute('data-scrolled', window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
   };
   document.addEventListener('astro:page-load', init);
 </script>
