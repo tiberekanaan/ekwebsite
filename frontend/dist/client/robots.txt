@@ -4,4 +4,4 @@ Allow: /
 # Block API routes
 Disallow: /api/
 
-Sitemap: https://example.com/sitemap-index.xml
+Sitemap: https://empower.org.ki/sitemap-index.xml

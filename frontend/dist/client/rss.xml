@@ -2,15 +2,15 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Empower Kiribati</title>
-    <description>Empower Kiribati — building skills, partnerships, and digital participation for communities across Kiribati</description>
-    <link>https://example.com</link>
-    <atom:link href="https://example.com/rss.xml" rel="self" type="application/rss+xml"/>
+    <description>Empower Kiribati is a platform for community initiatives. We partner with ministries, funders and community organisations to design, deliver and measure work that cultivates the conditions for a resilient Kiribati.</description>
+    <link>https://empower.org.ki</link>
+    <atom:link href="https://empower.org.ki/rss.xml" rel="self" type="application/rss+xml"/>
     <language>en-us</language>
-    <lastBuildDate>Tue, 25 Aug 2026 08:04:32 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 25 Aug 2026 09:18:18 GMT</lastBuildDate>
     <item>
       <title>Welcome to Velocity</title>
-      <link>https://example.com/blog/welcome-to-velocity/</link>
-      <guid>https://example.com/blog/welcome-to-velocity/</guid>
+      <link>https://empower.org.ki/blog/welcome-to-velocity/</link>
+      <guid>https://empower.org.ki/blog/welcome-to-velocity/</guid>
       <description>Get started with Velocity, the modern Astro boilerplate with everything you need to build fast, beautiful websites.</description>
       <pubDate>Wed, 28 Jan 2026 00:00:00 GMT</pubDate>
       <author>Southwell Media</author>
