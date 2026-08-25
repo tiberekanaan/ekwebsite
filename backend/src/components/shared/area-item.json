@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_shared_area_items",
+  "info": {
+    "displayName": "Area Item",
+    "icon": "grid",
+    "description": "A single \"What we do\" area of work card."
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    }
+  }
+}

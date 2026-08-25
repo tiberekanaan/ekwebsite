@@ -15,6 +15,22 @@ export interface BlocksChallenges extends Struct.ComponentSchema {
   };
 }
 
+export interface BlocksClose extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_closes';
+  info: {
+    description: 'Closing "Work with us" call-to-action section.';
+    displayName: 'Close';
+    icon: 'envelop';
+  };
+  attributes: {
+    buttonLink: Schema.Attribute.String;
+    buttonText: Schema.Attribute.String;
+    description: Schema.Attribute.Text;
+    eyebrow: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface BlocksFuture extends Struct.ComponentSchema {
   collectionName: 'components_blocks_futures';
   info: {
@@ -42,6 +58,8 @@ export interface BlocksHero extends Struct.ComponentSchema {
   };
   attributes: {
     description: Schema.Attribute.Text;
+    eyebrow: Schema.Attribute.String;
+    heritage: Schema.Attribute.Text;
     primaryButtonLink: Schema.Attribute.String;
     primaryButtonText: Schema.Attribute.String;
     secondaryButtonLink: Schema.Attribute.String;
@@ -61,6 +79,7 @@ export interface BlocksImpact extends Struct.ComponentSchema {
     description: Schema.Attribute.Text;
     eyebrow: Schema.Attribute.String;
     metrics: Schema.Attribute.Component<'shared.impact-metric', true>;
+    note: Schema.Attribute.Text;
     outcomes: Schema.Attribute.Component<'shared.outcome-item', true>;
     photos: Schema.Attribute.Media<'images', true>;
     title: Schema.Attribute.String;
@@ -100,6 +119,22 @@ export interface BlocksPillars extends Struct.ComponentSchema {
   };
 }
 
+export interface BlocksProgrammes extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_programmes';
+  info: {
+    description: 'Landing "Our work" section listing current programmes with status pills.';
+    displayName: 'Programmes';
+    icon: 'briefcase';
+  };
+  attributes: {
+    buttonLink: Schema.Attribute.String;
+    buttonText: Schema.Attribute.String;
+    eyebrow: Schema.Attribute.String;
+    items: Schema.Attribute.Component<'shared.programme-item', true>;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface BlocksTestimonials extends Struct.ComponentSchema {
   collectionName: 'components_blocks_testimonials';
   info: {
@@ -108,7 +143,10 @@ export interface BlocksTestimonials extends Struct.ComponentSchema {
     icon: 'message';
   };
   attributes: {
+    attribution: Schema.Attribute.String;
     eyebrow: Schema.Attribute.String;
+    note: Schema.Attribute.Text;
+    quote: Schema.Attribute.Text;
     testimonials: Schema.Attribute.Relation<
       'oneToMany',
       'api::testimonial.testimonial'
@@ -128,6 +166,21 @@ export interface BlocksThreats extends Struct.ComponentSchema {
     eyebrow: Schema.Attribute.String;
     items: Schema.Attribute.Component<'shared.threat-item', true>;
     lead: Schema.Attribute.Text;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface BlocksWhatWeDo extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_what_we_dos';
+  info: {
+    description: 'Four areas of work from the 2026-2030 strategy.';
+    displayName: 'What We Do';
+    icon: 'grid';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    eyebrow: Schema.Attribute.String;
+    items: Schema.Attribute.Component<'shared.area-item', true>;
     title: Schema.Attribute.String;
   };
 }
@@ -166,6 +219,19 @@ export interface ContentBlocksVideo extends Struct.ComponentSchema {
   };
   attributes: {
     url: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface SharedAreaItem extends Struct.ComponentSchema {
+  collectionName: 'components_shared_area_items';
+  info: {
+    description: 'A single "What we do" area of work card.';
+    displayName: 'Area Item';
+    icon: 'grid';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 
@@ -264,6 +330,23 @@ export interface SharedPartnerLogo extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedProgrammeItem extends Struct.ComponentSchema {
+  collectionName: 'components_shared_programme_items';
+  info: {
+    description: 'A programme row for the landing "Our work" section.';
+    displayName: 'Programme Item';
+    icon: 'briefcase';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    partnerLine: Schema.Attribute.String;
+    programmeStatus: Schema.Attribute.Enumeration<['running', 'completed']> &
+      Schema.Attribute.DefaultTo<'running'>;
+    statusYear: Schema.Attribute.String;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface SharedThreatItem extends Struct.ComponentSchema {
   collectionName: 'components_shared_threat_items';
   info: {
@@ -298,16 +381,20 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'blocks.challenges': BlocksChallenges;
+      'blocks.close': BlocksClose;
       'blocks.future': BlocksFuture;
       'blocks.hero': BlocksHero;
       'blocks.impact': BlocksImpact;
       'blocks.partners': BlocksPartners;
       'blocks.pillars': BlocksPillars;
+      'blocks.programmes': BlocksProgrammes;
       'blocks.testimonials': BlocksTestimonials;
       'blocks.threats': BlocksThreats;
+      'blocks.what-we-do': BlocksWhatWeDo;
       'content-blocks.article': ContentBlocksArticle;
       'content-blocks.download': ContentBlocksDownload;
       'content-blocks.video': ContentBlocksVideo;
+      'shared.area-item': SharedAreaItem;
       'shared.challenge-item': SharedChallengeItem;
       'shared.future-stat': SharedFutureStat;
       'shared.impact-metric': SharedImpactMetric;
@@ -315,6 +402,7 @@ declare module '@strapi/strapi' {
       'shared.outcome-item': SharedOutcomeItem;
       'shared.partner-category': SharedPartnerCategory;
       'shared.partner-logo': SharedPartnerLogo;
+      'shared.programme-item': SharedProgrammeItem;
       'shared.threat-item': SharedThreatItem;
       'shared.value-item': SharedValueItem;
     }

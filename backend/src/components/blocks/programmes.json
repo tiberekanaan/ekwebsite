@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_blocks_programmes",
+  "info": {
+    "displayName": "Programmes",
+    "icon": "briefcase",
+    "description": "Landing \"Our work\" section listing current programmes with status pills."
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.programme-item"
+    },
+    "buttonText": {
+      "type": "string"
+    },
+    "buttonLink": {
+      "type": "string"
+    }
+  }
+}

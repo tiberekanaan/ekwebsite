@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_blocks_what_we_dos",
+  "info": {
+    "displayName": "What We Do",
+    "icon": "grid",
+    "description": "Four areas of work from the 2026-2030 strategy."
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.area-item"
+    }
+  }
+}

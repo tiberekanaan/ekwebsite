@@ -1,34 +1,43 @@
 # Current Feature
 
-**Feature:** Real photos for "The threats to our roots" (ChallengesBlock)
+**Feature:** Landing page content v3 (donor-review rewrite — 9 sections → 6, CMS-driven)
 
 ## Status
-- ✅ Completed 2026-08-24. Verified by the user in the dev server, merged and pushed.
+- 🚧 In progress on branch `feature/landing-content-v3` (branched off `fix/donor-review-quick-fixes`, whose events past/upcoming split it carries; its other two fixes are superseded by this rewrite). Build passes; homepage currently renders the hardcoded v3 fallbacks because production Strapi 400s on the new populate keys until the schema deploys. Awaiting user browser review, then merge → deploy → run `backend/apply-landing-v3.js` against production → publish Homepage + Global in the Strapi Cloud admin.
 
-## Goals
-- Replace the four duotone placeholder JPGs in `frontend/src/assets/images/community/` with real photos from `~/Downloads` (`climate change.jpeg`, `unemployment.jpeg`, `limited digital participation.jpeg`, `fragile leadership.jpeg`).
-- Optimize: 1200×800 (3:2 card ratio), attention crop, saturation 0.88 + `#2a8089` (ek-500) soft-light wash, mozjpeg q80 — matching the hero-photo treatment. Indoor leadership shot gets brightness 1.14 to match the outdoor shots.
-- Add meaningful alt texts (photos pair with cards positionally; CMS item order verified to match: climate, unemployment, digital, leadership).
+## Source material
+- `~/Downloads/CONTENT-IMPLEMENTATION.md` — the binding brief: final copy (verbatim, British spelling), section order, and ten content rules from the donor review (name funders never amounts, no 2030 targets on the landing page, South Tarawa never "across Kiribati", quotes by role + month never name, no donate/subscribe CTAs, no dead links, no em dashes in body copy…).
+- `~/Downloads/empower-landing-v3.html` — standalone reference render (markup/section order only; its Saira-Condensed styling was NOT adopted — the existing ek landing aesthetic is kept, per user instruction "design is fine, focus on content").
+
+## Section mapping (9 → 6)
+| v3 section | Implementation |
+|---|---|
+| Hero | `blocks.hero` + new `eyebrow`/`heritage` fields; "Thriving, resilient futures" headline; secondary CTA re-enabled as "Partner with us" → `/contact`; primary "See our work" → `#our-work` |
+| What we do | new `blocks.what-we-do` (+ `shared.area-item`) — four approved 2026-2030 strategies, NOT five (livelihoods is cross-cutting, do not re-add) |
+| Where we are | `blocks.impact` rewritten — real delivery figures (5 / 40+ / 1,500+ / 3), **static, no count-up** (removed `data-countup`), new `note` field (attendance-register honesty note); badges/outcomes/photos band dropped from render (schema fields kept) |
+| Voice | `blocks.testimonials` gains `quote`/`attribution`/`note` — single pull quote ("A faith leader · July 2026"), carousel/3-card grid removed, anonymity note below |
+| Our work | new `blocks.programmes` (+ `shared.programme-item`: title, description, `partnerLine`, `programmeStatus` enum running/completed — `status` is reserved in Strapi — `statusYear`); section carries `id="our-work"` so existing `/#our-work` links (about, pillars back-link) still resolve; "All our work" → `/our-programs` |
+| Close | new `blocks.close` — "Bwabwai is not grown in a day", "Get in touch" → `/contact` |
+| Challenges / Threats / Partners / Future | **dropped from homepage** (components + Astro blocks kept in repo for later reuse on About / Our Work — the brief's "move to About/Our Work" is a separate job) |
+
+## Nav + footer (per user decisions)
+- Nav: Our Work (`/our-programs`) · Resources · Blog · About; **Contact is now the header CTA pill** (replaces disabled "Build your skills"). Kiribati language link omitted until the page exists (no dead links). Events dropped from nav (page still exists, still linked from footer).
+- Footer: newsletter subscribe form **removed** (subscriber collection + `subscribe` action kept in codebase, unused); v3 columns (Our work: Programmes/Partners — "Where we work" omitted, no page; Learn: Resources/Blog/Events); real contact block (`externalaffairs@empower.org.ki`, +686 7300 5227, Te Kimatore CS Compound, Bikenibeu); Digital Kiribati Inc legal identity line above copyright; socials trimmed to Facebook + LinkedIn.
+
+## Content sync (`backend/apply-landing-v3.js`)
+- Replaces the homepage dynamic zone wholesale with the six v3 blocks (`__component` first key per block, per [[strapi-dz-put-component-first]]) and sets Global `navbarLinks` to the four v3 links. Hero `title` deliberately null so the frontend's styled `<em>` default renders.
+- **Run order matters**: target Strapi must have the new schema first (local: restart dev server; production: after the merge deploys to Strapi Cloud). Then `node apply-landing-v3.js` locally, and `STRAPI_URL=https://determined-strength-17a6de9eef.strapiapp.com STRAPI_API_TOKEN=xxx node apply-landing-v3.js` for production, then publish Homepage + Global in the admin. Until then the live/local site renders the fallback defaults — which ARE the v3 copy, so the interim state is correct.
+- `backend/fix-impact-labels.js` deleted (never run; superseded).
+
+## Verified
+- `npm run build` passes; built homepage has zero em dashes in body copy, zero `href="#"`, no Donate/Subscribe strings, no `hello@empowerkiribati.org` anywhere in src.
+
+## Out of scope (brief items needing user action, not code)
+- Rotating the credentials exposed on the Notion "Website Planning" page (brief §0 — do before any deploy), confirming `externalaffairs@` is monitored, real Facebook/LinkedIn URLs (kept existing guessed slugs), logo SVG redraw, Kiribati-language page, moving Challenges/Future to About and Partners to Our Work, prerender/performance pass (brief §5).
 
 ---
 
-**Previous:** Grants & Funding Resource Articles — ✅ completed 2026-08-17, see History.
-
-## Source material
-- `~/Downloads/article-01-what-is-a-grant.md` — first article ("What a grant is, and what it is not") with frontmatter (title, slug, excerpt, meta_description, tags, reading_time, last_reviewed).
-- `~/Downloads/tag-guide.md` — closed tag vocabulary in three groups (stage / topic / funder-and-audience) plus the related-articles ranking rule.
-- `~/Downloads/article-01-preview.html` — design mock (treated as a spec, not embedded literally).
-
-## Goals
-1. **Backend (Strapi):**
-   - New `tag` collection (`name` unique, `group` enum stage/topic/audience, M2M `articles`). Draft & Publish off.
-   - New `article` collection (`title`, `slug` uid, `category`, `excerpt`, `meta_description`, `body` richtext, `author`, `reading_time`, `last_reviewed`, M2M `tags`). Draft & Publish on.
-   - Bootstrap: seed Public `find`/`findOne` for both; idempotently seed the closed tag vocabulary and the first article (seed data in `backend/src/seed/grants-articles.ts`).
-2. **Frontend (Astro):**
-   - `articles` collection in `content.config.ts` (softFetch `/api/articles?populate=*`).
-   - Prerendered article template `/resources/articles/[slug].astro` in the landing (ek) aesthetic: PageHeader banner (category eyebrow, byline, tag chips), markdown body via `marked` with styled callouts (`> **Label**` blockquotes), comparison table, pull-question.
-   - Related-articles resolver (`src/lib/related-articles.ts`): same stage tag → shared topic tag → tagged `grants`, max 4 — rendered as a card grid at the end of the article.
-   - `/resources` index gains a "Guides & articles" section listing articles above the existing video/download/link resources.
+**Previous:** Donor-review quick fixes — partially absorbed: events past/upcoming split (`events/index.astro` + `EventCard.astro`) rides along on this branch; impact-labels script and partner-marquee threshold superseded by this rewrite. Grants & Funding Resource Articles — ✅ completed 2026-08-17, see History.
 
 ## History
 

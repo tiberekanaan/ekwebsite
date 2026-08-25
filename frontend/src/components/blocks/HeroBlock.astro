@@ -5,8 +5,10 @@ import { Image } from 'astro:assets';
 import heroPhoto from '@/assets/images/hero-photo.jpg';
 
 export interface HeroBlockData {
+  eyebrow?: string | null;
   title?: string | null;
   description?: string | null;
+  heritage?: string | null;
   primaryButtonText?: string | null;
   primaryButtonLink?: string | null;
   secondaryButtonText?: string | null;
@@ -19,9 +21,17 @@ interface Props {
 
 const { block } = Astro.props;
 
-const primaryText = block.primaryButtonText ?? 'Support our work';
-const primaryLink = block.primaryButtonLink ?? '/contact';
-const secondaryText = block.secondaryButtonText ?? 'See our 2026–2030 vision';
+const eyebrow = block.eyebrow ?? 'A locally-led NGO · South Tarawa, Kiribati';
+const lede =
+  block.description ??
+  'Empower Kiribati is a platform for community initiatives. We partner with ministries, funders and community organisations to design, deliver and measure work that cultivates the conditions for a resilient Kiribati.';
+const heritage =
+  block.heritage ??
+  'Te bwabwai has supported I-Kiribati livelihoods for centuries. It grows only where the knowledge and the conditions are right, and today both are under threat. Our livelihoods are no exception. We exist to address both.';
+const primaryText = block.primaryButtonText ?? 'See our work';
+const primaryLink = block.primaryButtonLink ?? '#our-work';
+const secondaryText = block.secondaryButtonText ?? 'Partner with us';
+const secondaryLink = block.secondaryButtonLink ?? '/contact';
 ---
 
 <section
@@ -42,7 +52,7 @@ const secondaryText = block.secondaryButtonText ?? 'See our 2026–2030 vision';
         data-reveal
         class="mb-5 font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-lime-bright"
       >
-        A locally-led NGO · Kiribati
+        {eyebrow}
       </p>
 
       <h1
@@ -55,17 +65,14 @@ const secondaryText = block.secondaryButtonText ?? 'See our 2026–2030 vision';
             block.title
           ) : (
             <Fragment>
-              Cultivating a <em class="not-italic text-ek-lime-bright">Resilient</em> Kiribati
+              <em class="not-italic text-ek-lime-bright">Thriving, resilient</em> futures
             </Fragment>
           )
         }
       </h1>
 
       <p data-reveal data-reveal-delay="160" class="mb-[18px] max-w-[30em] text-lg text-[#cfe0db]">
-        {
-          block.description ??
-            'We help our people gain the leadership, enterprise, and digital skills they need to thrive in a rapidly changing world — and to lead that change themselves.'
-        }
+        {lede}
       </p>
 
       <p
@@ -73,9 +80,7 @@ const secondaryText = block.secondaryButtonText ?? 'See our 2026–2030 vision';
         data-reveal-delay="220"
         class="mb-9 max-w-[34em] border-l-2 border-ek-olive pl-[18px] text-base text-[#9fb9b4]"
       >
-        For generations, our people have grown the bwabwai in harsh atoll soils — work that has
-        always demanded knowledge, planning, and constant adaptation. Today our communities face the
-        same test, and need new tools to meet it.
+        {heritage}
       </p>
 
       <div data-reveal data-reveal-delay="300" class="flex flex-wrap items-center gap-4">
@@ -86,8 +91,8 @@ const secondaryText = block.secondaryButtonText ?? 'See our 2026–2030 vision';
           {primaryText}
         </a>
         <a
-          aria-disabled="true"
-          class="pointer-events-none inline-flex cursor-not-allowed items-center gap-2 rounded-full border-[1.5px] border-white/35 px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-white opacity-50"
+          href={secondaryLink}
+          class="inline-flex items-center gap-2 rounded-full border-[1.5px] border-white/35 px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-white transition-colors duration-200 hover:border-ek-lime-bright hover:text-ek-lime-bright"
         >
           {secondaryText}
         </a>

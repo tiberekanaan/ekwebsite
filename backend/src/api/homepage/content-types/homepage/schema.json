@@ -15,6 +15,9 @@
       "type": "dynamiczone",
       "components": [
         "blocks.hero",
+        "blocks.what-we-do",
+        "blocks.programmes",
+        "blocks.close",
         "blocks.challenges",
         "blocks.threats",
         "blocks.impact",

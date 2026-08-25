@@ -13,6 +13,15 @@
     "title": {
       "type": "string"
     },
+    "quote": {
+      "type": "text"
+    },
+    "attribution": {
+      "type": "string"
+    },
+    "note": {
+      "type": "text"
+    },
     "testimonials": {
       "type": "relation",
       "relation": "oneToMany",

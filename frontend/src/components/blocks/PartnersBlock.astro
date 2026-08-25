@@ -54,10 +54,14 @@ const dummyLogos: PartnerLogo[] = [
 const marqueeLogos =
   logos.length > 0 ? logos : collectionLogos.length > 0 ? collectionLogos : dummyLogos;
 
-// With few partners the track would be narrower than the viewport and the
-// -50% loop would show gaps — repeat the set until each half has ≥ 8 chips.
-const repeats = Math.max(1, Math.ceil(8 / marqueeLogos.length));
+// Below this many partners, repeating the set to fill a scrolling marquee
+// reads as padding (2 real partners repeated to look like a dozen) — show a
+// plain static row instead until there are enough for the loop to be honest.
+const MARQUEE_MIN = 6;
+const useMarquee = marqueeLogos.length >= MARQUEE_MIN;
+const repeats = useMarquee ? Math.max(1, Math.ceil(8 / marqueeLogos.length)) : 1;
 const marqueeItems = Array.from({ length: repeats }, () => marqueeLogos).flat();
+const trackSets = useMarquee ? marqueeSets : [false];
 
 // Defaults until edited on the Partners block in Strapi.
 const defaultCategories: PartnerCategory[] = [
@@ -131,11 +135,19 @@ const categories: PartnerCategory[] =
 
     <div
       data-reveal
-      class="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
+      class:list={[
+        'relative overflow-hidden',
+        useMarquee && '[mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]',
+      ]}
     >
-      <div class="flex w-max animate-partner-marquee items-center gap-4">
+      <div
+        class:list={[
+          'flex items-center gap-4',
+          useMarquee ? 'w-max animate-partner-marquee' : 'w-full flex-wrap justify-center',
+        ]}
+      >
         {
-          marqueeSets.map((isDuplicate) => (
+          trackSets.map((isDuplicate) => (
             <div class="flex shrink-0 items-center gap-4 pr-4" aria-hidden={isDuplicate || undefined}>
               {marqueeItems.map((p) => {
                 const logo = p.logo?.url ? absoluteUrl(p.logo.url) : null;

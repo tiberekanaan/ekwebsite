@@ -1,0 +1,78 @@
+---
+interface AreaItem {
+  title: string;
+  description?: string | null;
+}
+
+export interface WhatWeDoBlockData {
+  eyebrow?: string | null;
+  title?: string | null;
+  description?: string | null;
+  items?: AreaItem[] | null;
+}
+
+interface Props {
+  block: WhatWeDoBlockData;
+}
+
+const { block } = Astro.props;
+
+// The four approved strategies from the 2026-2030 strategy. There are four,
+// not five — livelihoods is a cross-cutting outcome, not a fifth area.
+const defaults: AreaItem[] = [
+  {
+    title: 'Empowering leaders & communities',
+    description:
+      'We work with people who already hold responsibility in a community organisation, a church or a youth group, on the leadership and systems their organisation needs to last.',
+  },
+  {
+    title: 'Enabling digital participation',
+    description:
+      'We deliver digital literacy and online safety work with schools, libraries and community groups, from basic internet skills through to recognising a scam.',
+  },
+  {
+    title: 'Building partnerships for impact',
+    description:
+      'We connect what communities tell us they need with the ministries, funders and organisations able to help.',
+  },
+  {
+    title: 'Creating conditions for innovation',
+    description:
+      'We create the space for people to test a practical idea, and help build the financial footing to keep it running.',
+  },
+];
+
+const areas: AreaItem[] = block.items && block.items.length > 0 ? block.items : defaults;
+---
+
+<section id="what-we-do" class="bg-ek-mist py-24">
+  <div class="mx-auto max-w-6xl px-7">
+    <div class="mb-14 max-w-[640px]" data-reveal>
+      <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
+        01 · {block.eyebrow ?? 'What we do'}
+      </span>
+      <h2 class="mb-4 font-serif text-4xl font-bold leading-[1.08] sm:text-5xl bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text text-transparent">
+        {block.title ?? 'Four areas of work'}
+      </h2>
+      <span class="mb-5 block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500" aria-hidden="true"></span>
+      <p class="text-lg text-ek-muted">
+        {block.description ?? 'Each of our programmes belongs to one of these.'}
+      </p>
+    </div>
+
+    <div class="grid gap-[22px] sm:grid-cols-2">
+      {
+        areas.map((area, i) => (
+          <article
+            data-reveal
+            data-reveal-delay={i * 100}
+            class="rounded-2xl border border-ek-700/10 border-t-[3px] border-t-ek-lime bg-white px-[30px] py-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_38px_rgba(15,50,58,0.1)]"
+          >
+            <h3 class="mb-3 font-serif text-2xl font-bold text-ek-800">{area.title}</h3>
+            <p class="text-base text-ek-muted">{area.description}</p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -21,6 +21,9 @@
       "repeatable": true,
       "component": "shared.impact-metric"
     },
+    "note": {
+      "type": "text"
+    },
     "outcomes": {
       "type": "component",
       "repeatable": true,

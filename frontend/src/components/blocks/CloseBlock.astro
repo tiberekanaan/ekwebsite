@@ -1,0 +1,44 @@
+---
+export interface CloseBlockData {
+  eyebrow?: string | null;
+  title?: string | null;
+  description?: string | null;
+  buttonText?: string | null;
+  buttonLink?: string | null;
+}
+
+interface Props {
+  block: CloseBlockData;
+}
+
+const { block } = Astro.props;
+
+const buttonText = block.buttonText ?? 'Get in touch';
+const buttonLink = block.buttonLink ?? '/contact';
+---
+
+<section id="work-with-us" class="border-t border-ek-700/10 bg-white py-24">
+  <div class="mx-auto max-w-6xl px-7">
+    <div class="max-w-[720px]" data-reveal>
+      <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
+        05 · {block.eyebrow ?? 'Work with us'}
+      </span>
+      <h2 class="mb-4 font-serif text-4xl font-bold leading-[1.08] sm:text-5xl bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text text-transparent">
+        {block.title ?? 'Bwabwai is not grown in a day'}
+      </h2>
+      <span class="mb-5 block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500" aria-hidden="true"></span>
+      <p class="mb-8 text-lg text-ek-muted">
+        {
+          block.description ??
+            'The same is true of the skill and confidence it takes to lead. If your organisation would like a workshop, or you work with a partner interested in this kind of work, please write to us.'
+        }
+      </p>
+      <a
+        href={buttonLink}
+        class="inline-flex items-center gap-2 rounded-full bg-ek-lime px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-ek-900 transition-all duration-200 hover:-translate-y-0.5 hover:bg-ek-lime-bright hover:shadow-[0_8px_22px_rgba(174,203,58,0.3)]"
+      >
+        {buttonText}
+      </a>
+    </div>
+  </div>
+</section>

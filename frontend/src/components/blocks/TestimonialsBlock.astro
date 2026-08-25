@@ -1,6 +1,4 @@
 ---
-import { STRAPI_URL } from 'astro:env/server';
-
 interface TestimonialRef {
   quote: string;
   author: string;
@@ -11,6 +9,9 @@ interface TestimonialRef {
 export interface TestimonialsBlockData {
   eyebrow?: string | null;
   title?: string | null;
+  quote?: string | null;
+  attribution?: string | null;
+  note?: string | null;
   testimonials?: TestimonialRef[] | null;
 }
 
@@ -18,115 +19,38 @@ interface Props {
   block: TestimonialsBlockData;
 }
 
-interface Voice {
-  quote: string;
-  name: string;
-  role: string;
-  image: { url: string; alternativeText?: string | null } | null;
-}
-
 const { block } = Astro.props;
 
-const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
-
-// Dummy voices for the design pass — replaced by real testimonials from the CMS.
-const defaults: Voice[] = [
-  {
-    quote:
-      'The budgeting course changed how I run my canteen. For the first time I know my numbers — and the business is feeding my family.',
-    name: 'Teretia',
-    role: 'Small business owner · South Tarawa',
-    image: null,
-  },
-  {
-    quote:
-      'They came to co-design with us, not to hand over a finished plan. That is why our council trusts this partnership.',
-    name: 'Ioane',
-    role: 'Island council member · Abaiang',
-    image: null,
-  },
-  {
-    quote:
-      'I joined as a participant. Now I run the digital-safety sessions for my own village.',
-    name: 'Ruta',
-    role: 'Volunteer facilitator · Betio',
-    image: null,
-  },
-];
-
-const voices: Voice[] =
-  block.testimonials && block.testimonials.length > 0
-    ? block.testimonials.map((t) => ({
-        quote: t.quote,
-        name: t.author,
-        role: t.role ?? '',
-        image: t.image ?? null,
-      }))
-    : defaults;
+// One pull quote, not a carousel. Quotes are attributed by role and month,
+// never by name — participants were promised their answers would not be shared.
+const quote =
+  block.quote ??
+  'I once was a boss but not a leader. After the workshop I learnt a lot about the difference.';
+const attribution = block.attribution ?? 'A faith leader · July 2026';
+const note =
+  block.note ??
+  'We identify people by their role and the month, not by name. At the start of every workshop we tell participants that their individual answers will not be shared.';
 ---
 
 <section id="voices" class="bg-ek-mist py-24">
   <div class="mx-auto max-w-6xl px-7">
-    {/* Centered intro — intentional break from the left-aligned section rhythm. */}
-    <div class="mx-auto mb-14 max-w-[640px] text-center" data-reveal>
-      <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
-        04 · {block.eyebrow ?? 'In their words'}
+    <div class="mb-12 max-w-[640px]" data-reveal>
+      <span class="inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
+        03 · {block.eyebrow ?? 'In their words'}
       </span>
-      <h2 class="mb-4 font-serif text-4xl font-bold leading-[1.08] sm:text-5xl bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text text-transparent">
-        {block.title ?? 'Voices from our communities'}
-      </h2>
-      <span class="mx-auto mb-5 block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500" aria-hidden="true"></span>
-      <p class="text-lg text-ek-muted">
-        The best measure of our work is what people say about it — the communities, partners, and
-        leaders we work alongside.
-      </p>
     </div>
 
-    <div class="grid gap-[22px] md:grid-cols-3">
-      {
-        voices.map((v, i) => {
-          const imgUrl = v.image?.url ? absoluteUrl(v.image.url) : null;
-          return (
-            <article
-              data-reveal
-              data-reveal-delay={i * 100}
-              class="rounded-2xl border border-ek-700/10 bg-white px-7 py-[30px] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_38px_rgba(15,50,58,0.08)]"
-            >
-              <p class="mb-[22px] text-[1.05rem] text-ek-ink">
-                <span class="mr-1 font-condensed text-5xl leading-[0] text-ek-lime align-middle" aria-hidden="true">
-                  “
-                </span>
-                {v.quote}
-              </p>
-              <div class="flex items-center gap-3 border-t border-ek-700/10 pt-4">
-                {imgUrl ? (
-                  <img
-                    src={imgUrl}
-                    alt={v.image?.alternativeText ?? v.name}
-                    width="42"
-                    height="42"
-                    class="h-[42px] w-[42px] flex-none rounded-full object-cover"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div
-                    class="flex h-[42px] w-[42px] flex-none items-center justify-center rounded-full bg-ek-600 font-condensed text-lg font-bold text-white"
-                    aria-hidden="true"
-                  >
-                    {v.name.charAt(0).toUpperCase()}
-                  </div>
-                )}
-                <div>
-                  <div class="font-condensed text-[0.95rem] font-semibold uppercase tracking-[0.04em] text-ek-800">
-                    {v.name}
-                  </div>
-                  {v.role && <div class="text-[0.85rem] text-ek-muted">{v.role}</div>}
-                </div>
-              </div>
-            </article>
-          );
-        })
-      }
-    </div>
+    <figure class="max-w-[760px] border-l-4 border-ek-lime pl-8" data-reveal data-reveal-delay="80">
+      <blockquote class="font-serif text-3xl font-bold leading-[1.18] text-ek-800 sm:text-4xl">
+        “{quote}”
+      </blockquote>
+      <figcaption class="mt-6 font-condensed text-[0.8rem] font-semibold uppercase tracking-[0.14em] text-ek-olive">
+        {attribution}
+      </figcaption>
+    </figure>
+
+    <p class="mt-9 max-w-[620px] text-[0.95rem] text-ek-muted" data-reveal data-reveal-delay="160">
+      {note}
+    </p>
   </div>
 </section>

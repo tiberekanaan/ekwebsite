@@ -21,12 +21,10 @@ interface NavItem {
 }
 
 const defaultNav: NavItem[] = [
-  { label: 'About', href: '/about' },
-  { label: 'Our Work', href: '/#our-work' },
+  { label: 'Our Work', href: '/our-programs' },
   { label: 'Resources', href: '/resources' },
   { label: 'Blog', href: '/blog' },
-  { label: 'Events', href: '/events' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'About', href: '/about' },
 ];
 
 const nav: NavItem[] =
@@ -118,10 +116,10 @@ const isActive = (href: string) => {
       </button>
 
       <a
-        aria-disabled="true"
-        class="pointer-events-none hidden cursor-not-allowed rounded-full bg-lime-300 px-5 py-2.5 text-sm font-semibold text-slate-900 opacity-50 shadow-sm sm:inline-flex"
+        href="/contact"
+        class="hidden rounded-full bg-lime-300 px-5 py-2.5 text-sm font-semibold text-slate-900 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-lime-400 sm:inline-flex"
       >
-        Build your skills
+        Contact
       </a>
 
       <button
@@ -163,10 +161,10 @@ const isActive = (href: string) => {
         ))
       }
       <a
-        aria-disabled="true"
-        class="pointer-events-none mt-2 inline-flex w-full cursor-not-allowed items-center justify-center rounded-full bg-lime-300 px-5 py-2.5 text-sm font-semibold text-slate-900 opacity-50 sm:hidden"
+        href="/contact"
+        class="mt-2 inline-flex w-full items-center justify-center rounded-full bg-lime-300 px-5 py-2.5 text-sm font-semibold text-slate-900 hover:bg-lime-400 sm:hidden"
       >
-        Build your skills
+        Contact
       </a>
     </nav>
   </div>

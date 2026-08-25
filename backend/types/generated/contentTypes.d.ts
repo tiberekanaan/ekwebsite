@@ -634,6 +634,9 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
     blocks: Schema.Attribute.DynamicZone<
       [
         'blocks.hero',
+        'blocks.what-we-do',
+        'blocks.programmes',
+        'blocks.close',
         'blocks.challenges',
         'blocks.threats',
         'blocks.impact',
@@ -975,7 +978,7 @@ export interface ApiSubscriberSubscriber extends Struct.CollectionTypeSchema {
 export interface ApiTagTag extends Struct.CollectionTypeSchema {
   collectionName: 'tags';
   info: {
-    description: 'Closed tag vocabulary for resource articles. Add new tags to the tag guide first — a tag used on one article only breaks the related-articles block.';
+    description: 'Closed tag vocabulary for resource articles. Add new tags to the tag guide first \u2014 a tag used on one article only breaks the related-articles block.';
     displayName: 'Tag';
     pluralName: 'tags';
     singularName: 'tag';

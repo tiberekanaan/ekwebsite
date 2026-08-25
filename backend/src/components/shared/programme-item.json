@@ -1,0 +1,29 @@
+{
+  "collectionName": "components_shared_programme_items",
+  "info": {
+    "displayName": "Programme Item",
+    "icon": "briefcase",
+    "description": "A programme row for the landing \"Our work\" section."
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "partnerLine": {
+      "type": "string"
+    },
+    "programmeStatus": {
+      "type": "enumeration",
+      "enum": ["running", "completed"],
+      "default": "running"
+    },
+    "statusYear": {
+      "type": "string"
+    }
+  }
+}

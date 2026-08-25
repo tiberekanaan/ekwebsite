@@ -4,6 +4,9 @@ import Layout from '@/layouts/Layout.astro';
 
 // Block components (dynamic-zone driven)
 import HeroBlock, { type HeroBlockData } from '@/components/blocks/HeroBlock.astro';
+import WhatWeDoBlock, { type WhatWeDoBlockData } from '@/components/blocks/WhatWeDoBlock.astro';
+import ProgrammesBlock, { type ProgrammesBlockData } from '@/components/blocks/ProgrammesBlock.astro';
+import CloseBlock, { type CloseBlockData } from '@/components/blocks/CloseBlock.astro';
 import ChallengesBlock, { type ChallengesBlockData } from '@/components/blocks/ChallengesBlock.astro';
 import ThreatsBlock, { type ThreatsBlockData } from '@/components/blocks/ThreatsBlock.astro';
 import ImpactBlock, { type ImpactBlockData } from '@/components/blocks/ImpactBlock.astro';
@@ -14,6 +17,9 @@ import PartnersBlock, { type PartnersBlockData } from '@/components/blocks/Partn
 
 type Block =
   | ({ __component: 'blocks.hero' } & HeroBlockData)
+  | ({ __component: 'blocks.what-we-do' } & WhatWeDoBlockData)
+  | ({ __component: 'blocks.programmes' } & ProgrammesBlockData)
+  | ({ __component: 'blocks.close' } & CloseBlockData)
   | ({ __component: 'blocks.challenges' } & ChallengesBlockData)
   | ({ __component: 'blocks.threats' } & ThreatsBlockData)
   | ({ __component: 'blocks.impact' } & ImpactBlockData)
@@ -25,6 +31,9 @@ type Block =
 // Explicitly populate the dynamic zone, its nested components, relations and media.
 const POPULATE = [
   'populate[blocks][on][blocks.hero][populate]=*',
+  'populate[blocks][on][blocks.what-we-do][populate]=*',
+  'populate[blocks][on][blocks.programmes][populate]=*',
+  'populate[blocks][on][blocks.close][populate]=*',
   'populate[blocks][on][blocks.challenges][populate]=*',
   'populate[blocks][on][blocks.threats][populate]=*',
   'populate[blocks][on][blocks.impact][populate]=*',
@@ -50,8 +59,8 @@ try {
 ---
 
 <Layout
-  title="Empower Kiribati"
-  description="A locally-led NGO helping I-Kiribati gain the leadership, enterprise, and digital skills to cultivate a resilient Kiribati — built by local people, made to last."
+  title="Empower Kiribati — Thriving, resilient futures"
+  description="Empower Kiribati is a platform for community initiatives. We partner with ministries, funders and community organisations to design, deliver and measure work that cultivates the conditions for a resilient Kiribati."
   floatingHeader
 >
   {
@@ -60,6 +69,12 @@ try {
         switch (block.__component) {
           case 'blocks.hero':
             return <HeroBlock block={block} />;
+          case 'blocks.what-we-do':
+            return <WhatWeDoBlock block={block} />;
+          case 'blocks.programmes':
+            return <ProgrammesBlock block={block} />;
+          case 'blocks.close':
+            return <CloseBlock block={block} />;
           case 'blocks.challenges':
             return <ChallengesBlock block={block} />;
           case 'blocks.threats':
@@ -81,12 +96,11 @@ try {
     ) : (
       <Fragment>
         <HeroBlock block={{}} />
-        <ChallengesBlock block={{}} />
-        <ThreatsBlock block={{}} />
+        <WhatWeDoBlock block={{}} />
         <ImpactBlock block={{}} />
         <TestimonialsBlock block={{}} />
-        <PartnersBlock block={{}} />
-        <FutureBlock block={{}} />
+        <ProgrammesBlock block={{}} />
+        <CloseBlock block={{}} />
       </Fragment>
     )
   }

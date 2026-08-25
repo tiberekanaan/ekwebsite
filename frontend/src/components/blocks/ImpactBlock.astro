@@ -1,21 +1,9 @@
 ---
-import { Image } from 'astro:assets';
-import { STRAPI_URL } from 'astro:env/server';
-// Placeholder photography — used only when no photos are uploaded on the
-// Impact block in Strapi (Homepage → Impact → photos, first two are shown).
-import photoField1 from '@/assets/images/community/impact-engagement-01.jpg';
-import photoField2 from '@/assets/images/community/impact-engagement-02.jpg';
-
 interface ImpactMetric {
   number: string;
   label: string;
-  description: string | null;
+  description?: string | null;
   badge?: string | null;
-}
-
-interface ImpactPhoto {
-  url: string;
-  alternativeText?: string | null;
 }
 
 export interface ImpactBlockData {
@@ -23,66 +11,33 @@ export interface ImpactBlockData {
   title?: string | null;
   description?: string | null;
   metrics?: ImpactMetric[] | null;
+  note?: string | null;
   outcomes?: { text: string }[] | null;
-  photos?: ImpactPhoto[] | null;
+  photos?: { url: string; alternativeText?: string | null }[] | null;
 }
 
 interface Props {
   block: ImpactBlockData;
 }
 
-interface Stat {
-  badge: string;
-  number: string;
-  label: string;
-}
-
 const { block } = Astro.props;
 
-// Dummy metrics for the design pass — replaced by CMS values once wired.
-const defaults: Stat[] = [
-  { badge: 'From 2026', number: '1,200+', label: 'People supported into stronger livelihoods and enterprise' },
-  { badge: 'From 2026', number: '25', label: 'Communities reached through digital skills and safety' },
-  { badge: 'From 2026', number: '150+', label: 'Local leaders developed through our programmes' },
-  { badge: 'From 2026', number: '12', label: 'Active partnerships delivering work together' },
+// Delivery to date, deliberately rounded so the homepage does not need
+// updating every month. Static figures: no count-up animation, precise
+// numbers belong on programme pages with their dates attached.
+const defaults: ImpactMetric[] = [
+  { number: '5', label: 'Programmes delivered or under way' },
+  { number: '40+', label: 'Workshops run since we began' },
+  { number: '1,500+', label: 'People have attended one of them' },
+  { number: '3', label: 'Funding partners backing our work' },
 ];
 
-// The current CMS seed stores badge text ("From 2026") in `number`; only
-// treat it as a countable stat when it actually starts with a digit.
-const isStat = (v: string | null | undefined): v is string => !!v && /^\d/.test(v.trim());
+const stats: ImpactMetric[] =
+  block.metrics && block.metrics.length > 0 ? block.metrics : defaults;
 
-const stats: Stat[] =
-  block.metrics && block.metrics.length > 0
-    ? block.metrics.map((m, i) => ({
-        badge: m.badge?.trim() || 'From 2026',
-        number: isStat(m.number) ? m.number.trim() : defaults[i % defaults.length].number,
-        label: m.label,
-      }))
-    : defaults;
-
-// Qualitative outcomes checklist; defaults until edited on the Impact block.
-const defaultTrack = [
-  'More people confident and safe using digital tools — and fewer left out.',
-  'Leadership and skills that no longer depend on any single person.',
-  'Real co-design and shared investment with partners — a sign of trust.',
-  'Local practices that communities carry on themselves.',
-];
-
-const track: string[] =
-  block.outcomes && block.outcomes.length > 0
-    ? block.outcomes.map((o) => o.text)
-    : defaultTrack;
-
-// Offset photo pair — CMS uploads win per slot, placeholders fill the rest.
-const uploadedPhotos = (block.photos ?? []).filter((p) => p?.url);
-const absoluteUrl = (path: string) => (path.startsWith('http') ? path : `${STRAPI_URL}${path}`);
-const placeholders = [photoField1, photoField2];
-const photoSlots = placeholders.map((placeholder, i) => {
-  const remote = uploadedPhotos[i];
-  return remote
-    ? { remote: { url: absoluteUrl(remote.url), alt: remote.alternativeText ?? '' } }
-    : { placeholder };
-});
+const note =
+  block.note ??
+  'All of this work has been on South Tarawa. Where we have a signed attendance register, we publish that number. Where a group was too large to count person by person, the figure we publish is lower than the number who were actually in the room.';
 ---
 
 <section
@@ -92,29 +47,18 @@ const photoSlots = placeholders.map((placeholder, i) => {
   <div class="mx-auto max-w-6xl px-7">
     <div class="mb-14 max-w-[640px]" data-reveal>
       <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-lime-bright">
-        03 · {block.eyebrow ?? 'The harvest'}
+        02 · {block.eyebrow ?? 'Where we are'}
       </span>
       <h2 class="mb-4 font-serif text-4xl font-bold leading-[1.08] sm:text-5xl bg-gradient-to-br from-white via-white to-ek-lime-bright bg-clip-text text-transparent">
-        {block.title ?? 'The change we’re growing'}
+        {block.title ?? 'We started in May 2024'}
       </h2>
       <span class="mb-5 block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500" aria-hidden="true"></span>
       <p class="text-lg text-[#cfe0db]">
-        {
-          block.description ??
-            'We measure real change, not just activity. As our programmes take root from 2026 onward, this is the evidence we hold ourselves to.'
-        }
+        {block.description ?? 'We are a small organisation. This is what we have done so far.'}
       </p>
     </div>
 
-    <p
-      class="mb-12 max-w-[780px] font-condensed text-2xl font-semibold uppercase leading-[1.15] text-white sm:text-3xl"
-      data-reveal
-    >
-      Our aim is for communities to know us not as a one-off service, but as a{' '}
-      <mark class="bg-ek-lime/25 px-1 text-ek-lime-bright">lasting partner for change</mark>.
-    </p>
-
-    <div class="mb-12 grid gap-[18px] sm:grid-cols-2 lg:grid-cols-4">
+    <div class="mb-11 grid gap-[18px] sm:grid-cols-2 lg:grid-cols-4">
       {
         stats.map((s, i) => (
           <div
@@ -122,14 +66,7 @@ const photoSlots = placeholders.map((placeholder, i) => {
             data-reveal-delay={i * 100}
             class="rounded-2xl border-b-[3px] border-ek-lime bg-white/[0.06] px-6 py-7 ring-1 ring-white/10 transition-all duration-200 hover:-translate-y-1 hover:bg-white/10 hover:shadow-[0_12px_30px_rgba(174,203,58,0.15)]"
           >
-            <span class="mb-1.5 inline-block rounded-[3px] bg-ek-lime/15 px-2 py-[3px] font-condensed text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-ek-lime-bright">
-              {s.badge}
-            </span>
-            <div
-              class="mt-3 bg-gradient-to-br from-white to-ek-lime-bright bg-clip-text font-condensed text-5xl font-bold leading-none tracking-tight text-transparent"
-              data-countup
-              data-target={s.number}
-            >
+            <div class="bg-gradient-to-br from-white to-ek-lime-bright bg-clip-text font-condensed text-5xl font-bold leading-none tracking-tight text-transparent">
               {s.number}
             </div>
             <div class="mt-2.5 text-[0.96rem] text-[#9fb9b4]">{s.label}</div>
@@ -138,56 +75,11 @@ const photoSlots = placeholders.map((placeholder, i) => {
       }
     </div>
 
-    <div class="grid items-center gap-x-14 gap-y-10 lg:grid-cols-[1.1fr_0.9fr]">
-      <div class="grid gap-x-9 gap-y-[14px] sm:grid-cols-2 lg:grid-cols-1" data-reveal>
-        {
-          track.map((t) => (
-            <div class="flex gap-3 text-[1.02rem] text-[#cfe0db]">
-              <svg
-                class="mt-[3px] h-[22px] w-[22px] flex-none text-ek-lime"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                aria-hidden="true"
-              >
-                <path d="M20 6L9 17l-5-5" />
-              </svg>
-              <span>{t}</span>
-            </div>
-          ))
-        }
-      </div>
-
-      {/* Offset photo pair — moments from the work itself. */}
-      <div class="grid grid-cols-2 gap-4" data-reveal data-reveal-delay="120">
-        {
-          photoSlots.map((slot, i) =>
-            slot.remote ? (
-              <img
-                src={slot.remote.url}
-                alt={slot.remote.alt}
-                loading="lazy"
-                class:list={[
-                  'aspect-[3/4] w-full rounded-2xl object-cover shadow-[0_18px_44px_rgba(0,0,0,0.35)] ring-1 ring-white/15',
-                  i === 1 && 'mt-10',
-                ]}
-              />
-            ) : (
-              <Image
-                src={slot.placeholder!}
-                alt=""
-                widths={[400, 800]}
-                sizes="(min-width: 1024px) 240px, 45vw"
-                class:list={[
-                  'aspect-[3/4] w-full rounded-2xl object-cover shadow-[0_18px_44px_rgba(0,0,0,0.35)] ring-1 ring-white/15',
-                  i === 1 && 'mt-10',
-                ]}
-              />
-            ),
-          )
-        }
-      </div>
-    </div>
+    <p
+      class="max-w-[660px] border-l-2 border-ek-olive pl-[18px] text-base text-[#8fb0ab]"
+      data-reveal
+    >
+      {note}
+    </p>
   </div>
 </section>
