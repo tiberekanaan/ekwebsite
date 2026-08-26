@@ -30,13 +30,14 @@ const { title, description, eyebrow, backHref, backLabel } = Astro.props;
   <div class="relative z-[2] mx-auto w-full max-w-7xl px-8">
     {
       backHref && (
-        <a
-          href={backHref}
-          class="mb-7 inline-flex items-center gap-1 text-sm font-semibold text-[#9fb9b4] transition-colors hover:text-ek-lime-bright"
-          data-reveal
-        >
-          ← {backLabel ?? 'Back'}
-        </a>
+        <p class="mb-7" data-reveal>
+          <a
+            href={backHref}
+            class="inline-flex items-center gap-1 text-sm font-semibold text-[#9fb9b4] transition-colors hover:text-ek-lime-bright"
+          >
+            ← {backLabel ?? 'Back'}
+          </a>
+        </p>
       )
     }
     {
