@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
 interface ImpactMetric {
   number: string;
   label: string;
@@ -23,8 +24,8 @@ interface Props {
 const { block } = Astro.props;
 
 // Delivery to date, deliberately rounded so the homepage does not need
-// updating every month. Static figures: no count-up animation, precise
-// numbers belong on programme pages with their dates attached.
+// updating every month. Precise numbers belong on programme pages with
+// their dates attached.
 const defaults: ImpactMetric[] = [
   { number: '5', label: 'Programmes delivered or under way' },
   { number: '40+', label: 'Workshops run since we began' },
@@ -46,9 +47,7 @@ const note =
 >
   <div class="mx-auto max-w-6xl px-7">
     <div class="mb-14 max-w-[640px]" data-reveal>
-      <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-lime-bright">
-        02 · {block.eyebrow ?? 'Where we are'}
-      </span>
+      <Eyebrow as="span" class="mb-4" tone="dark">{block.eyebrow ?? 'Where we are'}</Eyebrow>
       <h2 class="mb-4 font-serif text-4xl font-bold leading-[1.08] sm:text-5xl bg-gradient-to-br from-white via-white to-ek-lime-bright bg-clip-text text-transparent">
         {block.title ?? 'We started in May 2024'}
       </h2>
@@ -58,21 +57,76 @@ const note =
       </p>
     </div>
 
-    <div class="mb-11 grid gap-[18px] sm:grid-cols-2 lg:grid-cols-4">
-      {
-        stats.map((s, i) => (
-          <div
-            data-reveal
-            data-reveal-delay={i * 100}
-            class="rounded-2xl border-b-[3px] border-ek-lime bg-white/[0.06] px-6 py-7 ring-1 ring-white/10 transition-all duration-200 hover:-translate-y-1 hover:bg-white/10 hover:shadow-[0_12px_30px_rgba(174,203,58,0.15)]"
-          >
-            <div class="bg-gradient-to-br from-white to-ek-lime-bright bg-clip-text font-condensed text-5xl font-bold leading-none tracking-tight text-transparent">
-              {s.number}
-            </div>
-            <div class="mt-2.5 text-[0.96rem] text-[#9fb9b4]">{s.label}</div>
-          </div>
-        ))
-      }
+    <!--
+      The voyage chart: a dashed swell line runs from "May 2024" to "Today"
+      and the four figures sit on its crossings as ports of call. On lg the
+      line is a horizontal sine (zero crossings every 12.5% of the viewBox,
+      so with gap-x-0 the four column centres land exactly on it); below lg
+      it collapses to a vertical ship's-log rail on the left.
+    -->
+    <div class="voyage relative mb-14" data-reveal>
+      <svg
+        class="voyage-swell pointer-events-none absolute inset-x-0 -top-[13px] hidden h-10 w-full lg:block"
+        viewBox="0 0 800 40"
+        preserveAspectRatio="none"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M0 20 Q50 2 100 20 Q150 38 200 20 Q250 2 300 20 Q350 38 400 20 Q450 2 500 20 Q550 38 600 20 Q650 2 700 20 Q750 38 800 20"
+          stroke="url(#voyage-grad)"
+          stroke-width="1.5"
+          stroke-dasharray="5 7"
+          stroke-linecap="round"
+        ></path>
+        <defs>
+          <linearGradient id="voyage-grad" x1="0" y1="0" x2="800" y2="0" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#aecb3a" stop-opacity="0.85"></stop>
+            <stop offset="1" stop-color="#2a8089"></stop>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span
+        class="voyage-rail absolute bottom-3 left-[6px] top-3 border-l-2 border-dashed border-ek-500/40 lg:hidden"
+        aria-hidden="true"
+      ></span>
+
+      <span
+        class="relative z-[1] mb-8 inline-flex items-center rounded-full bg-ek-900 px-3 py-1 font-condensed text-[0.64rem] font-semibold uppercase tracking-[0.2em] text-[#9fb9b4] ring-1 ring-white/15 lg:absolute lg:left-0 lg:top-[7px] lg:mb-0 lg:-translate-y-1/2"
+      >
+        May 2024
+      </span>
+
+      <ol class="grid list-none gap-y-10 pl-9 lg:grid-cols-4 lg:gap-y-0 lg:pl-0">
+        {
+          stats.map((s, i) => (
+            <li
+              class="relative lg:px-5 lg:text-center"
+              data-reveal
+              data-reveal-delay={200 + i * 450}
+            >
+              <span
+                class="absolute left-[-30px] top-2 block h-3.5 w-3.5 rounded-full bg-ek-lime shadow-[0_0_0_5px_rgba(174,203,58,0.16)] lg:static lg:mx-auto lg:mb-7"
+                aria-hidden="true"
+              />
+              <div
+                class="bg-gradient-to-br from-white to-ek-lime-bright bg-clip-text font-serif text-[3.4rem] font-bold leading-none text-transparent"
+                data-countup
+                data-target={s.number}
+              >
+                {s.number}
+              </div>
+              <div class="mt-3 max-w-[16em] text-[0.96rem] text-[#9fb9b4] lg:mx-auto">{s.label}</div>
+            </li>
+          ))
+        }
+      </ol>
+
+      <span
+        class="relative z-[1] mt-8 inline-flex items-center rounded-full bg-ek-lime px-3 py-1 font-condensed text-[0.64rem] font-semibold uppercase tracking-[0.2em] text-ek-900 lg:absolute lg:right-0 lg:top-[7px] lg:mt-0 lg:-translate-y-1/2"
+      >
+        Today
+      </span>
     </div>
 
     <p
@@ -83,3 +137,33 @@ const note =
     </p>
   </div>
 </section>
+
+<noscript>
+  <style>
+    .voyage .voyage-swell,
+    .voyage .voyage-rail {
+      clip-path: none !important;
+    }
+  </style>
+</noscript>
+
+<style>
+  /* Course draws itself when the section reveals; static without JS or
+     under reduced motion (clip only applies once .is-visible can arrive). */
+  @media (prefers-reduced-motion: no-preference) {
+    .voyage[data-reveal] .voyage-swell {
+      clip-path: inset(-20px 100% -20px 0);
+    }
+    .voyage[data-reveal] .voyage-rail {
+      clip-path: inset(0 0 100% 0);
+    }
+    .voyage.is-visible .voyage-swell {
+      clip-path: inset(-20px 0 -20px 0);
+      transition: clip-path 2000ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .voyage.is-visible .voyage-rail {
+      clip-path: inset(0 0 0 0);
+      transition: clip-path 1600ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  }
+</style>

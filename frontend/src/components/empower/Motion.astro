@@ -104,8 +104,14 @@
             );
           }
           el.classList.add('is-visible');
-          el.querySelectorAll<HTMLElement>('[data-countup]').forEach(countUp);
-          if (el.matches('[data-countup]')) countUp(el);
+          // Hold the count until the element actually fades in, otherwise a
+          // staggered stat can finish counting while still transparent.
+          const runCountups = () => {
+            el.querySelectorAll<HTMLElement>('[data-countup]').forEach(countUp);
+            if (el.matches('[data-countup]')) countUp(el);
+          };
+          if (delay > 0 && !prefersReduced) setTimeout(runCountups, delay);
+          else runCountups();
           observer.unobserve(el);
         });
       },
