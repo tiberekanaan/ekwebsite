@@ -9,6 +9,7 @@ export interface HeroBlockData {
   eyebrow?: string | null;
   title?: string | null;
   description?: string | null;
+  /** Still in the CMS payload; no longer rendered — the bwabwai narrative lives on the About page. */
   heritage?: string | null;
   primaryButtonText?: string | null;
   primaryButtonLink?: string | null;
@@ -26,9 +27,6 @@ const eyebrow = block.eyebrow ?? 'A locally-led NGO · South Tarawa, Kiribati';
 const lede =
   block.description ??
   'Empower Kiribati is a platform for community initiatives. We partner with ministries, funders and community organisations to design, deliver and measure work that cultivates the conditions for a resilient Kiribati.';
-const heritage =
-  block.heritage ??
-  'Te bwabwai has supported I-Kiribati livelihoods for centuries. It grows only where the knowledge and the conditions are right, and today both are under threat. Our livelihoods are no exception. We exist to address both.';
 const primaryText = block.primaryButtonText ?? 'See our work';
 const primaryLink = block.primaryButtonLink ?? '#our-work';
 const secondaryText = block.secondaryButtonText ?? 'Partner with us';
@@ -102,19 +100,11 @@ const secondaryLink = block.secondaryButtonLink ?? '/contact';
         }
       </h1>
 
-      <p data-reveal data-reveal-delay="160" class="mb-[18px] max-w-[30em] text-lg text-[#cfe0db]">
+      <p data-reveal data-reveal-delay="160" class="mb-9 max-w-[30em] text-lg text-[#cfe0db]">
         {lede}
       </p>
 
-      <p
-        data-reveal
-        data-reveal-delay="220"
-        class="mb-9 max-w-[34em] border-l-2 border-ek-olive pl-[18px] text-base text-[#9fb9b4]"
-      >
-        {heritage}
-      </p>
-
-      <div data-reveal data-reveal-delay="300" class="flex flex-wrap items-center gap-4">
+      <div data-reveal data-reveal-delay="240" class="flex flex-wrap items-center gap-4">
         <a
           href={primaryLink}
           class="inline-flex items-center gap-2 rounded-full bg-ek-lime px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-ek-900 transition-all duration-200 hover:-translate-y-0.5 hover:bg-ek-lime-bright hover:shadow-[0_8px_22px_rgba(174,203,58,0.3)]"
