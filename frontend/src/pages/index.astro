@@ -62,6 +62,14 @@ try {
 } catch {
   // Strapi unreachable — fall back to the default landing below.
 }
+
+// Featured projects renders above the pull quote regardless of the CMS zone
+// order — reordering these two blocks in the admin has no effect here.
+const programmesIdx = blocks.findIndex((b) => b.__component === 'blocks.programmes');
+const testimonialsIdx = blocks.findIndex((b) => b.__component === 'blocks.testimonials');
+if (programmesIdx > -1 && testimonialsIdx > -1 && testimonialsIdx < programmesIdx) {
+  [blocks[testimonialsIdx], blocks[programmesIdx]] = [blocks[programmesIdx], blocks[testimonialsIdx]];
+}
 ---
 
 <Layout
@@ -116,8 +124,8 @@ try {
         <WhatWeDoBlock block={{}} />
         <ImpactBlock block={{}} />
         <PartnerMarqueeBlock block={{}} />
-        <TestimonialsBlock block={{}} />
         <ProgrammesBlock block={{}} />
+        <TestimonialsBlock block={{}} />
         <CloseBlock block={{}} />
       </Fragment>
     )

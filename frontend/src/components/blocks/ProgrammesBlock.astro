@@ -1,5 +1,8 @@
 ---
 import Eyebrow from '@/components/empower/Eyebrow.astro';
+import { getCollection } from 'astro:content';
+import { STRAPI_URL } from 'astro:env/server';
+
 interface ProgrammeItem {
   title: string;
   description?: string | null;
@@ -22,80 +25,82 @@ interface Props {
 
 const { block } = Astro.props;
 
-const defaults: ProgrammeItem[] = [
-  {
-    title: 'American Spaces',
-    description:
-      'Youth workshops on vision, leadership, cybersafety and careers, at the Kiribati National Library and in secondary schools',
-    partnerLine: 'with the U.S. Embassy Suva',
-    programmeStatus: 'running',
-  },
-  {
-    title: 'Empowering Community Leadership',
-    description:
-      'Two-day workshops in leadership, digital literacy and financial management, run for three separate groups of local leaders',
-    partnerLine: 'with the New Zealand High Commission',
-    programmeStatus: 'completed',
-    statusYear: '2026',
-  },
-  {
-    title: "Women's Economic Empowerment",
-    description:
-      "We facilitated the workshops that built a national framework with 19 women's organisations",
-    partnerLine: 'convened by MWYSSA, funded by Caritas',
-    programmeStatus: 'completed',
-    statusYear: '2026',
-  },
-];
-
-const programmes: ProgrammeItem[] = block.items && block.items.length > 0 ? block.items : defaults;
-
-const pillLabel = (p: ProgrammeItem) =>
-  p.programmeStatus === 'completed' ? `Completed${p.statusYear ? ` ${p.statusYear}` : ''}` : 'Running';
-
 const buttonText = block.buttonText ?? 'All our work';
 const buttonLink = block.buttonLink ?? '/our-programs';
+
+const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
+
+// The four most recent projects, newest first (same ordering as
+// /our-programs). The CMS `items` list is no longer the source — the row
+// grows to four automatically as project entries are added.
+const cards = (await getCollection('projects'))
+  .sort((a, b) => {
+    const aDate = a.data.publishedAt?.valueOf() ?? a.data.createdAt?.valueOf() ?? 0;
+    const bDate = b.data.publishedAt?.valueOf() ?? b.data.createdAt?.valueOf() ?? 0;
+    return bDate - aDate;
+  })
+  .slice(0, 4)
+  .map((p) => ({
+    title: p.data.title,
+    href: `/our-programs/${p.data.slug}`,
+    image: p.data.image ?? null,
+  }));
 ---
 
-<section id="our-work" class="bg-ek-paper py-24">
+<section id="our-work" class="bg-ek-mist py-24">
   <div class="mx-auto max-w-6xl px-7">
     <div class="mb-14 max-w-[640px]" data-reveal>
       <Eyebrow as="span" class="mb-4">{block.eyebrow ?? 'Our work'}</Eyebrow>
       <h2 class="mb-4 font-serif text-4xl font-bold leading-[1.08] sm:text-5xl bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text text-transparent">
-        {block.title ?? 'What we are running now'}
+        {block.title ?? 'Featured projects'}
       </h2>
       <span class="mb-5 block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500" aria-hidden="true"></span>
     </div>
 
-    <div class="border-t border-ek-700/10">
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
       {
-        programmes.map((p, i) => (
-          <div
+        cards.map((card, i) => (
+          <a
+            href={card.href}
             data-reveal
             data-reveal-delay={i * 100}
-            class="grid items-center gap-3 border-b border-ek-700/10 py-7 md:grid-cols-[1fr_auto] md:gap-6"
+            class="group relative block overflow-hidden rounded-3xl shadow-[0_10px_30px_rgba(15,50,58,0.12)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_22px_50px_rgba(15,50,58,0.22)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-ek-mist focus-visible:ring-ek-500"
           >
-            <div>
-              <h3 class="mb-2 font-serif text-2xl font-bold text-ek-800">{p.title}</h3>
-              <p class="max-w-[52em] text-base text-ek-muted">
-                {p.description}
-                {p.partnerLine && (
-                  <Fragment>
-                    {' · '}
-                    <b class="font-semibold text-ek-600">{p.partnerLine}</b>
-                  </Fragment>
-                )}
-              </p>
-            </div>
+            {card.image?.url ? (
+              <img
+                src={absoluteUrl(card.image.url)}
+                alt={card.image.alternativeText ?? ''}
+                loading="lazy"
+                decoding="async"
+                class="aspect-[16/11] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06] sm:aspect-[4/5]"
+              />
+            ) : (
+              <span class="block aspect-[16/11] w-full bg-white sm:aspect-[4/5]" aria-hidden="true" />
+            )}
             <span
-              class:list={[
-                'justify-self-start whitespace-nowrap rounded-full px-[14px] py-1.5 font-condensed text-[0.76rem] font-semibold uppercase tracking-[0.14em] md:justify-self-end',
-                p.programmeStatus === 'completed' ? 'bg-ek-sand text-ek-muted' : 'bg-ek-lime text-ek-900',
-              ]}
+              class="absolute inset-0 bg-gradient-to-t from-ek-900/95 via-ek-900/45 to-ek-900/5"
+              aria-hidden="true"
+            />
+            <span
+              class="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white ring-1 ring-white/25 backdrop-blur-md transition-colors duration-300 group-hover:bg-ek-lime group-hover:text-ek-900 group-hover:ring-ek-lime"
+              aria-hidden="true"
             >
-              {pillLabel(p)}
+              <svg
+                class="h-4 w-4 -rotate-45 transition-transform duration-300 group-hover:rotate-0"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
             </span>
-          </div>
+            <span class="absolute inset-x-0 bottom-0 px-5 pb-8">
+              <h3 class="font-serif text-[1.35rem] font-bold leading-tight text-white">{card.title}</h3>
+            </span>
+          </a>
         ))
       }
     </div>
