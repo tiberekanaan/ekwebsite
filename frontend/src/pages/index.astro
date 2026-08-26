@@ -4,6 +4,7 @@ import Layout from '@/layouts/Layout.astro';
 
 // Block components (dynamic-zone driven)
 import HeroBlock, { type HeroBlockData } from '@/components/blocks/HeroBlock.astro';
+import ChallengeCycleBlock from '@/components/blocks/ChallengeCycleBlock.astro';
 import WhatWeDoBlock, { type WhatWeDoBlockData } from '@/components/blocks/WhatWeDoBlock.astro';
 import ProgrammesBlock, { type ProgrammesBlockData } from '@/components/blocks/ProgrammesBlock.astro';
 import CloseBlock, { type CloseBlockData } from '@/components/blocks/CloseBlock.astro';
@@ -73,7 +74,15 @@ try {
       blocks.map((block) => {
         switch (block.__component) {
           case 'blocks.hero':
-            return <HeroBlock block={block} />;
+            // The Challenge sits directly under the hero. Its copy is locked
+            // by the donor brief, so it renders from the component's own
+            // constants — not from the CMS dynamic zone (wiring deferred).
+            return (
+              <Fragment>
+                <HeroBlock block={block} />
+                <ChallengeCycleBlock />
+              </Fragment>
+            );
           case 'blocks.what-we-do':
             return <WhatWeDoBlock block={block} />;
           case 'blocks.programmes':
@@ -103,6 +112,7 @@ try {
     ) : (
       <Fragment>
         <HeroBlock block={{}} />
+        <ChallengeCycleBlock />
         <WhatWeDoBlock block={{}} />
         <ImpactBlock block={{}} />
         <PartnerMarqueeBlock block={{}} />

@@ -1,0 +1,567 @@
+---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
+
+/**
+ * "The Challenge" — nine steps experienced as a cycle, not a list.
+ *
+ * Direction A from the brief: a scroll-driven pinned stage. The dark section
+ * holds the viewport still (position: sticky) while scroll progress drives
+ * which step is on stage — each step rises in as the previous recedes upward,
+ * a left rail of nine numbered nodes fills with the reader's progress, and a
+ * giant ghost numeral marks the place in the cycle. The close sits in normal
+ * flow on white below, so the mood lifts from the dark cycle into light.
+ *
+ * Progressive enhancement, not graceful failure: the server-rendered default
+ * is a plain readable ordered list on the dark panel. A small scroll handler
+ * (no library) adds `.ek-enhanced` only when JS runs AND the visitor does not
+ * prefer reduced motion — everything below `.ek-enhanced` in the CSS is the
+ * upgrade. Steps are hidden with opacity/transform only, so screen readers
+ * always get the full text in document order.
+ *
+ * The copy is final and locked by the donor brief — do not shorten, reword,
+ * or "correct" it (fortnight, "can turn into", "as they always have", no
+ * school fees are all deliberate). CMS wiring is deferred; the section is
+ * not yet a blocks.* component in the Strapi dynamic zone.
+ */
+
+const STEPS = [
+  'Kiribati has a small economy with few industries. That means few jobs, and most of them are with government.',
+  'Every year many students finish school and university. There are not enough jobs for all of them, even for those who did well.',
+  'Those who left school early do not have the skills for the jobs that do exist.',
+  'Meanwhile the cost of living keeps rising. Food, fuel and everyday goods cost more, but pay stays the same. Every fortnight it buys less than the fortnight before.',
+  'On top of that, families give to their community and their church, as they always have. These are important, and they come out of the same pay.',
+  'So a family needs more than it earns. To cover the difference, they borrow from relatives or friends.',
+  'When the next pay arrives, part of it is already owed. Less is left than before, and the costs have not gone away. Each time this happens the gap gets wider and harder to escape.',
+  "Financial pressure takes a parent's attention away from important responsibilities, such as raising their children well and supporting their education. Children need help and encouragement to do well at school. Without it, many fall behind and leave early. They then face the same job market their parents did, and the pattern begins again.",
+  'The harm does not stay inside the home. Where there is no work and no purpose, young people drift into groups that get into trouble, and pressure inside families can turn into violence against women and children.',
+];
+---
+
+<section id="the-challenge" class="ek-ch relative bg-white">
+  <div
+    class="pointer-events-none absolute inset-0"
+    style="background: radial-gradient(55% 45% at 80% 8%, rgba(221, 241, 232, 0.65), transparent 70%);"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="ek-flow-wrap relative mx-auto max-w-6xl px-7 pt-24">
+    <div class="ek-flow-head max-w-[640px]" data-reveal>
+      <Eyebrow as="span" class="mb-4">The challenge</Eyebrow>
+      <h2
+        class="mb-4 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl"
+      >
+        Our challenges are not loud, but their effects are real.
+      </h2>
+      <span
+        class="block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500"
+        aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <div class="ek-wrap relative">
+    <div class="ek-stage">
+      <div class="relative mx-auto h-full max-w-3xl px-7 lg:max-w-7xl">
+        <!-- Persistent heading, shown inside the pinned stage on wide screens
+             (the flow heading above is visually hidden there but stays for
+             screen readers, so this copy is decorative). -->
+        <div class="ek-stage-head" aria-hidden="true">
+          <Eyebrow as="span" class="mb-4">The challenge</Eyebrow>
+          <h2
+            class="mb-5 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-4xl font-bold leading-[1.1] text-transparent xl:text-5xl"
+          >
+            Our challenges are not loud, but their effects are real.
+          </h2>
+          <span
+            class="block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500"
+          ></span>
+        </div>
+        <!-- Progress rail: nine numbered nodes lit by scroll (enhanced only). -->
+        <div class="ek-rail" aria-hidden="true">
+          <div class="ek-rail-inner">
+            <span class="ek-rail-line"></span>
+            <span class="ek-rail-fill"></span>
+            {STEPS.map((_, i) => <span class="ek-dot">{i + 1}</span>)}
+          </div>
+        </div>
+
+        <ol class="ek-slides">
+          {
+            STEPS.map((step, i) => (
+              <li class="ek-slide">
+                <span class="ek-ghost" aria-hidden="true">
+                  {i + 1}
+                </span>
+                <div class="ek-slide-inner">
+                  <p class="ek-step-label font-condensed" aria-hidden="true">
+                    Step {i + 1} <span class="ek-step-of">of {STEPS.length}</span>
+                  </p>
+                  <p class="ek-step-text">{step}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+
+        <div class="ek-hint font-condensed" aria-hidden="true">
+          Keep scrolling
+          <svg
+            class="h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M6 9l6 6 6-6"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ek-close relative mx-auto max-w-3xl px-7 pb-24 lg:max-w-7xl">
+    <div class="ek-close-beats relative max-w-[680px] pl-16" data-reveal>
+      <span
+        class="ek-loop absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-full border-[1.5px] border-ek-500 bg-white text-ek-500"
+        aria-hidden="true"
+      >
+        <svg
+          class="h-5 w-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="23 4 23 10 17 10"></polyline>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+        </svg>
+      </span>
+      <p class="pt-1.5 text-[1.05rem] leading-relaxed text-ek-ink sm:text-lg">
+        This cycle repeats itself in every generation. It passes from parents to children, and
+        starts again.
+      </p>
+      <p class="mt-6 text-[1.05rem] leading-relaxed text-ek-ink sm:text-lg">
+        What holds it in place is conditions, not a lack of effort or ambition.
+        <strong class="rounded-sm bg-ek-lime/30 px-1 font-semibold [box-decoration-break:clone]">
+          Conditions can be changed.
+        </strong>
+      </p>
+    </div>
+
+    <div
+      class="relative mt-12 overflow-hidden rounded-3xl bg-ek-900 px-8 py-12 sm:px-12 lg:mt-16 lg:px-16 lg:py-16"
+      data-reveal
+    >
+      <div
+        class="pointer-events-none absolute inset-0"
+        style="background: radial-gradient(60% 90% at 85% 15%, rgba(42, 128, 137, 0.35), transparent 70%);"
+        aria-hidden="true"
+      >
+      </div>
+      <svg
+        class="pointer-events-none absolute -right-16 top-1/2 hidden h-[26rem] w-[26rem] -translate-y-1/2 text-white/[0.045] lg:block"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <polyline points="23 4 23 10 17 10"></polyline>
+        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+      </svg>
+      <span
+        class="relative mb-7 block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500"
+        aria-hidden="true"></span>
+      <p
+        class="relative max-w-[46rem] bg-gradient-to-br from-white via-white to-ek-lime-bright bg-clip-text font-serif text-2xl font-bold leading-[1.32] text-transparent sm:text-3xl xl:text-[2.4rem] xl:leading-[1.28]"
+      >
+        Kiribati will not be changed from outside. It will be changed by I-Kiribati people with the
+        skills, the systems and the standing to do it. We exist to build all three, and to raise
+        the leaders who will keep building long after us.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ---------- Default: a plain readable list (no JS / reduced motion) ---------- */
+
+  .ek-wrap {
+    padding: 3.5rem 0 6rem;
+  }
+
+  .ek-slides {
+    list-style: none;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .ek-slide {
+    padding-bottom: 2.75rem;
+  }
+
+  .ek-step-label {
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-ek-olive);
+  }
+
+  .ek-step-of {
+    color: rgba(84, 102, 108, 0.6);
+  }
+
+  .ek-step-text {
+    font-size: clamp(1.02rem, 0.8rem + 1.1vw, 1.5rem);
+    line-height: 1.65;
+    color: var(--color-ek-ink);
+    text-wrap: pretty;
+  }
+
+  .ek-rail,
+  .ek-hint,
+  .ek-ghost,
+  .ek-stage-head {
+    display: none;
+  }
+
+  .ek-close {
+    padding-top: 3rem;
+  }
+
+  /* The stage centres its content, leaving the lower third of the last
+     pinned screen empty — pull the close up into it so the resolution
+     arrives as step nine finishes, instead of after a blank screen. */
+  .ek-ch.ek-enhanced .ek-close {
+    position: relative;
+    z-index: 1;
+    margin-top: -15svh;
+    padding-top: 0;
+  }
+
+  /* ---------- Enhanced: the pinned, scroll-driven stage ---------- */
+
+  .ek-ch.ek-enhanced .ek-wrap {
+    /* Nine scroll segments of ~65svh each, plus the pinned viewport itself. */
+    height: calc(9 * 65svh + 100svh);
+    padding: 0;
+  }
+
+  .ek-ch.ek-enhanced .ek-stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  .ek-ch.ek-enhanced .ek-slides {
+    position: absolute;
+    inset: 0;
+    max-width: none;
+  }
+
+  .ek-ch.ek-enhanced .ek-slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 1.75rem 0 4.75rem;
+    opacity: 0;
+    transform: translateY(9svh) scale(0.985);
+    transition:
+      opacity 650ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  .ek-ch.ek-enhanced .ek-slide.is-current {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .ek-ch.ek-enhanced .ek-slide.is-past {
+    opacity: 0;
+    transform: translateY(-7svh) scale(0.97);
+  }
+
+  .ek-ch.ek-enhanced .ek-slide-inner {
+    max-width: 34rem;
+  }
+
+  .ek-ch.ek-enhanced .ek-slide-inner {
+    position: relative;
+  }
+
+  /* Giant serif numeral drifting behind the text — the sense of place. */
+  .ek-ch.ek-enhanced .ek-ghost {
+    display: block;
+    position: absolute;
+    right: -0.05em;
+    top: 50%;
+    transform: translateY(-52%);
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(11rem, 34vw, 24rem);
+    line-height: 1;
+    color: rgba(7, 37, 41, 0.05);
+    user-select: none;
+  }
+
+  /* Progress rail: the line spans exactly the dot column, and the fill is
+     driven by --ek-line so it meets each dot as it becomes current. */
+  .ek-ch.ek-enhanced .ek-rail {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 1.75rem;
+    top: 0;
+    height: 100%;
+    width: 1.75rem;
+    justify-content: center;
+  }
+
+  .ek-ch.ek-enhanced .ek-rail-inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(0.4rem, 1.6svh, 1rem);
+  }
+
+  .ek-ch.ek-enhanced .ek-rail-line,
+  .ek-ch.ek-enhanced .ek-rail-fill {
+    position: absolute;
+    left: 50%;
+    top: 0.8rem;
+    bottom: 0.8rem;
+    width: 2px;
+    margin-left: -1px;
+    border-radius: 1px;
+  }
+
+  .ek-ch.ek-enhanced .ek-rail-line {
+    background: rgba(17, 74, 82, 0.16);
+  }
+
+  .ek-ch.ek-enhanced .ek-rail-fill {
+    background: linear-gradient(to bottom, var(--color-ek-lime), var(--color-ek-500));
+    transform: scaleY(var(--ek-line, 0));
+    transform-origin: top;
+  }
+
+  .ek-ch.ek-enhanced .ek-dot {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(1.35rem, 3.2svh, 1.7rem);
+    height: clamp(1.35rem, 3.2svh, 1.7rem);
+    border-radius: 9999px;
+    border: 1.5px solid rgba(17, 74, 82, 0.3);
+    background: #fff;
+    font-family: var(--font-condensed);
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--color-ek-700);
+    transition:
+      background-color 400ms ease,
+      border-color 400ms ease,
+      color 400ms ease,
+      transform 400ms ease;
+  }
+
+  .ek-ch.ek-enhanced .ek-dot.is-done {
+    border-color: var(--color-ek-500);
+    background: var(--color-ek-500);
+    color: #fff;
+  }
+
+  .ek-ch.ek-enhanced .ek-dot.is-current {
+    border-color: var(--color-ek-lime);
+    background: var(--color-ek-lime);
+    color: var(--color-ek-900);
+    transform: scale(1.18);
+  }
+
+  /* Scroll affordance, shown until the reader moves. */
+  .ek-ch.ek-enhanced .ek-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-ek-muted);
+    transition: opacity 500ms ease;
+  }
+
+  .ek-ch.ek-enhanced .ek-hint svg {
+    animation: ek-hint-nudge 1.8s ease-in-out infinite;
+  }
+
+  .ek-ch.ek-enhanced.is-started .ek-hint {
+    opacity: 0;
+  }
+
+  @keyframes ek-hint-nudge {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(5px);
+    }
+  }
+
+  /* Wider screens: give the text room and let the rail breathe. */
+  @media (min-width: 640px) {
+    .ek-ch.ek-enhanced .ek-slide {
+      padding-left: 6.5rem;
+    }
+    .ek-ch.ek-enhanced .ek-rail {
+      left: 2.25rem;
+    }
+  }
+
+  /* Laptops and up: use the width. The section heading moves inside the
+     pinned stage as a persistent left column, the rail sits between the
+     columns, and the steps play out on the right half with the ghost
+     numeral filling the far edge. */
+  @media (min-width: 1024px) {
+    .ek-ch.ek-enhanced .ek-flow-wrap {
+      padding: 0;
+    }
+
+    /* Visually hidden, kept in the accessibility tree — the in-stage copy
+       of the heading is aria-hidden. */
+    .ek-ch.ek-enhanced .ek-flow-head {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    .ek-ch.ek-enhanced .ek-stage-head {
+      display: block;
+      position: absolute;
+      left: 1.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: clamp(20rem, 34vw, 30rem);
+      z-index: 2;
+    }
+
+    .ek-ch.ek-enhanced .ek-rail {
+      left: 45%;
+    }
+
+    .ek-ch.ek-enhanced .ek-slide {
+      padding-left: 50%;
+      padding-right: 4rem;
+    }
+
+    .ek-ch.ek-enhanced .ek-slide-inner {
+      max-width: 36rem;
+    }
+
+    /* Land the loop glyph on the rail's axis so the line of dots visually
+       resolves into the cycle mark, with the text continuing the step column. */
+    .ek-ch.ek-enhanced .ek-close-beats {
+      margin-left: calc(45% - 0.375rem);
+    }
+  }
+
+  /* The loop glyph draws itself in when the close reveals. */
+  @media (prefers-reduced-motion: no-preference) {
+    .ek-loop svg {
+      stroke-dasharray: 60;
+    }
+    [data-reveal].is-visible .ek-loop svg {
+      animation: ek-loop-draw 1200ms cubic-bezier(0.22, 1, 0.36, 1) 300ms both;
+    }
+  }
+
+  @keyframes ek-loop-draw {
+    from {
+      stroke-dashoffset: 60;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+</style>
+
+<script>
+  // Scroll driver for the pinned stage. Elements are re-captured on every
+  // astro:page-load (ClientRouter swaps the DOM); the window listeners are
+  // bound once at module scope so they never stack.
+  let section: HTMLElement | null = null;
+  let wrap: HTMLElement | null = null;
+  let slides: HTMLElement[] = [];
+  let dots: HTMLElement[] = [];
+  let ticking = false;
+
+  const update = () => {
+    ticking = false;
+    if (!section || !wrap) return;
+    const rect = wrap.getBoundingClientRect();
+    const total = rect.height - window.innerHeight;
+    const progress = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0;
+    section.style.setProperty('--ek-progress', progress.toFixed(4));
+    // The line runs dot-centre to dot-centre ((n-1) gaps), while a step spans
+    // 1/n of the scroll — rescale so the fill meets each dot as it lights up.
+    const line = Math.min(1, (progress * slides.length) / (slides.length - 1));
+    section.style.setProperty('--ek-line', line.toFixed(4));
+    const current = Math.min(slides.length - 1, Math.floor(progress * slides.length));
+    slides.forEach((el, i) => {
+      el.classList.toggle('is-current', i === current);
+      el.classList.toggle('is-past', i < current);
+    });
+    dots.forEach((el, i) => {
+      el.classList.toggle('is-current', i === current);
+      el.classList.toggle('is-done', i < current);
+    });
+    section.classList.toggle('is-started', progress > 0.03);
+  };
+
+  const requestUpdate = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  };
+
+  const init = () => {
+    section = document.getElementById('the-challenge');
+    wrap = section?.querySelector('.ek-wrap') ?? null;
+    slides = section ? Array.from(section.querySelectorAll('.ek-slide')) : [];
+    dots = section ? Array.from(section.querySelectorAll('.ek-dot')) : [];
+    if (!section || !wrap || slides.length === 0) return;
+    // Reduced motion keeps the server-rendered static list.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      section = null;
+      return;
+    }
+    section.classList.add('ek-enhanced');
+    update();
+  };
+
+  document.addEventListener('astro:page-load', init);
+  window.addEventListener('scroll', requestUpdate, { passive: true });
+  window.addEventListener('resize', requestUpdate);
+</script>
