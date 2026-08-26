@@ -62,9 +62,10 @@ const STEPS = [
   <div class="ek-wrap relative">
     <div class="ek-stage">
       <div class="relative mx-auto h-full max-w-3xl px-7 lg:max-w-7xl">
-        <!-- Persistent heading, shown inside the pinned stage on wide screens
-             (the flow heading above is visually hidden there but stays for
-             screen readers, so this copy is decorative). -->
+        <!-- Persistent heading, shown inside the pinned stage when enhanced —
+             pinned top on mobile, left column on lg+ (the flow heading above
+             is visually hidden then but stays for screen readers, so this
+             copy is decorative). -->
         <div class="ek-stage-head" aria-hidden="true">
           <Eyebrow as="span" class="mb-4">The challenge</Eyebrow>
           <h2
@@ -262,6 +263,53 @@ const STEPS = [
     overflow: hidden;
   }
 
+  /* The heading stays with the reader while the steps change: the in-flow
+     heading is visually hidden (kept in the accessibility tree) and the
+     decorative in-stage copy pins to the viewport — top of the stage on
+     mobile, left column on lg+. */
+  .ek-ch.ek-enhanced .ek-flow-wrap {
+    padding: 0;
+  }
+
+  .ek-ch.ek-enhanced .ek-flow-head {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .ek-ch.ek-enhanced .ek-stage-head {
+    display: block;
+    position: absolute;
+    z-index: 2;
+  }
+
+  /* Mobile and tablet: compact heading pinned above the step column (clear
+     of the fixed navbar and the left rail), steps recentred below it. */
+  @media (max-width: 1023px) {
+    .ek-ch.ek-enhanced .ek-stage-head {
+      left: 4.75rem;
+      right: 1.75rem;
+      top: calc(5rem + 1svh);
+    }
+
+    .ek-ch.ek-enhanced .ek-stage-head h2 {
+      margin-bottom: 0.75rem;
+      font-size: clamp(1.3rem, 2.8vw + 0.6rem, 1.9rem);
+      line-height: 1.25;
+    }
+
+    .ek-ch.ek-enhanced .ek-slide {
+      padding-top: clamp(9rem, 24svh, 12rem);
+    }
+
+    .ek-ch.ek-enhanced .ek-ghost {
+      top: 58%;
+    }
+  }
+
   .ek-ch.ek-enhanced .ek-slides {
     position: absolute;
     inset: 0;
@@ -435,6 +483,9 @@ const STEPS = [
     .ek-ch.ek-enhanced .ek-rail {
       left: 2.25rem;
     }
+    .ek-ch.ek-enhanced .ek-stage-head {
+      left: 6.5rem;
+    }
   }
 
   /* Laptops and up: use the width. The section heading moves inside the
@@ -442,29 +493,11 @@ const STEPS = [
      columns, and the steps play out on the right half with the ghost
      numeral filling the far edge. */
   @media (min-width: 1024px) {
-    .ek-ch.ek-enhanced .ek-flow-wrap {
-      padding: 0;
-    }
-
-    /* Visually hidden, kept in the accessibility tree — the in-stage copy
-       of the heading is aria-hidden. */
-    .ek-ch.ek-enhanced .ek-flow-head {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip-path: inset(50%);
-      white-space: nowrap;
-    }
-
     .ek-ch.ek-enhanced .ek-stage-head {
-      display: block;
-      position: absolute;
       left: 1.75rem;
       top: 50%;
       transform: translateY(-50%);
       width: clamp(20rem, 34vw, 30rem);
-      z-index: 2;
     }
 
     .ek-ch.ek-enhanced .ek-rail {
