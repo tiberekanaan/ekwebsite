@@ -1,6 +1,29 @@
 # Current Feature
 
-**Feature:** "Work with us" CTA section — replace the landing close block (per `~/Downloads/THE-CTA-SECTION.md`)
+**Feature:** CMS-editable footer + homepage — move all hardcoded footer/contact/nav content into Strapi
+
+## Status
+- ✅ Completed 2026-08-27 on branch `feature/cms-editable-footer-contact`, merged to `main` and pushed (see History). **Rollout still pending:** run `backend/apply-editable-globals.js` against production (fresh token) after the Strapi Cloud schema deploy — until then the live homepage close section renders the stale v3 "Bwabwai" copy, because CloseBlock honours its CMS fields again and production still stores the old close. The script two-stages itself: run pre-deploy it fixes the five legacy close fields; run post-deploy it seeds routes/contact/global fields (only where unset).
+
+## What it is
+- Audit found the footer consumed **zero** CMS fields (nav columns, blurb, socials, email/phone/address, legal line, tagline all hardcoded), CloseBlock ignored its `blocks.close` fields and hardcoded its own contact details (a *different* email from the footer), and the header's Contact pill + floating-mode logos were hardcoded.
+- **Global single type** gains (all optional, current copy kept as frontend fallbacks): `generalEmail` (footer, externalaffairs@) and `partnershipEmail` (CTA, partnership@) as two separate fields (user-confirmed), `phone`, `footerAddress` (multiline text → `<br>`), `officeLine`, `utcNote`, `footerBlurb`, `footerContactHeading`, `footerColumns` (new `shared.link-column`: heading + repeatable `shared.link`), `socialLinks` (repeatable `shared.link`; icon keyword-matched from url/label — facebook/linkedin/youtube/instagram, globe fallback), `legalLine`, `footerTagline`, `headerCta` (single `shared.link`), `logoWhite` (media, for dark surfaces).
+- **`blocks.close`** gains `routes` (new `shared.route-card`: label/title/body), `contactHeading`, `contactText`. CloseBlock now renders eyebrow/title/description/buttonText/buttonLink again; `*text*` in the title renders as the lime `<em>` (so the locked heading survives as a CMS string); unset buttonLink derives `mailto:` from `partnershipEmail`. Contact rows (email/phone/office/UTC note) come from Global so one edit updates footer + CTA together.
+- **Frontend plumbing:** new `src/lib/global.ts` `fetchGlobal()` (deep populate for nested `footerColumns→links`, falls back to `populate=*` while production schema lags — the deep keys 400 pre-deploy); `Layout.astro` uses it and threads props to Header (`cta`, `logoWhite`) and Footer (`global`, `logoWhite`); `index.astro` fetches global for CloseBlock's contact prop. Homepage POPULATE unchanged — `blocks.close` `populate=*` reaches `routes` (scalars only, one level). `types/global.ts` extended + shared `telHref()`.
+- **Header:** Contact pill (desktop + mobile) label/url from `headerCta`; floating mode's dark-state logo uses CMS `logoWhite` and the scrolled state uses CMS `logo` (both fall back to bundled — previously floating mode ignored CMS entirely because a colour upload would vanish on dark; the dedicated white field resolves that).
+- **Deliberately still locked** (user-confirmed scope): ChallengeCycleBlock's nine steps + close copy (donor brief), WhatWeDo card icons/descriptions, Impact voyage labels/outcomes/photos, the programmes/testimonials order swap.
+- `backend/apply-editable-globals.js`: (1) overwrites the stale v3 close fields with the Work-with-us copy + seeds the three route cards (deliberate overwrite — the stale copy must go); (2) seeds the new Global fields **only where unset** (idempotent, never clobbers admin edits). Handles pre-schema-deploy 400s gracefully on both steps.
+- Generated types hand-updated (`backend/types/generated/{components,contentTypes}.d.ts`) — Strapi regenerates identically on dev start.
+
+## Rollout
+1. Local review: start local Strapi (schema loads), run `node backend/apply-editable-globals.js` (local), review with `STRAPI_URL=http://localhost:1337 npm run dev`.
+2. Optionally run the script against production pre-push (fresh token) to purge the stale close copy early.
+3. Merge + push → Strapi Cloud deploys schema, Vercel builds.
+4. Re-run `STRAPI_URL=https://determined-strength-17a6de9eef.strapiapp.com STRAPI_API_TOKEN=xxx node backend/apply-editable-globals.js` — seeds routes/contact/global; the publish webhook triggers the final Vercel rebuild. Delete the token after use.
+
+---
+
+**Previous:** "Work with us" CTA section — replace the landing close block (per `~/Downloads/THE-CTA-SECTION.md`)
 
 ## Status
 - ✅ Completed 2026-08-26 on branch `feature/cta-section`, merged to `main` and pushed (see History). No production apply-script needed — the block renders from locked constants, CMS `blocks.close` fields are ignored.
@@ -88,6 +111,8 @@
 **Previous:** Landing page content v3 — ✅ completed 2026-08-25, live on empower.org.ki (see History).
 
 ## History
+
+- 2026-08-27 — **CMS-editable footer + homepage contact/nav content**. Audit found the footer consumed zero CMS fields and CloseBlock ignored its `blocks.close` fields with its own hardcoded contact details. Global single type gained contact fields (`generalEmail` footer / `partnershipEmail` CTA — two fields, user-confirmed —, `phone`, `footerAddress`, `officeLine`, `utcNote`), footer fields (`footerBlurb`, `footerContactHeading`, `footerColumns` via new `shared.link-column`, `socialLinks` as `shared.link` with keyword-matched icons + globe fallback, `legalLine`, `footerTagline`), `headerCta` (Contact pill) and `logoWhite` (dark-surface logo). `blocks.close` gained `routes` (new `shared.route-card`), `contactHeading`, `contactText`; CloseBlock renders its CMS fields again with `*text*` → lime `<em>` title parsing, buttonLink defaulting to `mailto:partnershipEmail`, contact rows from Global. New `src/lib/global.ts` `fetchGlobal()` (deep populate, `populate=*` fallback while the schema lags); Layout threads props to Header/Footer; homepage POPULATE unchanged (`blocks.close` `populate=*` reaches `routes`). Every field falls back to the previous hardcoded copy. Locked by scope choice: ChallengeCycle steps, WhatWeDo icons/descriptions, Impact voyage labels/outcomes/photos. `backend/apply-editable-globals.js` (two-stage-safe: pre-schema-deploy fixes only the five legacy close fields, post-deploy seeds routes + Global where unset) — **gotcha:** production stores the stale v3 "Bwabwai" close copy which renders the moment this branch deploys, until the script runs. Generated types hand-updated. Branch `feature/cms-editable-footer-contact`.
 
 - 2026-08-26 — **Challenge heading pinned in view on mobile**. `ChallengeCycleBlock.astro`: when the scroll-driven stage is enhanced, the "Our challenges are not loud, but their effects are real." heading now stays pinned inside the sticky stage at every screen size, not just lg+ — on <1024px a compact copy (serif `clamp(1.3rem, 2.8vw + 0.6rem, 1.9rem)`, eyebrow + tick kept) pins near the viewport top (`top: calc(5rem + 1svh)` clears the fixed navbar; `left: 4.75rem`/`6.5rem@sm` clears the numbered rail) while the steps and ghost numeral recentre below it (`.ek-slide` `padding-top: clamp(9rem, 24svh, 12rem)`, ghost `top: 58%`). The in-flow heading is now clip-hidden at all sizes when enhanced (was lg-only; stays in the accessibility tree) — the `.ek-flow-wrap` padding reset, `.ek-flow-head` clip and `.ek-stage-head` display moved out of the lg media query into the base enhanced rules, so the lg block only repositions the shared heading as the left column. No-JS and reduced-motion unchanged (static list, normal in-flow heading). Branch `fix/challenge-mobile-pinned-heading`, merged ff (`54282b6`), dist regenerated (`f50efc8`), pushed.
 
