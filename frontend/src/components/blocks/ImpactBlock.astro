@@ -24,13 +24,14 @@ interface Props {
 const { block } = Astro.props;
 
 // Delivery to date, deliberately rounded so the homepage does not need
-// updating every month. Precise numbers belong on programme pages with
-// their dates attached.
+// updating every month. Static by donor-review decision: no count-up,
+// no counting methodology here. Precise numbers belong on programme
+// pages with their dates attached.
 const defaults: ImpactMetric[] = [
-  { number: '5', label: 'Programmes delivered or under way' },
-  { number: '40+', label: 'Workshops run since we began' },
-  { number: '1,500+', label: 'People have attended one of them' },
-  { number: '3', label: 'Funding partners backing our work' },
+  { number: '1,500+', label: 'People reached', description: 'through our programmes' },
+  { number: '50+', label: 'Organisations', description: 'we have worked alongside' },
+  { number: '40+', label: 'Workshops delivered', description: 'since 2024' },
+  { number: '5', label: 'Programmes', description: 'delivered or under way' },
 ];
 
 const stats: ImpactMetric[] =
@@ -38,7 +39,7 @@ const stats: ImpactMetric[] =
 
 const note =
   block.note ??
-  'All of this work has been on South Tarawa. Where we have a signed attendance register, we publish that number. Where a group was too large to count person by person, the figure we publish is lower than the number who were actually in the room.';
+  'Every initiative we take on is designed against national priorities, measured before and after, and reported in full.';
 ---
 
 <section
@@ -47,13 +48,14 @@ const note =
 >
   <div class="mx-auto max-w-6xl px-7">
     <div class="mb-14 max-w-[640px]" data-reveal>
-      <Eyebrow as="span" class="mb-4" tone="dark">{block.eyebrow ?? 'Where we are'}</Eyebrow>
+      <Eyebrow as="span" class="mb-4" tone="dark">{block.eyebrow ?? 'Track record'}</Eyebrow>
       <h2 class="mb-4 font-serif text-4xl font-bold leading-[1.08] sm:text-5xl bg-gradient-to-br from-white via-white to-ek-lime-bright bg-clip-text text-transparent">
-        {block.title ?? 'We started in May 2024'}
+        {block.title ?? 'Delivered, and measured'}
       </h2>
       <span class="mb-5 block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500" aria-hidden="true"></span>
       <p class="text-lg text-[#cfe0db]">
-        {block.description ?? 'We are a small organisation. This is what we have done so far.'}
+        {block.description ??
+          'Government ministries, regional agencies, civil society and community organisations come to us with the work that matters most to their communities.'}
       </p>
     </div>
 
@@ -109,14 +111,17 @@ const note =
                 class="absolute left-[-30px] top-2 block h-3.5 w-3.5 rounded-full bg-ek-lime shadow-[0_0_0_5px_rgba(174,203,58,0.16)] lg:static lg:mx-auto lg:mb-7"
                 aria-hidden="true"
               />
-              <div
-                class="bg-gradient-to-br from-white to-ek-lime-bright bg-clip-text font-serif text-[3.4rem] font-bold leading-none text-transparent"
-                data-countup
-                data-target={s.number}
-              >
+              <div class="bg-gradient-to-br from-white to-ek-lime-bright bg-clip-text font-serif text-[3.4rem] font-bold leading-none text-transparent">
                 {s.number}
               </div>
-              <div class="mt-3 max-w-[16em] text-[0.96rem] text-[#9fb9b4] lg:mx-auto">{s.label}</div>
+              <div class="mt-3 text-[1.02rem] font-semibold text-white">{s.label}</div>
+              {
+                s.description && (
+                  <div class="mt-0.5 max-w-[16em] text-[0.92rem] text-[#9fb9b4] lg:mx-auto">
+                    {s.description}
+                  </div>
+                )
+              }
             </li>
           ))
         }
@@ -130,7 +135,7 @@ const note =
     </div>
 
     <p
-      class="max-w-[660px] border-l-2 border-ek-olive pl-[18px] text-base text-[#8fb0ab]"
+      class="max-w-[660px] border-l-2 border-ek-lime pl-[18px] text-base text-[#8fb0ab]"
       data-reveal
     >
       {note}
