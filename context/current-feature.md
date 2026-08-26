@@ -3,7 +3,7 @@
 **Feature:** Per-programme partner roles — multiple partners on a programme, distinguished as funder vs co-implementer
 
 ## Status
-- 🚧 In progress on branch `feature/partner-roles`. Frontend build passes against production (fallback path). Awaiting user local review: start local Strapi (loads the new component schema), run `node backend/apply-partner-roles.js` (local), then review with `STRAPI_URL=http://localhost:1337 npm run dev`.
+- ✅ Completed 2026-08-27 on branch `feature/partner-roles`, verified locally by the user, merged to `main` and pushed (`bff18de`). **Rollout still pending:** after the Strapi Cloud schema deploy, run `backend/apply-partner-roles.js` against production (fresh token, delete after use), then set the real roles in the admin (e.g. add Ministry of Education as co-implementer on American Corner). Until the script runs, the site renders the legacy roleless "In partnership with" list — nothing breaks.
 
 ## What it is
 - A programme can already hold many partners via the `partners` M2M, but nothing distinguishes a funder from a co-host (e.g. American Corner is funded via American Spaces but co-delivered with the Ministry of Education). Strapi M2M relations can't carry per-link attributes, so the role lives on a new repeatable component.
