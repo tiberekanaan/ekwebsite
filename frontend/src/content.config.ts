@@ -172,6 +172,11 @@ const partners = defineCollection({
     name: z.string(),
     website_url: z.string().nullable().optional(),
     logo: strapiImage,
+    // Marquee fields; nullable so builds tolerate production before the
+    // partner schema deploys.
+    role: z.enum(['funder', 'government', 'civil_society', 'community']).nullable().optional(),
+    consent_to_name: z.boolean().nullable().optional(),
+    display_order: z.number().nullable().optional(),
     projects: z.array(projectRef).default([]),
     publishedAt: z.coerce.date().nullable().optional(),
     createdAt: z.coerce.date().optional(),

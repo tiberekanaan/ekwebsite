@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_blocks_partner_marquees",
+  "info": {
+    "displayName": "Partner marquee",
+    "icon": "apps",
+    "description": "Scrolling row of funder and government partners, sourced from consenting Partner records."
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "intro": {
+      "type": "text"
+    }
+  }
+}

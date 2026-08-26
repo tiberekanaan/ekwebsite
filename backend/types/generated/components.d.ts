@@ -86,6 +86,19 @@ export interface BlocksImpact extends Struct.ComponentSchema {
   };
 }
 
+export interface BlocksPartnerMarquee extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_partner_marquees';
+  info: {
+    description: 'Scrolling row of funder and government partners, sourced from consenting Partner records.';
+    displayName: 'Partner marquee';
+    icon: 'apps';
+  };
+  attributes: {
+    eyebrow: Schema.Attribute.String;
+    intro: Schema.Attribute.Text;
+  };
+}
+
 export interface BlocksPartners extends Struct.ComponentSchema {
   collectionName: 'components_blocks_partners';
   info: {
@@ -386,6 +399,7 @@ declare module '@strapi/strapi' {
       'blocks.future': BlocksFuture;
       'blocks.hero': BlocksHero;
       'blocks.impact': BlocksImpact;
+      'blocks.partner-marquee': BlocksPartnerMarquee;
       'blocks.partners': BlocksPartners;
       'blocks.pillars': BlocksPillars;
       'blocks.programmes': BlocksProgrammes;

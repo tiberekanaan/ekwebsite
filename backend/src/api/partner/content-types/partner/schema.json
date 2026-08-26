@@ -25,6 +25,17 @@
     "website_url": {
       "type": "string"
     },
+    "role": {
+      "type": "enumeration",
+      "enum": ["funder", "government", "civil_society", "community"]
+    },
+    "consent_to_name": {
+      "type": "boolean",
+      "default": false
+    },
+    "display_order": {
+      "type": "integer"
+    },
     "projects": {
       "type": "relation",
       "relation": "manyToMany",

@@ -686,6 +686,7 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
         'blocks.challenges',
         'blocks.threats',
         'blocks.impact',
+        'blocks.partner-marquee',
         'blocks.pillars',
         'blocks.testimonials',
         'blocks.future',
@@ -773,9 +774,12 @@ export interface ApiPartnerPartner extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    consent_to_name: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    display_order: Schema.Attribute.Integer;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -786,6 +790,9 @@ export interface ApiPartnerPartner extends Struct.CollectionTypeSchema {
     name: Schema.Attribute.String & Schema.Attribute.Required;
     projects: Schema.Attribute.Relation<'manyToMany', 'api::project.project'>;
     publishedAt: Schema.Attribute.DateTime;
+    role: Schema.Attribute.Enumeration<
+      ['funder', 'government', 'civil_society', 'community']
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

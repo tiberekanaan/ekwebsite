@@ -14,6 +14,9 @@ import PillarsBlock, { type PillarsBlockData } from '@/components/blocks/Pillars
 import TestimonialsBlock, { type TestimonialsBlockData } from '@/components/blocks/TestimonialsBlock.astro';
 import FutureBlock, { type FutureBlockData } from '@/components/blocks/FutureBlock.astro';
 import PartnersBlock, { type PartnersBlockData } from '@/components/blocks/PartnersBlock.astro';
+import PartnerMarqueeBlock, {
+  type PartnerMarqueeBlockData,
+} from '@/components/blocks/PartnerMarqueeBlock.astro';
 
 type Block =
   | ({ __component: 'blocks.hero' } & HeroBlockData)
@@ -26,7 +29,8 @@ type Block =
   | ({ __component: 'blocks.pillars' } & PillarsBlockData)
   | ({ __component: 'blocks.testimonials' } & TestimonialsBlockData)
   | ({ __component: 'blocks.future' } & FutureBlockData)
-  | ({ __component: 'blocks.partners' } & PartnersBlockData);
+  | ({ __component: 'blocks.partners' } & PartnersBlockData)
+  | ({ __component: 'blocks.partner-marquee' } & PartnerMarqueeBlockData);
 
 // Explicitly populate the dynamic zone, its nested components, relations and media.
 const POPULATE = [
@@ -37,6 +41,7 @@ const POPULATE = [
   'populate[blocks][on][blocks.challenges][populate]=*',
   'populate[blocks][on][blocks.threats][populate]=*',
   'populate[blocks][on][blocks.impact][populate]=*',
+  'populate[blocks][on][blocks.partner-marquee][populate]=*',
   'populate[blocks][on][blocks.pillars][populate][pillars][populate]=*',
   'populate[blocks][on][blocks.testimonials][populate][testimonials][populate]=*',
   'populate[blocks][on][blocks.future][populate]=*',
@@ -89,6 +94,8 @@ try {
             return <FutureBlock block={block} />;
           case 'blocks.partners':
             return <PartnersBlock block={block} />;
+          case 'blocks.partner-marquee':
+            return <PartnerMarqueeBlock block={block} />;
           default:
             return null;
         }
@@ -98,6 +105,7 @@ try {
         <HeroBlock block={{}} />
         <WhatWeDoBlock block={{}} />
         <ImpactBlock block={{}} />
+        <PartnerMarqueeBlock block={{}} />
         <TestimonialsBlock block={{}} />
         <ProgrammesBlock block={{}} />
         <CloseBlock block={{}} />

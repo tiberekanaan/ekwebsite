@@ -145,6 +145,63 @@ async function seedDefaultPillars(strapi: Core.Strapi) {
   }
 }
 
+// Funders and government bodies for the landing-page marquee. Idempotent:
+// creates missing records, fills in role/consent/display_order on existing
+// ones only while role is unset, and never overwrites admin edits after that.
+const MARQUEE_PARTNERS: {
+  name: string;
+  role: 'funder' | 'government';
+  display_order: number;
+}[] = [
+  { name: 'U.S. Embassy Suva', role: 'funder', display_order: 1 },
+  { name: 'New Zealand High Commission', role: 'funder', display_order: 2 },
+  { name: 'Caritas', role: 'funder', display_order: 3 },
+  {
+    name: 'Ministry for Women, Youth, Sports & Social Affairs',
+    role: 'government',
+    display_order: 4,
+  },
+  {
+    name: 'Ministry of Environment, Lands & Agricultural Development',
+    role: 'government',
+    display_order: 5,
+  },
+  { name: 'Kiribati National Library', role: 'government', display_order: 6 },
+];
+
+async function seedMarqueePartners(strapi: Core.Strapi) {
+  for (const partner of MARQUEE_PARTNERS) {
+    const existing = await strapi.documents('api::partner.partner').findFirst({
+      filters: { name: { $eqi: partner.name } },
+      status: 'draft',
+    });
+
+    if (!existing) {
+      const created = await strapi.documents('api::partner.partner').create({
+        data: { ...partner, consent_to_name: true },
+      });
+      await strapi
+        .documents('api::partner.partner')
+        .publish({ documentId: created.documentId });
+      continue;
+    }
+
+    if (!existing.role) {
+      await strapi.documents('api::partner.partner').update({
+        documentId: existing.documentId,
+        data: {
+          role: partner.role,
+          consent_to_name: true,
+          display_order: partner.display_order,
+        },
+      });
+      await strapi
+        .documents('api::partner.partner')
+        .publish({ documentId: existing.documentId });
+    }
+  }
+}
+
 async function seedTags(strapi: Core.Strapi) {
   for (const tag of TAG_VOCABULARY) {
     const existing = await strapi.documents('api::tag.tag').findFirst({
@@ -191,6 +248,7 @@ export default {
     await ensureKiribatiLocale(strapi);
     await seedDefaultPillars(strapi);
     await seedPartnersPage(strapi);
+    await seedMarqueePartners(strapi);
     await seedTags(strapi);
     await seedGrantArticles(strapi);
   },

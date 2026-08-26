@@ -1,0 +1,143 @@
+---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
+import { getCollection } from 'astro:content';
+import { STRAPI_URL } from 'astro:env/server';
+
+export interface PartnerMarqueeBlockData {
+  eyebrow?: string | null;
+  intro?: string | null;
+}
+
+interface Props {
+  block: PartnerMarqueeBlockData;
+}
+
+const { block } = Astro.props;
+
+const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
+
+// Funders and government bodies only, and only where the organisation has
+// agreed to be named — a logo here reads as endorsement, so civil society,
+// schools and community groups are deliberately excluded.
+const partnerEntries = await getCollection('partners');
+const plates = partnerEntries
+  .filter(
+    (p) =>
+      (p.data.role === 'funder' || p.data.role === 'government') &&
+      p.data.consent_to_name === true,
+  )
+  .map((p) => ({
+    name: p.data.name,
+    logo: p.data.logo ?? null,
+    order: p.data.display_order,
+  }))
+  .sort((a, b) => {
+    if (a.order != null && b.order != null) return a.order - b.order;
+    if (a.order != null) return -1;
+    if (b.order != null) return 1;
+    return a.name.localeCompare(b.name);
+  });
+
+// Below six plates the loop reads as broken rather than continuous — render
+// a static centred row instead.
+const MARQUEE_MIN = 6;
+const useMarquee = plates.length >= MARQUEE_MIN;
+// Track is duplicated so the -50% translate loops seamlessly; the second
+// copy is aria-hidden.
+const trackSets = useMarquee ? [false, true] : [false];
+---
+
+{
+  plates.length > 0 && (
+    <section id="funding-partners" class="border-t border-ek-700/10 bg-white py-20">
+      <div class="mx-auto max-w-6xl px-7">
+        <div class="mx-auto mb-11 max-w-[640px] text-center" data-reveal>
+          <Eyebrow as="span" class="mb-4">
+            {block.eyebrow ?? 'Our funding and government partners'}
+          </Eyebrow>
+          <p class="text-lg text-ek-muted">
+            {block.intro ??
+              'The ministries, embassies and funds that back our work and shape it alongside national priorities.'}
+          </p>
+        </div>
+
+        <div
+          data-reveal
+          class:list={[
+            'partner-marquee-viewport relative overflow-hidden',
+            useMarquee &&
+              '[mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]',
+          ]}
+        >
+          <div
+            class:list={[
+              'partner-marquee-track flex items-center gap-4',
+              useMarquee ? 'w-max animate-funder-marquee' : 'w-full flex-wrap justify-center',
+            ]}
+          >
+            {trackSets.map((isDuplicate) => (
+              <div
+                class="flex shrink-0 items-center gap-4 pr-4"
+                aria-hidden={isDuplicate || undefined}
+              >
+                {plates.map((p) => {
+                  const logo = p.logo?.url ? absoluteUrl(p.logo.url) : null;
+                  return (
+                    <div class="flex h-16 w-52 shrink-0 items-center justify-center rounded-md border border-ek-700/10 bg-ek-mist/60 px-5">
+                      {logo ? (
+                        <img
+                          src={logo}
+                          alt={p.logo?.alternativeText ?? p.name}
+                          class="max-h-11 max-w-full object-contain"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <span class="text-center font-condensed text-[0.82rem] font-bold uppercase leading-tight tracking-[0.06em] text-ek-600">
+                          {p.name}
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  @keyframes funder-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-funder-marquee {
+    animation: funder-marquee 46s linear infinite;
+  }
+
+  .animate-funder-marquee:hover {
+    animation-play-state: paused;
+  }
+
+  /* With motion off the marquee becomes a plain horizontal scroll region:
+     no animation, no edge mask, duplicate track copy hidden. */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-funder-marquee {
+      animation: none;
+    }
+    .partner-marquee-viewport {
+      overflow-x: auto;
+      mask-image: none !important;
+    }
+    .partner-marquee-track > [aria-hidden='true'] {
+      display: none;
+    }
+  }
+</style>
