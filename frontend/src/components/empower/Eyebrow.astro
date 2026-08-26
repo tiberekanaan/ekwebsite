@@ -1,0 +1,74 @@
+---
+/**
+ * Section eyebrow: the three waves of the Kiribati flag, hand-drawn as a small
+ * stroke glyph that draws itself in when the section reveals, followed by the
+ * label in condensed caps. Replaces the old numbered "0N ·" journey markers.
+ *
+ * The draw animation triggers off Motion.astro's `.is-visible` class — put
+ * `data-reveal` on this element (or any ancestor) to arm it. Without JS or with
+ * reduced motion the waves simply sit fully drawn.
+ */
+interface Props {
+  /** 'light' = olive on white/mist sections, 'dark' = lime on ek-900 panels. */
+  tone?: 'light' | 'dark';
+  /** Element to render as; matches whatever the call site used before. */
+  as?: 'p' | 'span' | 'h2';
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { tone = 'light', as: Tag = 'p', class: className = '', ...rest } = Astro.props;
+
+const toneClass = tone === 'dark' ? 'text-ek-lime-bright' : 'text-ek-olive';
+---
+
+<Tag
+  class:list={[
+    'ek-eyebrow inline-flex items-center gap-3 font-condensed text-[0.75rem] font-semibold uppercase tracking-[0.28em]',
+    toneClass,
+    className,
+  ]}
+  {...rest}
+>
+  <svg
+    class="ek-wave h-[13px] w-[27px] shrink-0"
+    viewBox="0 0 27 13"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.6"
+    stroke-linecap="round"
+    aria-hidden="true"
+  >
+    <path d="M1 2.5c1.75-2 4.25-2 6 0s4.25 2 6 0 4.25-2 6 0 4.25 2 6 0"></path>
+    <path d="M1 6.5c1.75-2 4.25-2 6 0s4.25 2 6 0 4.25-2 6 0" opacity="0.65"></path>
+    <path d="M1 10.5c1.75-2 4.25-2 6 0s4.25 2 6 0" opacity="0.4"></path>
+  </svg>
+  <slot />
+</Tag>
+
+<style is:global>
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal].is-visible .ek-wave path {
+      stroke-dasharray: 40;
+      animation: ek-wave-draw 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    [data-reveal].is-visible .ek-wave path:nth-child(1) {
+      animation-delay: 120ms;
+    }
+    [data-reveal].is-visible .ek-wave path:nth-child(2) {
+      animation-delay: 280ms;
+    }
+    [data-reveal].is-visible .ek-wave path:nth-child(3) {
+      animation-delay: 440ms;
+    }
+  }
+
+  @keyframes ek-wave-draw {
+    from {
+      stroke-dashoffset: 40;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+</style>

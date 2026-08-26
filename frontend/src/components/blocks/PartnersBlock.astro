@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
 import { getCollection } from 'astro:content';
 import { STRAPI_URL } from 'astro:env/server';
 
@@ -90,9 +91,7 @@ const categories: PartnerCategory[] =
 <section id="partners" class="border-t border-ek-700/10 bg-white py-24">
   <div class="mx-auto max-w-6xl px-7">
     <div class="mb-14 max-w-[640px]" data-reveal>
-      <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
-        05 · {block.eyebrow ?? 'Stronger together'}
-      </span>
+      <Eyebrow as="span" class="mb-4">{block.eyebrow ?? 'Stronger together'}</Eyebrow>
       <h2 class="mb-4 font-serif text-4xl font-bold leading-[1.08] sm:text-5xl bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text text-transparent">
         {block.title ?? 'Who we work with'}
       </h2>

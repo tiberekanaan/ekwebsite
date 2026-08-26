@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
 import { getCollection } from 'astro:content';
 
 interface PillarRef {
@@ -79,9 +80,7 @@ const accents = [
 <section id="our-work" class="bg-ek-mist py-24">
   <div class="mx-auto max-w-6xl px-7">
     <div class="mb-14 max-w-[640px]" data-reveal>
-      <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
-        {block.eyebrow ?? 'Our work'}
-      </span>
+      <Eyebrow as="span" class="mb-4">{block.eyebrow ?? 'Our work'}</Eyebrow>
       <h2 class="mb-[18px] font-serif text-4xl font-bold leading-[1.08] sm:text-5xl bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text text-transparent">
         {block.title ?? 'Four pillars, one island ecosystem'}
       </h2>

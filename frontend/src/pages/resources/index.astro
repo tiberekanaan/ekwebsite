@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
 import Layout from '@/layouts/Layout.astro';
 import PageHeader from '@/components/PageHeader.astro';
 import { getCollection } from 'astro:content';
@@ -30,12 +31,7 @@ const articles = (await getCollection('articles')).sort((a, b) => {
     {
       articles.length > 0 && (
         <section class="mb-14">
-          <h2
-            class="mb-6 font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-600"
-            data-reveal
-          >
-            Guides &amp; articles
-          </h2>
+          <Eyebrow as="h2" class="mb-6" data-reveal>Guides &amp; articles</Eyebrow>
           <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {articles.map((article, index) => (
               <li>
@@ -73,12 +69,7 @@ const articles = (await getCollection('articles')).sort((a, b) => {
     }
     {
       articles.length > 0 && resources.length > 0 && (
-        <h2
-          class="mb-6 font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-600"
-          data-reveal
-        >
-          Videos, downloads &amp; links
-        </h2>
+        <Eyebrow as="h2" class="mb-6" data-reveal>Videos, downloads &amp; links</Eyebrow>
       )
     }
     {

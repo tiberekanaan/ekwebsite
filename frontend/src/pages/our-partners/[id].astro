@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
 import Layout from '@/layouts/Layout.astro';
 import PageHeader from '@/components/PageHeader.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
@@ -65,9 +66,7 @@ const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_U
   </PageHeader>
   <div class="mx-auto max-w-7xl px-8 py-12">
     <section class="max-w-3xl">
-      <p class="mb-4 font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
-        Projects
-      </p>
+      <Eyebrow class="mb-4">Projects</Eyebrow>
       <h2 class="mb-6 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-3xl font-bold tracking-tight text-transparent">
         Associated Projects
       </h2>

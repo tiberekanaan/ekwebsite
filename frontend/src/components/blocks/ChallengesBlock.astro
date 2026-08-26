@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
 import { Image } from 'astro:assets';
 import photoClimate from '@/assets/images/community/challenge-climate.jpg';
 import photoWork from '@/assets/images/community/challenge-work.jpg';
@@ -107,9 +108,7 @@ const challenges: Challenge[] =
 <section id="challenges" class="bg-ek-mist py-24">
   <div class="mx-auto max-w-6xl px-7">
     <div class="mb-14 max-w-[640px]" data-reveal>
-      <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
-        01 · {block.eyebrow ?? 'The changing soil'}
-      </span>
+      <Eyebrow as="span" class="mb-4">{block.eyebrow ?? 'The changing soil'}</Eyebrow>
       <h2 class="mb-4 font-serif text-4xl font-bold leading-[1.08] sm:text-5xl bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text text-transparent">
         {block.title ?? 'The threats to our roots'}
       </h2>

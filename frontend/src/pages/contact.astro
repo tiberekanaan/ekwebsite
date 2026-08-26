@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
 export const prerender = false;
 
 import Layout from '@/layouts/Layout.astro';
@@ -34,11 +35,7 @@ const inputClasses =
   <section class="bg-ek-mist py-24">
     <div class="mx-auto grid w-full max-w-6xl gap-x-14 gap-y-12 px-7 lg:grid-cols-5">
       <aside class="lg:col-span-2" data-reveal>
-        <span
-          class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive"
-        >
-          Where to find us
-        </span>
+        <Eyebrow as="span" class="mb-4">Where to find us</Eyebrow>
         <h2
           class="mb-4 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-3xl font-bold leading-[1.1] text-transparent sm:text-4xl"
         >

@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
 import Layout from '@/layouts/Layout.astro';
 ---
 
@@ -33,13 +34,7 @@ import Layout from '@/layouts/Layout.astro';
         <span class="error-digit inline-block text-white/10" style="animation-delay: 0.3s;">4</span>
       </div>
 
-      <p
-        data-reveal
-        data-reveal-delay="80"
-        class="mt-6 font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-lime-bright"
-      >
-        Error 404 · Lost at sea
-      </p>
+      <Eyebrow class="mt-6" tone="dark" data-reveal data-reveal-delay="80">Error 404 · Lost at sea</Eyebrow>
       <h1
         data-reveal
         data-reveal-delay="140"

@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
 interface TestimonialRef {
   quote: string;
   author: string;
@@ -35,9 +36,7 @@ const note =
 <section id="voices" class="bg-ek-mist py-24">
   <div class="mx-auto max-w-6xl px-7">
     <div class="mb-12 max-w-[640px]" data-reveal>
-      <span class="inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
-        03 · {block.eyebrow ?? 'In their words'}
-      </span>
+      <Eyebrow as="span">{block.eyebrow ?? 'In their words'}</Eyebrow>
     </div>
 
     <figure class="max-w-[760px] border-l-4 border-ek-lime pl-8" data-reveal data-reveal-delay="80">

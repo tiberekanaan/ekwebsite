@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
 import { Image } from 'astro:assets';
 // Real photo, pre-cropped 4:5 and graded to the ek palette — regenerate via
 // sharp (1200x1500, teal soft-light overlay) if the source photo changes.
@@ -83,12 +84,7 @@ const secondaryLink = block.secondaryButtonLink ?? '/contact';
 
   <div class="relative z-[2] mx-auto grid w-full max-w-6xl flex-1 items-center gap-10 px-7 pt-28 pb-8 lg:grid-cols-[1.1fr_0.8fr] lg:pt-32">
     <div>
-      <p
-        data-reveal
-        class="mb-5 font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-lime-bright"
-      >
-        {eyebrow}
-      </p>
+      <Eyebrow class="mb-5" tone="dark" data-reveal>{eyebrow}</Eyebrow>
 
       <h1
         data-reveal

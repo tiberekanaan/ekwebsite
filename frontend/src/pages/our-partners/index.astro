@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
 import Layout from '@/layouts/Layout.astro';
 import PageHeader from '@/components/PageHeader.astro';
 import { Image } from 'astro:assets';
@@ -73,11 +74,7 @@ const arrowRight = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
       class="mx-auto grid w-full max-w-6xl items-start gap-x-14 gap-y-12 px-7 lg:grid-cols-[1.1fr_0.9fr]"
     >
       <div data-reveal>
-        <span
-          class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive"
-        >
-          01 · Why partnership
-        </span>
+        <Eyebrow as="span" class="mb-4">Why partnership</Eyebrow>
         <h2
           class="mb-4 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl"
         >
@@ -134,11 +131,7 @@ const arrowRight = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   <section class="bg-ek-mist py-24">
     <div class="mx-auto w-full max-w-6xl px-7">
       <div class="mb-14 max-w-[640px]" data-reveal>
-        <span
-          class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive"
-        >
-          02 · Who we work with
-        </span>
+        <Eyebrow as="span" class="mb-4">Who we work with</Eyebrow>
         <h2
           class="mb-4 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl"
         >
@@ -202,11 +195,7 @@ const arrowRight = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   <section class="bg-gradient-to-b from-ek-900 to-ek-800 py-24 text-white">
     <div class="mx-auto w-full max-w-6xl px-7">
       <div class="max-w-[640px]" data-reveal>
-        <span
-          class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-lime-bright"
-        >
-          03 · Work with us
-        </span>
+        <Eyebrow as="span" class="mb-4" tone="dark">Work with us</Eyebrow>
         <h2
           class="mb-4 bg-gradient-to-r from-white to-ek-lime-bright bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl"
         >

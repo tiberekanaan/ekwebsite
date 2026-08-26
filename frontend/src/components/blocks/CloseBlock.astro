@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
 export interface CloseBlockData {
   eyebrow?: string | null;
   title?: string | null;
@@ -20,9 +21,7 @@ const buttonLink = block.buttonLink ?? '/contact';
 <section id="work-with-us" class="border-t border-ek-700/10 bg-white py-24">
   <div class="mx-auto max-w-6xl px-7">
     <div class="max-w-[720px]" data-reveal>
-      <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
-        05 · {block.eyebrow ?? 'Work with us'}
-      </span>
+      <Eyebrow as="span" class="mb-4">{block.eyebrow ?? 'Work with us'}</Eyebrow>
       <h2 class="mb-4 font-serif text-4xl font-bold leading-[1.08] sm:text-5xl bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text text-transparent">
         {block.title ?? 'Bwabwai is not grown in a day'}
       </h2>

@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
 import Layout from '@/layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import { marked } from 'marked';
@@ -118,12 +119,7 @@ const arrowRight = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
     </svg>
 
     <div class="relative z-[2] mx-auto w-full max-w-6xl px-7 pt-44 pb-20 lg:pt-52 lg:pb-24">
-      <p
-        data-reveal
-        class="mb-5 font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-lime-bright"
-      >
-        Who we are · Empower Kiribati
-      </p>
+      <Eyebrow class="mb-5" tone="dark" data-reveal>Who we are · Empower Kiribati</Eyebrow>
       <h1
         data-reveal
         data-reveal-delay="80"
@@ -158,9 +154,7 @@ const arrowRight = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
       <section class="bg-white py-24">
         <div class="mx-auto grid w-full max-w-6xl items-start gap-x-14 gap-y-12 px-7 lg:grid-cols-[1.1fr_0.9fr]">
           <div data-reveal>
-            <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
-              01 · Our story
-            </span>
+            <Eyebrow as="span" class="mb-4">Our story</Eyebrow>
             <h2 class="mb-4 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl">
               From Digital Kiribati to Empower Kiribati
             </h2>
@@ -202,9 +196,7 @@ const arrowRight = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
       <section class="bg-ek-mist py-24">
         <div class="mx-auto w-full max-w-6xl px-7">
           <div class="mb-14 max-w-[640px]" data-reveal>
-            <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
-              02 · Why we exist
-            </span>
+            <Eyebrow as="span" class="mb-4">Why we exist</Eyebrow>
             <h2 class="mb-4 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl">
               The seed we plant, the horizon we work toward
             </h2>
@@ -282,9 +274,7 @@ const arrowRight = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
       <section class="bg-white py-24">
         <div class="mx-auto w-full max-w-6xl px-7">
           <div class="mb-14 max-w-[640px]" data-reveal>
-            <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
-              03 · Our approach
-            </span>
+            <Eyebrow as="span" class="mb-4">Our approach</Eyebrow>
             <h2 class="mb-4 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl">
               How we're different
             </h2>
@@ -332,11 +322,7 @@ const arrowRight = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   <section class="bg-gradient-to-b from-ek-900 to-ek-800 py-24 text-white">
     <div class="mx-auto w-full max-w-6xl px-7">
       <div class="max-w-[640px]" data-reveal>
-        <span
-          class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-lime-bright"
-        >
-          04 · Get involved
-        </span>
+        <Eyebrow as="span" class="mb-4" tone="dark">Get involved</Eyebrow>
         <h2
           class="mb-4 bg-gradient-to-r from-white to-ek-lime-bright bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl"
         >

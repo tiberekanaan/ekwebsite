@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
 import Layout from '@/layouts/Layout.astro';
 import PageHeader from '@/components/PageHeader.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
@@ -104,9 +105,7 @@ const cardTag = (entry: CollectionEntry<'articles'>) =>
     {
       related.length > 0 && (
         <section class="mt-16 max-w-3xl border-t-2 border-ek-500 pt-8">
-          <h2 class="mb-6 font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-600">
-            Related articles
-          </h2>
+          <Eyebrow as="h2" class="mb-6">Related articles</Eyebrow>
           <div class="grid gap-4 sm:grid-cols-2">
             {related.map((entry) => (
               <a

@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
 interface Props {
   /** Main page heading. */
   title: string;
@@ -40,12 +41,7 @@ const { title, description, eyebrow, backHref, backLabel } = Astro.props;
     }
     {
       eyebrow && (
-        <p
-          class="mb-4 font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-lime-bright"
-          data-reveal
-        >
-          {eyebrow}
-        </p>
+        <Eyebrow class="mb-4" tone="dark" data-reveal>{eyebrow}</Eyebrow>
       )
     }
     <h1

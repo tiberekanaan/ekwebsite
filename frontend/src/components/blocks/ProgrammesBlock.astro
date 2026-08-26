@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
 interface ProgrammeItem {
   title: string;
   description?: string | null;
@@ -59,9 +60,7 @@ const buttonLink = block.buttonLink ?? '/our-programs';
 <section id="our-work" class="bg-ek-paper py-24">
   <div class="mx-auto max-w-6xl px-7">
     <div class="mb-14 max-w-[640px]" data-reveal>
-      <span class="mb-4 inline-block font-condensed text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-ek-olive">
-        04 · {block.eyebrow ?? 'Our work'}
-      </span>
+      <Eyebrow as="span" class="mb-4">{block.eyebrow ?? 'Our work'}</Eyebrow>
       <h2 class="mb-4 font-serif text-4xl font-bold leading-[1.08] sm:text-5xl bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text text-transparent">
         {block.title ?? 'What we are running now'}
       </h2>
