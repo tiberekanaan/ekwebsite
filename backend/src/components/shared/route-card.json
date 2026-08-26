@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_shared_route_cards",
+  "info": {
+    "displayName": "Route Card",
+    "icon": "arrowRight",
+    "description": "An audience route card for the Work-with-us section (label + title + body)."
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "body": {
+      "type": "text"
+    }
+  }
+}

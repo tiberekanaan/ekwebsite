@@ -1,6 +1,8 @@
 ---
 import { STRAPI_URL } from 'astro:env/server';
 import Layout from '@/layouts/Layout.astro';
+import { fetchGlobal } from '@/lib/global';
+import type { ContactDetails } from '@/types/global';
 
 // Block components (dynamic-zone driven)
 import HeroBlock, { type HeroBlockData } from '@/components/blocks/HeroBlock.astro';
@@ -50,6 +52,16 @@ const POPULATE = [
   'populate[blocks][on][blocks.partners][populate][categories]=true',
 ].join('&');
 
+// Contact details for the Work-with-us close come from the Global single
+// type (same source as the footer) so one admin edit updates both.
+const global = await fetchGlobal();
+const contact: ContactDetails = {
+  partnershipEmail: global?.partnershipEmail,
+  phone: global?.phone,
+  officeLine: global?.officeLine,
+  utcNote: global?.utcNote,
+};
+
 let blocks: Block[] = [];
 try {
   // Public read is granted on the homepage endpoint (no token — a scoped
@@ -96,7 +108,7 @@ if (programmesIdx > -1 && testimonialsIdx > -1 && testimonialsIdx < programmesId
           case 'blocks.programmes':
             return <ProgrammesBlock block={block} />;
           case 'blocks.close':
-            return <CloseBlock block={block} />;
+            return <CloseBlock block={block} contact={contact} />;
           case 'blocks.challenges':
             return <ChallengesBlock block={block} />;
           case 'blocks.threats':
@@ -126,7 +138,7 @@ if (programmesIdx > -1 && testimonialsIdx > -1 && testimonialsIdx < programmesId
         <PartnerMarqueeBlock block={{}} />
         <ProgrammesBlock block={{}} />
         <TestimonialsBlock block={{}} />
-        <CloseBlock block={{}} />
+        <CloseBlock block={{}} contact={contact} />
       </Fragment>
     )
   }

@@ -10,11 +10,17 @@ interface Props {
   floating?: boolean;
   /** Dynamic logo from Strapi Global settings; falls back to the bundled asset. */
   logo?: { url: string; alternativeText?: string | null };
+  /** Dedicated white logo from Strapi (floating mode's dark state); falls back to the bundled asset. */
+  logoWhite?: { url: string; alternativeText?: string | null };
   /** Dynamic navbar links from Strapi Global settings; falls back to the hard-coded nav. */
   links?: NavLink[];
+  /** Header CTA pill from Strapi Global settings; falls back to Contact → /contact. */
+  cta?: NavLink;
 }
 
-const { floating = false, logo, links } = Astro.props;
+const { floating = false, logo, logoWhite: cmsLogoWhite, links, cta } = Astro.props;
+
+const headerCta = cta ?? { label: 'Contact', url: '/contact' };
 
 interface NavItem {
   label: string;
@@ -63,28 +69,47 @@ const isActive = (href: string) => {
     >
       {
         floating ? (
-          // Over the hero the bar is transparent on a dark scene, so the
-          // bundled white logo wins (a full-colour CMS upload would vanish);
-          // the colour version crossfades in once the bar scrolls to white.
+          // Over the hero the bar is transparent on a dark scene, so a white
+          // logo wins (the CMS logoWhite field, else the bundled asset — a
+          // full-colour upload would vanish); the colour version crossfades
+          // in once the bar scrolls to white.
           <span class="relative inline-flex">
-            <Image
-              src={logoWhite}
-              alt="Empower Kiribati"
-              height={56}
-              widths={[144, 216, 288]}
-              sizes="(min-width: 640px) 200px, 170px"
-              class="h-12 w-auto drop-shadow-[0_2px_12px_rgba(2,20,25,0.5)] transition-opacity duration-300 group-data-[scrolled]:opacity-0 sm:h-14"
-              loading="eager"
-            />
-            <Image
-              src={logoFullColor}
-              alt=""
-              height={56}
-              widths={[144, 216, 288]}
-              sizes="(min-width: 640px) 200px, 170px"
-              class="absolute left-0 top-0 h-12 w-auto opacity-0 transition-opacity duration-300 group-data-[scrolled]:opacity-100 sm:h-14"
-              loading="eager"
-            />
+            {cmsLogoWhite ? (
+              <img
+                src={cmsLogoWhite.url}
+                alt={cmsLogoWhite.alternativeText || 'Empower Kiribati'}
+                class="h-12 w-auto drop-shadow-[0_2px_12px_rgba(2,20,25,0.5)] transition-opacity duration-300 group-data-[scrolled]:opacity-0 sm:h-14"
+                loading="eager"
+              />
+            ) : (
+              <Image
+                src={logoWhite}
+                alt="Empower Kiribati"
+                height={56}
+                widths={[144, 216, 288]}
+                sizes="(min-width: 640px) 200px, 170px"
+                class="h-12 w-auto drop-shadow-[0_2px_12px_rgba(2,20,25,0.5)] transition-opacity duration-300 group-data-[scrolled]:opacity-0 sm:h-14"
+                loading="eager"
+              />
+            )}
+            {logo ? (
+              <img
+                src={logo.url}
+                alt=""
+                class="absolute left-0 top-0 h-12 w-auto opacity-0 transition-opacity duration-300 group-data-[scrolled]:opacity-100 sm:h-14"
+                loading="eager"
+              />
+            ) : (
+              <Image
+                src={logoFullColor}
+                alt=""
+                height={56}
+                widths={[144, 216, 288]}
+                sizes="(min-width: 640px) 200px, 170px"
+                class="absolute left-0 top-0 h-12 w-auto opacity-0 transition-opacity duration-300 group-data-[scrolled]:opacity-100 sm:h-14"
+                loading="eager"
+              />
+            )}
           </span>
         ) : logo ? (
           <img
@@ -164,7 +189,7 @@ const isActive = (href: string) => {
       </button>
 
       <a
-        href="/contact"
+        href={headerCta.url}
         class:list={[
           'hidden rounded-full text-sm font-semibold text-ek-900 shadow-sm transition-all duration-200 hover:-translate-y-0.5 sm:inline-flex',
           floating
@@ -172,7 +197,7 @@ const isActive = (href: string) => {
             : 'bg-lime-300 px-5 py-2.5 text-slate-900 hover:bg-lime-400',
         ]}
       >
-        Contact
+        {headerCta.label}
       </a>
 
       <button
@@ -229,7 +254,7 @@ const isActive = (href: string) => {
         ))
       }
       <a
-        href="/contact"
+        href={headerCta.url}
         class:list={[
           'mt-2 inline-flex w-full items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold sm:hidden',
           floating
@@ -237,7 +262,7 @@ const isActive = (href: string) => {
             : 'bg-lime-300 text-slate-900 hover:bg-lime-400',
         ]}
       >
-        Contact
+        {headerCta.label}
       </a>
     </nav>
   </div>

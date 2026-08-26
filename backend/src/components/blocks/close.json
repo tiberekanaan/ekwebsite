@@ -21,6 +21,17 @@
     },
     "buttonLink": {
       "type": "string"
+    },
+    "routes": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.route-card"
+    },
+    "contactHeading": {
+      "type": "string"
+    },
+    "contactText": {
+      "type": "text"
     }
   }
 }

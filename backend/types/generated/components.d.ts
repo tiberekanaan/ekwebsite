@@ -25,8 +25,11 @@ export interface BlocksClose extends Struct.ComponentSchema {
   attributes: {
     buttonLink: Schema.Attribute.String;
     buttonText: Schema.Attribute.String;
+    contactHeading: Schema.Attribute.String;
+    contactText: Schema.Attribute.Text;
     description: Schema.Attribute.Text;
     eyebrow: Schema.Attribute.String;
+    routes: Schema.Attribute.Component<'shared.route-card', true>;
     title: Schema.Attribute.String;
   };
 }
@@ -306,6 +309,19 @@ export interface SharedLink extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedLinkColumn extends Struct.ComponentSchema {
+  collectionName: 'components_shared_link_columns';
+  info: {
+    description: 'A footer navigation column: heading + links.';
+    displayName: 'Link Column';
+    icon: 'bulletList';
+  };
+  attributes: {
+    heading: Schema.Attribute.String & Schema.Attribute.Required;
+    links: Schema.Attribute.Component<'shared.link', true>;
+  };
+}
+
 export interface SharedOutcomeItem extends Struct.ComponentSchema {
   collectionName: 'components_shared_outcome_items';
   info: {
@@ -357,6 +373,20 @@ export interface SharedProgrammeItem extends Struct.ComponentSchema {
     programmeStatus: Schema.Attribute.Enumeration<['running', 'completed']> &
       Schema.Attribute.DefaultTo<'running'>;
     statusYear: Schema.Attribute.String;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface SharedRouteCard extends Struct.ComponentSchema {
+  collectionName: 'components_shared_route_cards';
+  info: {
+    description: 'An audience route card for the Work-with-us section (label + title + body).';
+    displayName: 'Route Card';
+    icon: 'arrowRight';
+  };
+  attributes: {
+    body: Schema.Attribute.Text;
+    label: Schema.Attribute.String & Schema.Attribute.Required;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
@@ -414,10 +444,12 @@ declare module '@strapi/strapi' {
       'shared.future-stat': SharedFutureStat;
       'shared.impact-metric': SharedImpactMetric;
       'shared.link': SharedLink;
+      'shared.link-column': SharedLinkColumn;
       'shared.outcome-item': SharedOutcomeItem;
       'shared.partner-category': SharedPartnerCategory;
       'shared.partner-logo': SharedPartnerLogo;
       'shared.programme-item': SharedProgrammeItem;
+      'shared.route-card': SharedRouteCard;
       'shared.threat-item': SharedThreatItem;
       'shared.value-item': SharedValueItem;
     }

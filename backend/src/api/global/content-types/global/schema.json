@@ -5,7 +5,7 @@
     "singularName": "global",
     "pluralName": "globals",
     "displayName": "Global",
-    "description": "Site-wide settings: site name, favicon, logo, and navbar links."
+    "description": "Site-wide settings: site name, logos, navigation, contact details and footer content."
   },
   "options": {
     "draftAndPublish": true
@@ -27,10 +27,61 @@
       "required": false,
       "allowedTypes": ["images"]
     },
+    "logoWhite": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
     "navbarLinks": {
       "type": "component",
       "repeatable": true,
       "component": "shared.link"
+    },
+    "headerCta": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.link"
+    },
+    "generalEmail": {
+      "type": "email"
+    },
+    "partnershipEmail": {
+      "type": "email"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "footerAddress": {
+      "type": "text"
+    },
+    "officeLine": {
+      "type": "string"
+    },
+    "utcNote": {
+      "type": "text"
+    },
+    "footerBlurb": {
+      "type": "text"
+    },
+    "footerContactHeading": {
+      "type": "string"
+    },
+    "footerColumns": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.link-column"
+    },
+    "socialLinks": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.link"
+    },
+    "legalLine": {
+      "type": "text"
+    },
+    "footerTagline": {
+      "type": "string"
     }
   }
 }

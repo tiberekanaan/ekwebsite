@@ -1,28 +1,40 @@
 ---
 import Eyebrow from '@/components/empower/Eyebrow.astro';
+import { telHref, type ContactDetails } from '@/types/global';
 
 /**
- * "Work with us" close: dark-teal CTA section above the footer. Copy is locked
- * verbatim by the donor brief (THE-CTA-SECTION.md) — the stored CMS
- * eyebrow/title/description/button fields are no longer rendered (the heading
- * carries an <em> a plain CMS string can't express). The interface stays so
- * the blocks.close dynamic-zone entry keeps triggering this component.
+ * "Work with us" close: dark-teal CTA section above the footer. The donor
+ * brief's copy (THE-CTA-SECTION.md) lives here as the fallback for every
+ * field; the CMS blocks.close fields override it when set. `*text*` in the
+ * title renders as the lime <em> (a plain CMS string can't carry markup).
+ * Contact details come from the Global single type via the `contact` prop.
  */
+export interface RouteCard {
+  label?: string | null;
+  title?: string | null;
+  body?: string | null;
+}
+
 export interface CloseBlockData {
   eyebrow?: string | null;
   title?: string | null;
   description?: string | null;
   buttonText?: string | null;
   buttonLink?: string | null;
+  routes?: RouteCard[] | null;
+  contactHeading?: string | null;
+  contactText?: string | null;
 }
 
-// Accepted (the dynamic zone still passes the stored block) but unused.
 interface Props {
   block: CloseBlockData;
+  contact?: ContactDetails | null;
 }
 
+const { block, contact } = Astro.props;
+
 // Funders first — keep this order.
-const ROUTES = [
+const DEFAULT_ROUTES = [
   {
     label: 'Embassies, ministries and funds',
     heading: 'Fund a programme',
@@ -40,7 +52,35 @@ const ROUTES = [
   },
 ];
 
-const EMAIL = 'partnership@empower.org.ki';
+const routes =
+  block.routes && block.routes.length > 0
+    ? block.routes.map((r) => ({
+        label: r.label ?? '',
+        heading: r.title ?? '',
+        body: r.body ?? '',
+      }))
+    : DEFAULT_ROUTES;
+
+const eyebrow = block.eyebrow || 'Work with us';
+// Odd-indexed segments of the split are the *emphasised* runs.
+const titleParts = (block.title || 'Back work that is *already happening*').split(/\*([^*]+)\*/g);
+const description =
+  block.description ||
+  'We are on the ground in South Tarawa, delivering with partners who checked us before they funded us. If you are looking for a partner in Kiribati who can plan, deliver and report properly, start here.';
+const contactHeading = block.contactHeading || 'Talk to us directly';
+const contactText =
+  block.contactText ||
+  'Write to us and we will respond promptly. You will get a real answer, not a form response, and we will tell you plainly if we are not the right partner for it.';
+
+const email = contact?.partnershipEmail || 'partnership@empower.org.ki';
+const phone = contact?.phone || '+686 7300 5227';
+const office = contact?.officeLine || 'Bikenibeu, South Tarawa, Kiribati';
+const utcNote =
+  contact?.utcNote ||
+  'Kiribati is UTC+12, ahead of most of the world. Your message will already be waiting for us when our day starts.';
+
+const buttonText = block.buttonText || 'Start a conversation';
+const buttonLink = block.buttonLink || `mailto:${email}`;
 ---
 
 <section
@@ -49,23 +89,23 @@ const EMAIL = 'partnership@empower.org.ki';
 >
   <div class="mx-auto max-w-6xl px-7">
     <div class="max-w-[680px]" data-reveal>
-      <Eyebrow as="span" class="mb-4" tone="dark">Work with us</Eyebrow>
+      <Eyebrow as="span" class="mb-4" tone="dark">{eyebrow}</Eyebrow>
       <h2 class="mb-4 font-serif text-4xl font-bold leading-[1.08] text-white sm:text-5xl">
-        Back work that is <em class="not-italic text-ek-lime-bright">already happening</em>
+        {
+          titleParts.map((part, i) =>
+            i % 2 === 1 ? <em class="not-italic text-ek-lime-bright">{part}</em> : part,
+          )
+        }
       </h2>
       <span
         class="mb-5 block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500"
         aria-hidden="true"></span>
-      <p class="text-lg text-[#cfe0db]">
-        We are on the ground in South Tarawa, delivering with partners who checked us before they
-        funded us. If you are looking for a partner in Kiribati who can plan, deliver and report
-        properly, start here.
-      </p>
+      <p class="text-lg text-[#cfe0db]">{description}</p>
     </div>
 
     <div class="mt-14 grid gap-5 md:grid-cols-3">
       {
-        ROUTES.map((route, i) => (
+        routes.map((route, i) => (
           <article
             class="group relative overflow-hidden rounded-2xl bg-white/[0.05] p-7 ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.08] hover:ring-ek-lime/30 hover:shadow-[0_18px_40px_rgba(4,24,27,0.45)]"
             data-reveal
@@ -94,17 +134,14 @@ const EMAIL = 'partnership@empower.org.ki';
         aria-hidden="true"></span>
       <div>
         <h3 class="font-serif text-2xl font-bold text-white sm:text-[1.7rem]">
-          Talk to us directly
+          {contactHeading}
         </h3>
-        <p class="mt-3 max-w-[52ch] text-[#cfe0db]">
-          Write to us and we will respond promptly. You will get a real answer, not a form
-          response, and we will tell you plainly if we are not the right partner for it.
-        </p>
+        <p class="mt-3 max-w-[52ch] text-[#cfe0db]">{contactText}</p>
         <a
-          href={`mailto:${EMAIL}`}
+          href={buttonLink}
           class="mt-7 inline-flex items-center gap-2 rounded-full bg-ek-lime px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-ek-900 transition-all duration-200 hover:-translate-y-0.5 hover:bg-ek-lime-bright hover:shadow-[0_8px_22px_rgba(174,203,58,0.3)]"
         >
-          Start a conversation
+          {buttonText}
         </a>
       </div>
 
@@ -118,10 +155,10 @@ const EMAIL = 'partnership@empower.org.ki';
             </dt>
             <dd class="[overflow-wrap:anywhere]">
               <a
-                href={`mailto:${EMAIL}`}
+                href={`mailto:${email}`}
                 class="text-white transition-colors hover:text-ek-lime-bright"
               >
-                {EMAIL}
+                {email}
               </a>
             </dd>
           </div>
@@ -133,10 +170,10 @@ const EMAIL = 'partnership@empower.org.ki';
             </dt>
             <dd>
               <a
-                href="tel:+68673005227"
+                href={telHref(phone)}
                 class="text-white transition-colors hover:text-ek-lime-bright"
               >
-                +686 7300 5227
+                {phone}
               </a>
             </dd>
           </div>
@@ -146,12 +183,11 @@ const EMAIL = 'partnership@empower.org.ki';
             >
               Office
             </dt>
-            <dd class="text-white">Bikenibeu, South Tarawa, Kiribati</dd>
+            <dd class="text-white">{office}</dd>
           </div>
         </dl>
         <p class="mt-7 max-w-[46ch] border-l-2 border-ek-lime pl-4 text-[0.92rem] text-[#8fb0ab]">
-          Kiribati is UTC+12, ahead of most of the world. Your message will already be waiting for
-          us when our day starts.
+          {utcNote}
         </p>
       </div>
     </div>

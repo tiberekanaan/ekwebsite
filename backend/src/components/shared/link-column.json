@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_shared_link_columns",
+  "info": {
+    "displayName": "Link Column",
+    "icon": "bulletList",
+    "description": "A footer navigation column: heading + links."
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "required": true
+    },
+    "links": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.link"
+    }
+  }
+}

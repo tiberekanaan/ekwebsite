@@ -636,7 +636,7 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
 export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
   collectionName: 'globals';
   info: {
-    description: 'Site-wide settings: site name, favicon, logo, and navbar links.';
+    description: 'Site-wide settings: site name, logos, navigation, contact details and footer content.';
     displayName: 'Global';
     pluralName: 'globals';
     singularName: 'global';
@@ -649,6 +649,14 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     favicon: Schema.Attribute.Media<'images'>;
+    footerAddress: Schema.Attribute.Text;
+    footerBlurb: Schema.Attribute.Text;
+    footerColumns: Schema.Attribute.Component<'shared.link-column', true>;
+    footerContactHeading: Schema.Attribute.String;
+    footerTagline: Schema.Attribute.String;
+    generalEmail: Schema.Attribute.Email;
+    headerCta: Schema.Attribute.Component<'shared.link', false>;
+    legalLine: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -656,12 +664,18 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
     > &
       Schema.Attribute.Private;
     logo: Schema.Attribute.Media<'images'>;
+    logoWhite: Schema.Attribute.Media<'images'>;
     navbarLinks: Schema.Attribute.Component<'shared.link', true>;
+    officeLine: Schema.Attribute.String;
+    partnershipEmail: Schema.Attribute.Email;
+    phone: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     siteName: Schema.Attribute.String & Schema.Attribute.Required;
+    socialLinks: Schema.Attribute.Component<'shared.link', true>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    utcNote: Schema.Attribute.Text;
   };
 }
 

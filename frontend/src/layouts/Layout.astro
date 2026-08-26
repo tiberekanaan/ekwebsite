@@ -5,7 +5,7 @@ import Footer from '@/components/empower/Footer.astro';
 import Motion from '@/components/empower/Motion.astro';
 import Search from '@/components/empower/Search.astro';
 import { STRAPI_URL } from 'astro:env/server';
-import type { GlobalSettings } from '@/types/global';
+import { fetchGlobal } from '@/lib/global';
 
 interface Props {
   title?: string;
@@ -37,19 +37,10 @@ const {
   floatingHeader = false,
 } = Astro.props;
 
-// Global settings from Strapi (site name, favicon, logo, navbar links);
-// null when Strapi is down or the single type is unpublished — every
-// consumer falls back to its hard-coded default.
-let global: GlobalSettings | null = null;
-try {
-  const res = await fetch(`${STRAPI_URL}/api/global?populate=*`);
-  if (res.ok) {
-    const { data } = (await res.json()) as { data: GlobalSettings | null };
-    global = data;
-  }
-} catch {
-  global = null;
-}
+// Global settings from Strapi (site name, favicon, logos, nav, contact and
+// footer content); null when Strapi is down or the single type is
+// unpublished — every consumer falls back to its hard-coded default.
+const global = await fetchGlobal();
 
 const absoluteUrl = (path?: string | null) =>
   path ? (path.startsWith('http') ? path : `${STRAPI_URL}${path}`) : undefined;
@@ -61,6 +52,10 @@ const favicon =
 
 const logo = global?.logo?.url
   ? { url: absoluteUrl(global.logo.url)!, alternativeText: global.logo.alternativeText }
+  : undefined;
+
+const logoWhite = global?.logoWhite?.url
+  ? { url: absoluteUrl(global.logoWhite.url)!, alternativeText: global.logoWhite.alternativeText }
   : undefined;
 ---
 
@@ -76,11 +71,18 @@ const logo = global?.logo?.url
   siteName={global?.siteName ?? undefined}
   favicon={favicon}
 >
-  <Header slot="header" floating={floatingHeader} logo={logo} links={global?.navbarLinks ?? undefined} />
+  <Header
+    slot="header"
+    floating={floatingHeader}
+    logo={logo}
+    logoWhite={logoWhite}
+    links={global?.navbarLinks ?? undefined}
+    cta={global?.headerCta ?? undefined}
+  />
 
   <slot />
 
-  <Footer slot="footer" />
+  <Footer slot="footer" global={global} logoWhite={logoWhite} />
   <Search />
   <Motion />
 </BaseLayout>
