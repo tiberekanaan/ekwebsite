@@ -1,6 +1,22 @@
 # Current Feature
 
-**Feature:** Featured projects — landing "Our work" block as image cards
+**Feature:** "Work with us" CTA section — replace the landing close block (per `~/Downloads/THE-CTA-SECTION.md`)
+
+## Status
+- 🚧 In progress on branch `feature/cta-section`.
+
+## What it is
+- `CloseBlock.astro` rewritten wholesale: the white "Bwabwai is not grown in a day" close becomes a dark-teal "Work with us" section — same gradient family as the Track record section (`radial 900×500 at 80% 0% rgba(42,128,137,.5)` over `linear-gradient(200deg, ek-800, ek-900 70%)`).
+- Copy is verbatim from the brief and locked (British spelling, no em dashes; "we will tell you plainly if we are not the right partner for it" must not be shortened). The brief's reference file (`empower-landing-v3.html`) predates this section — the copy in Downloads still has the old close — so the markup was built fresh in the ek Tailwind vocabulary from the brief's spec.
+- Structure: head (eyebrow "Work with us", heading "Back work that is *already happening*" with the em in `text-ek-lime-bright not-italic` per hero convention, lead paragraph) → three routes (glass cards, funders first: Fund a programme / Deliver with us / Bring us to your people, each with an uppercase audience label above the heading) → contact block under a `border-ek-lime/[0.22]` separator (left: "Talk to us directly" + lime "Start a conversation" mailto pill; right: Email/Phone/Office rows as mailto/tel links + UTC+12 note).
+- Rules honoured: no donate button, no staff names/photos, nothing behind interaction, three separate `data-reveal`s (head, routes, foot), reduced motion respected via the existing Motion.astro treatment.
+- CMS: the `blocks.close` component stays in the dynamic zone and still triggers this block, but its stored eyebrow/title/description/button fields are **no longer rendered** — copy is locked and the heading needs an `<em>` a plain CMS string can't carry. `CloseBlockData` interface kept so `index.astro` compiles.
+- **Footer re-homed in the ek palette (site-wide, user request):** the old `bg-slate-900` footer clashed dark-on-dark against the CTA's ek-900. Now `linear-gradient(180deg, ek-900 → #04181b)` so the CTA settles into it seamlessly, with the seam marked by a faint centred lime hairline and the reference's bwabwai-roots SVG (opacity 0.11) growing down from it; all slate/lime-300/teal-300 utilities retinted to ek tokens (#cfe0db / #9fb9b4 body tones, ek-lime-bright accents, white/10 chips + hairlines, "Mauri" in #7fc8d2, condensed column headings).
+- **Micro-motion (user request):** route cards reveal individually with a 120 ms stagger and on hover lift −4px, brighten (`bg-white/[0.08]`, `ring-ek-lime/30`, deep shadow) and grow a lime→teal top accent bar from the left; the contact block's lime separator draws itself across on reveal (`.cta-rule` scaleX keyed off `.is-visible`, ImpactBlock pattern, static under no-JS/reduced motion).
+
+---
+
+**Previous:** Featured projects — landing "Our work" block as image cards
 
 ## Status
 - ✅ Completed 2026-08-26 on branch `feature/featured-projects-cards`, merged to `main` (see History). **Rollout still pending:** run `backend/apply-featured-projects.js` against production (fresh token) or edit the field in admin — until then the live heading stays "What we are running now".
