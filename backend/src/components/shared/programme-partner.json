@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_shared_programme_partners",
+  "info": {
+    "displayName": "Programme Partner",
+    "icon": "handHeart",
+    "description": "A partner's involvement in one programme, with its role in that programme (funder or co-implementer)."
+  },
+  "options": {},
+  "attributes": {
+    "partner": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::partner.partner"
+    },
+    "partner_role": {
+      "type": "enumeration",
+      "enum": ["funder", "co_implementer"],
+      "required": true,
+      "default": "funder"
+    }
+  }
+}

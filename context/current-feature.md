@@ -1,6 +1,25 @@
 # Current Feature
 
-**Feature:** CMS-editable footer + homepage — move all hardcoded footer/contact/nav content into Strapi
+**Feature:** Per-programme partner roles — multiple partners on a programme, distinguished as funder vs co-implementer
+
+## Status
+- 🚧 In progress on branch `feature/partner-roles`. Frontend build passes against production (fallback path). Awaiting user local review: start local Strapi (loads the new component schema), run `node backend/apply-partner-roles.js` (local), then review with `STRAPI_URL=http://localhost:1337 npm run dev`.
+
+## What it is
+- A programme can already hold many partners via the `partners` M2M, but nothing distinguishes a funder from a co-host (e.g. American Corner is funded via American Spaces but co-delivered with the Ministry of Education). Strapi M2M relations can't carry per-link attributes, so the role lives on a new repeatable component.
+- **Strapi:** new `shared.programme-partner` component (`partner` oneToOne → partner, `partner_role` enum `funder / co_implementer`, required, default funder); Programme gains `partner_links` (repeatable, shared across locales). The legacy `partners` M2M is kept this phase as the migration source and pre-deploy fallback (removal is a later cleanup, same pattern as `pillars`). Note: the *partner-level* `role` enum (funder/government/civil_society/community) is a different axis — organisation kind, not per-programme role — and is untouched. Generated types hand-updated as usual.
+- **`backend/apply-partner-roles.js`:** idempotent migration — copies each programme's M2M partners into `partner_links` with role `funder` (skips programmes that already have links, so admin edits are never clobbered); roles then adjusted per programme in the admin. 400s with a clear message pre-schema-deploy.
+- **Frontend:** projects loader now deep-populates `populate[partner_links][populate][partner]=true` (explicit key list replaces `populate=*`), falling back to `populate=*` while production runs the old schema. New `src/lib/programme-partners.ts`: `programmePartners()` (partner_links preferred, deduped; legacy M2M as roleless fallback) and `programmeHasPartner()` (either source). Programme detail page renders partners grouped under "Funded by" / "Delivered with" (roleless legacy entries keep "In partnership with"); /our-programs card chips and both /our-partners pages (project lists, per-card counts, joint-projects stat) resolve from the programme side so partners attached only through the component still surface.
+- **Admin flow for the American Corner case:** create a Ministry of Education partner entry, then on the programme add a partner_links row → Ministry of Education / co_implementer (American Spaces row stays funder).
+
+## Rollout
+1. Local review (above), merge + push → Strapi Cloud deploys schema, Vercel builds (fallback keeps current behaviour until then).
+2. `STRAPI_URL=https://determined-strength-17a6de9eef.strapiapp.com STRAPI_API_TOKEN=xxx node backend/apply-partner-roles.js` (fresh token, delete after use).
+3. Adjust roles + add co-implementers (e.g. Ministry of Education) in the production admin; publish triggers the Vercel rebuild.
+
+---
+
+**Previous:** CMS-editable footer + homepage — move all hardcoded footer/contact/nav content into Strapi
 
 ## Status
 - ✅ Completed 2026-08-27 on branch `feature/cms-editable-footer-contact`, merged to `main` and pushed (see History). **Rollout still pending:** run `backend/apply-editable-globals.js` against production (fresh token) after the Strapi Cloud schema deploy — until then the live homepage close section renders the stale v3 "Bwabwai" copy, because CloseBlock honours its CMS fields again and production still stores the old close. The script two-stages itself: run pre-deploy it fixes the five legacy close fields; run post-deploy it seeds routes/contact/global fields (only where unset).

@@ -125,6 +125,15 @@ const partnerRef = z.object({
   name: z.string(),
 });
 
+// A partner's involvement in one programme, with its per-programme role.
+// `partner` is nullable so builds tolerate the populate=* fallback (which
+// returns the component without its nested relation) and dangling links.
+const programmePartnerLink = z.object({
+  id: z.number().optional(),
+  partner_role: z.enum(['funder', 'co_implementer']).nullable().optional(),
+  partner: partnerRef.nullable().optional(),
+});
+
 const projectRef = z.object({
   documentId: z.string(),
   id: z.number().optional(),
@@ -196,9 +205,27 @@ const slugify = (value: string) =>
 
 const projects = defineCollection({
   loader: async () => {
-    const entries = await fetchStrapi<StrapiEntry & { title: string }>(
-      '/api/projects?populate=*',
-    );
+    // partner_links is a component whose nested relation needs an explicit
+    // deep populate; that key 400s while the target Strapi still runs the
+    // pre-partner-roles schema, so fall back to populate=* (partner_links
+    // then arrives without partners and the legacy M2M takes over).
+    const deepPopulate =
+      '/api/projects?' +
+      [
+        'populate[image]=true',
+        'populate[partners]=true',
+        'populate[strategy]=true',
+        'populate[pillars]=true',
+        'populate[activities]=true',
+        'populate[testimonials]=true',
+        'populate[partner_links][populate][partner]=true',
+      ].join('&');
+    let entries: (StrapiEntry & { title: string })[];
+    try {
+      entries = await fetchStrapi<StrapiEntry & { title: string }>(deepPopulate);
+    } catch {
+      entries = await fetchStrapi<StrapiEntry & { title: string }>('/api/projects?populate=*');
+    }
     return entries.map(({ documentId, id: _strapiNumericId, ...rest }) => ({
       id: documentId,
       slug: slugify(rest.title),
@@ -220,6 +247,7 @@ const projects = defineCollection({
     location: z.string().nullable().optional(),
     metrics: z.string().nullable().optional(),
     partners: z.array(partnerRef).default([]),
+    partner_links: z.array(programmePartnerLink).default([]),
     strategy: pillarRef.nullable().optional(),
     pillars: z.array(pillarRef).default([]),
     activities: z.array(activityRef).default([]),

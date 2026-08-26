@@ -377,6 +377,21 @@ export interface SharedProgrammeItem extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedProgrammePartner extends Struct.ComponentSchema {
+  collectionName: 'components_shared_programme_partners';
+  info: {
+    description: "A partner's involvement in one programme, with its role in that programme (funder or co-implementer).";
+    displayName: 'Programme Partner';
+    icon: 'handHeart';
+  };
+  attributes: {
+    partner: Schema.Attribute.Relation<'oneToOne', 'api::partner.partner'>;
+    partner_role: Schema.Attribute.Enumeration<['funder', 'co_implementer']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'funder'>;
+  };
+}
+
 export interface SharedRouteCard extends Struct.ComponentSchema {
   collectionName: 'components_shared_route_cards';
   info: {
@@ -449,6 +464,7 @@ declare module '@strapi/strapi' {
       'shared.partner-category': SharedPartnerCategory;
       'shared.partner-logo': SharedPartnerLogo;
       'shared.programme-item': SharedProgrammeItem;
+      'shared.programme-partner': SharedProgrammePartner;
       'shared.route-card': SharedRouteCard;
       'shared.threat-item': SharedThreatItem;
       'shared.value-item': SharedValueItem;

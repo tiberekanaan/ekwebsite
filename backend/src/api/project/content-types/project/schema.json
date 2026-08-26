@@ -73,6 +73,11 @@
       "target": "api::partner.partner",
       "mappedBy": "projects"
     },
+    "partner_links": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.programme-partner"
+    },
     "strategy": {
       "type": "relation",
       "relation": "manyToOne",

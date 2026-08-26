@@ -8,6 +8,7 @@ import { marked } from 'marked';
 import { STRAPI_URL } from 'astro:env/server';
 import { STRAPI_LOCALES, resolveLang, type Lang } from '@/lib/i18n';
 import { statusLabel, statusPillClass, type ProgrammeStatus } from '@/lib/programme-status';
+import { programmePartners, ROLE_GROUP_LABELS } from '@/lib/programme-partners';
 
 export const prerender = false;
 
@@ -49,7 +50,7 @@ if (!localized && lang !== 'en') localized = await fetchLocalized(STRAPI_LOCALES
 
 // relations and media are shared across locales — keep them from the build-time
 // collection entry; only the localized text fields come from the runtime fetch
-const { image, partners, testimonials, strategy, pillars, activities } = project.data;
+const { image, testimonials, strategy, pillars, activities } = project.data;
 const strategyTitle = strategy?.title ?? pillars[0]?.title ?? null;
 const title = localized?.title ?? project.data.title;
 const description = localized?.description ?? project.data.description;
@@ -62,6 +63,18 @@ const currentLang: Lang = localized?.locale === STRAPI_LOCALES.kir ? 'kir' : 'en
 
 const allPartners = await getCollection('partners');
 const partnerById = new Map(allPartners.map((p) => [p.id, p.data]));
+
+// Partners grouped by their role in this programme; roleless entries (legacy
+// M2M links the migration has not reached yet) keep the old generic heading.
+const partnerRefs = programmePartners(project.data);
+const partnerGroups = [
+  { label: ROLE_GROUP_LABELS.funder, refs: partnerRefs.filter((p) => p.role === 'funder') },
+  {
+    label: ROLE_GROUP_LABELS.co_implementer,
+    refs: partnerRefs.filter((p) => p.role === 'co_implementer'),
+  },
+  { label: 'In partnership with', refs: partnerRefs.filter((p) => p.role === null) },
+].filter((group) => group.refs.length > 0);
 
 // join heading markers the Strapi editor leaves on their own line ("###\nTitle"),
 // which markdown would otherwise render as an empty heading + plain paragraph
@@ -169,41 +182,39 @@ const formatRange = (start: Date, end?: Date | null) => {
             )
           }
 
-          {
-            partners.length > 0 && (
-              <div class="mt-8">
-                <p class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">
-                  In partnership with
-                </p>
-                <div class="flex flex-wrap items-center gap-2">
-                  {partners.map((partnerRef) => {
-                    const fullPartner = partnerById.get(partnerRef.documentId);
-                    return (
-                      <a
-                        href={`/our-partners/${partnerRef.documentId}`}
-                        class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:border-teal-300 hover:bg-teal-50 hover:text-teal-800"
-                      >
-                        {fullPartner?.logo ? (
-                          <img
-                            src={absoluteUrl(fullPartner.logo.url)}
-                            alt={fullPartner.logo.alternativeText ?? partnerRef.name}
-                            class="h-6 w-6 rounded-full object-contain"
-                            loading="lazy"
-                          />
-                        ) : (
-                          <span
-                            aria-hidden="true"
-                            class="h-6 w-6 rounded-full bg-gradient-to-br from-teal-400 to-emerald-500"
-                          />
-                        )}
-                        <span>{partnerRef.name}</span>
-                      </a>
-                    );
-                  })}
-                </div>
+          {partnerGroups.map((group) => (
+            <div class="mt-8">
+              <p class="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">
+                {group.label}
+              </p>
+              <div class="flex flex-wrap items-center gap-2">
+                {group.refs.map((partnerRef) => {
+                  const fullPartner = partnerById.get(partnerRef.documentId);
+                  return (
+                    <a
+                      href={`/our-partners/${partnerRef.documentId}`}
+                      class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:border-teal-300 hover:bg-teal-50 hover:text-teal-800"
+                    >
+                      {fullPartner?.logo ? (
+                        <img
+                          src={absoluteUrl(fullPartner.logo.url)}
+                          alt={fullPartner.logo.alternativeText ?? partnerRef.name}
+                          class="h-6 w-6 rounded-full object-contain"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <span
+                          aria-hidden="true"
+                          class="h-6 w-6 rounded-full bg-gradient-to-br from-teal-400 to-emerald-500"
+                        />
+                      )}
+                      <span>{partnerRef.name}</span>
+                    </a>
+                  );
+                })}
               </div>
-            )
-          }
+            </div>
+          ))}
         </div>
 
         <figure class="lg:col-span-2" data-reveal>

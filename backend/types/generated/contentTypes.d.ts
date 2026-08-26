@@ -937,6 +937,7 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
+    partner_links: Schema.Attribute.Component<'shared.programme-partner', true>;
     partners: Schema.Attribute.Relation<'manyToMany', 'api::partner.partner'>;
     pillars: Schema.Attribute.Relation<'manyToMany', 'api::pillar.pillar'>;
     project_status: Schema.Attribute.Enumeration<

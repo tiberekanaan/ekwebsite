@@ -6,6 +6,7 @@ import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import { marked } from 'marked';
 import { STRAPI_URL } from 'astro:env/server';
+import { programmeHasPartner } from '@/lib/programme-partners';
 // Fallback photo when no image is uploaded to the Partners Page single type —
 // overwrite with a real photo of partners working together and set alt below.
 import fallbackPhoto from '@/assets/images/community/impact-engagement-01.jpg';
@@ -56,8 +57,19 @@ const partners = (await getCollection('partners')).sort((a, b) =>
   a.data.name.localeCompare(b.data.name),
 );
 
+// Programme links resolved from the programme side so partners attached only
+// through the role-carrying partner_links component are counted too.
+const allProjects = await getCollection('projects');
+const programmeCountByPartner = new Map(
+  partners.map((p) => [
+    p.id,
+    allProjects.filter((project) => programmeHasPartner(project.data, p.id)).length,
+  ]),
+);
 const projectIds = new Set(
-  partners.flatMap((p) => p.data.projects.map((project) => project.documentId)),
+  allProjects
+    .filter((project) => partners.some((p) => programmeHasPartner(project.data, p.id)))
+    .map((project) => project.id),
 );
 
 const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
@@ -150,7 +162,8 @@ const arrowRight = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
         ) : (
           <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {partners.map((partner, idx) => {
-              const { name, logo, projects: linked } = partner.data;
+              const { name, logo } = partner.data;
+              const linkedCount = programmeCountByPartner.get(partner.id) ?? 0;
               return (
                 <li data-reveal data-reveal-delay={(idx % 3) * 80}>
                   <a
@@ -175,7 +188,7 @@ const arrowRight = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
                       {name}
                     </h3>
                     <span class="mt-auto inline-flex items-center gap-2 rounded-full bg-ek-900 px-4 py-1.5 font-condensed text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-ek-lime-bright">
-                      {linked.length} {linked.length === 1 ? 'project' : 'projects'}
+                      {linkedCount} {linkedCount === 1 ? 'project' : 'projects'}
                       <span
                         class="transition-transform duration-200 group-hover:translate-x-0.5"
                         set:html={arrowRight}
