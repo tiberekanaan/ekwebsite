@@ -107,32 +107,53 @@ const year = new Date().getFullYear();
   class="relative overflow-hidden bg-ek-900 bg-[linear-gradient(180deg,var(--color-ek-900),#04181b)] text-[#cfe0db]"
 >
   <!--
-    The seam: a faint lime hairline the bwabwai roots grow down from, so the
-    dark CTA above settles into the footer instead of butting against it.
-    Roots motif from the landing reference (empower-landing-v3.html).
+    The seam: a faint lime hairline with bwabwai leaves hanging down from it,
+    so the dark CTA above settles into the footer instead of butting against
+    it. Leaf motif traced from the logo's taro leaves (heart blade, radiating
+    veins); fixed-width and centred so the leaves never stretch — wide screens
+    show bare hairline at the edges, narrow screens crop symmetrically.
   -->
   <span
     class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-ek-lime/25 to-transparent"
     aria-hidden="true"></span>
   <svg
-    class="pointer-events-none absolute inset-x-0 top-0 h-[110px] w-full opacity-[0.11]"
-    viewBox="0 0 1440 120"
-    preserveAspectRatio="none"
+    class="pointer-events-none absolute left-1/2 top-0 h-[110px] w-[1920px] max-w-none -translate-x-1/2 opacity-[0.13]"
+    viewBox="0 0 1920 110"
     aria-hidden="true"
   >
-    <g stroke="#aecb3a" stroke-width="2" fill="none">
-      <path
-        d="M720 0v50M720 50c-60 0-120 20-180 60M720 50c60 0 120 20 180 60M720 50c-20 0-40 30-40 70M720 50c20 0 40 30 40 70M520 30v40M920 30v40M360 60c-40 0-80 20-110 50M1080 60c40 0 80 20 110 50"
-      ></path>
+    <defs>
+      <g id="ek-seam-leaf" stroke="#aecb3a" stroke-width="1.6" fill="none" stroke-linecap="round">
+        <path
+          vector-effect="non-scaling-stroke"
+          d="M0 8 C -9 -3 -25 -3 -32 9 C -41 25 -25 47 0 64 C 25 47 41 25 32 9 C 25 -3 9 -3 0 8 Z"
+        ></path>
+        <path vector-effect="non-scaling-stroke" d="M0 14 L 0 54"></path>
+        <path
+          vector-effect="non-scaling-stroke"
+          d="M0 18 L -13 33 M0 18 L 13 33 M0 28 L -9 44 M0 28 L 9 44"
+        ></path>
+      </g>
+    </defs>
+    <g stroke="#aecb3a" stroke-width="1.6" fill="none" stroke-linecap="round">
+      <path d="M960 0 C 959 6 959 11 960 16"></path>
+      <path d="M886 0 C 884 4 885 7 886 10"></path>
+      <path d="M1042 0 C 1044 4 1043 8 1042 12"></path>
+      <path d="M636 0 C 635 3 635 6 636 8"></path>
+      <path d="M1286 0 C 1287 3 1287 6 1286 9"></path>
+      <path d="M432 0 C 431 5 431 10 432 14"></path>
+      <path d="M1512 0 C 1513 5 1513 9 1512 13"></path>
+      <path d="M214 0 C 213 3 213 6 214 8"></path>
+      <path d="M1730 0 C 1731 3 1731 6 1730 9"></path>
     </g>
-    <g fill="#aecb3a">
-      <circle cx="540" cy="110" r="4"></circle>
-      <circle cx="900" cy="110" r="4"></circle>
-      <circle cx="680" cy="120" r="4"></circle>
-      <circle cx="760" cy="120" r="4"></circle>
-      <circle cx="250" cy="110" r="3"></circle>
-      <circle cx="1190" cy="110" r="3"></circle>
-    </g>
+    <use href="#ek-seam-leaf" transform="translate(960 16) rotate(-6)"></use>
+    <use href="#ek-seam-leaf" transform="translate(886 10) rotate(18) scale(0.66)"></use>
+    <use href="#ek-seam-leaf" transform="translate(1042 12) rotate(-20) scale(0.58)"></use>
+    <use href="#ek-seam-leaf" transform="translate(636 8) rotate(10) scale(0.46)"></use>
+    <use href="#ek-seam-leaf" transform="translate(1286 9) rotate(-13) scale(0.46)"></use>
+    <use href="#ek-seam-leaf" transform="translate(432 14) rotate(-8) scale(0.34)"></use>
+    <use href="#ek-seam-leaf" transform="translate(1512 13) rotate(9) scale(0.34)"></use>
+    <use href="#ek-seam-leaf" transform="translate(214 8) rotate(13) scale(0.26)"></use>
+    <use href="#ek-seam-leaf" transform="translate(1730 9) rotate(-11) scale(0.26)"></use>
   </svg>
   <div class="relative mx-auto max-w-7xl px-6 py-12">
     <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.3fr] lg:items-start">
