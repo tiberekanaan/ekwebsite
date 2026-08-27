@@ -27,7 +27,7 @@
     },
     "role": {
       "type": "enumeration",
-      "enum": ["funder", "government", "civil_society", "community"]
+      "enum": ["funder", "government", "in_kind_donor", "co_implementor"]
     },
     "consent_to_name": {
       "type": "boolean",

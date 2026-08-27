@@ -183,7 +183,12 @@ const partners = defineCollection({
     logo: strapiImage,
     // Marquee fields; nullable so builds tolerate production before the
     // partner schema deploys.
-    role: z.enum(['funder', 'government', 'civil_society', 'community']).nullable().optional(),
+    // civil_society/community are legacy values kept so builds tolerate
+    // production data entered before the in_kind_donor/co_implementor rename.
+    role: z
+      .enum(['funder', 'government', 'in_kind_donor', 'co_implementor', 'civil_society', 'community'])
+      .nullable()
+      .optional(),
     consent_to_name: z.boolean().nullable().optional(),
     display_order: z.number().nullable().optional(),
     projects: z.array(projectRef).default([]),
