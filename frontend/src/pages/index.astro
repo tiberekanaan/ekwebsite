@@ -75,6 +75,14 @@ try {
   // Strapi unreachable — fall back to the default landing below.
 }
 
+// The funding-partner marquee renders directly under Featured projects. The
+// production CMS zone has no partner-marquee entry, so the block is injected
+// here rather than positioned by the admin; a CMS entry, if one is ever
+// added, supplies its copy but not its position.
+const marqueeIdx = blocks.findIndex((b) => b.__component === 'blocks.partner-marquee');
+const marqueeData: PartnerMarqueeBlockData =
+  marqueeIdx > -1 ? (blocks.splice(marqueeIdx, 1)[0] as PartnerMarqueeBlockData) : {};
+
 // Featured projects renders above the pull quote regardless of the CMS zone
 // order — reordering these two blocks in the admin has no effect here.
 const programmesIdx = blocks.findIndex((b) => b.__component === 'blocks.programmes');
@@ -106,7 +114,12 @@ if (programmesIdx > -1 && testimonialsIdx > -1 && testimonialsIdx < programmesId
           case 'blocks.what-we-do':
             return <WhatWeDoBlock block={block} />;
           case 'blocks.programmes':
-            return <ProgrammesBlock block={block} />;
+            return (
+              <Fragment>
+                <ProgrammesBlock block={block} />
+                <PartnerMarqueeBlock block={marqueeData} />
+              </Fragment>
+            );
           case 'blocks.close':
             return <CloseBlock block={block} contact={contact} />;
           case 'blocks.challenges':
@@ -123,8 +136,6 @@ if (programmesIdx > -1 && testimonialsIdx > -1 && testimonialsIdx < programmesId
             return <FutureBlock block={block} />;
           case 'blocks.partners':
             return <PartnersBlock block={block} />;
-          case 'blocks.partner-marquee':
-            return <PartnerMarqueeBlock block={block} />;
           default:
             return null;
         }
@@ -135,8 +146,8 @@ if (programmesIdx > -1 && testimonialsIdx > -1 && testimonialsIdx < programmesId
         <ChallengeCycleBlock />
         <WhatWeDoBlock block={{}} />
         <ImpactBlock block={{}} />
-        <PartnerMarqueeBlock block={{}} />
         <ProgrammesBlock block={{}} />
+        <PartnerMarqueeBlock block={{}} />
         <TestimonialsBlock block={{}} />
         <CloseBlock block={{}} contact={contact} />
       </Fragment>

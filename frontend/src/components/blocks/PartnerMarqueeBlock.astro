@@ -71,24 +71,24 @@ const trackSets = useMarquee ? [false, true] : [false];
         >
           <div
             class:list={[
-              'partner-marquee-track flex items-center gap-4',
+              'partner-marquee-track flex items-center gap-6',
               useMarquee ? 'w-max animate-funder-marquee' : 'w-full flex-wrap justify-center',
             ]}
           >
             {trackSets.map((isDuplicate) => (
               <div
-                class="flex shrink-0 items-center gap-4 pr-4"
+                class="flex shrink-0 items-center gap-6 pr-6"
                 aria-hidden={isDuplicate || undefined}
               >
                 {plates.map((p) => {
                   const logo = p.logo?.url ? absoluteUrl(p.logo.url) : null;
                   return (
-                    <div class="flex h-16 w-52 shrink-0 items-center justify-center rounded-md border border-ek-700/10 bg-ek-mist/60 px-5">
+                    <div class="flex h-24 w-56 shrink-0 items-center justify-center px-4">
                       {logo ? (
                         <img
                           src={logo}
                           alt={p.logo?.alternativeText ?? p.name}
-                          class="max-h-11 max-w-full object-contain"
+                          class="max-h-20 max-w-full object-contain"
                           loading="lazy"
                         />
                       ) : (
