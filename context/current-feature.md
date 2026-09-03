@@ -1,6 +1,45 @@
 # Current Feature
 
-**Feature:** Per-programme partner roles — multiple partners on a programme, distinguished as funder vs co-implementer
+**Feature:** Resource article "How to prepare your grant application" + "On this page" outline for long articles
+
+## Status
+- 🚧 In progress on branch `feature/grant-application-guide` (branched from `main`; the unmerged `feature/wee-programme` working-tree changes were carried along uncommitted and are NOT part of this feature — stage only the files listed below). Backend type-check and frontend build pass; verified in Playwright at 1440px and 390px. Awaiting user local review, then merge + push. **No apply-script needed:** the article ships through the idempotent bootstrap seed, so the Strapi Cloud deploy creates and publishes it (its publish webhook then rebuilds Vercel).
+
+## What it is
+- **Article:** the second entry in `backend/src/seed/grants-articles.ts` `GRANT_ARTICLES` — source `~/Downloads/how-to-prepare-your-grant-application.md`, copy verbatim apart from formatting: the `# ` title became the `title` field, the bold audience line is the standfirst, the mid-document `---` rules were dropped (the page's `hr ~ p` rule would otherwise mute every paragraph after the first rule), the checklist's bold group labels became `###` headings (a whole-bold paragraph would render as a pull-question card), and the "keep a folder" paragraph became a `> **A good habit**` callout. Sign-off mirrors the first article but says "in Kiribati" rather than "across Kiribati" (donor-review flagged phrasing). Slug `how-to-prepare-your-grant-application`, 12-minute read, last reviewed 2026-09, tags `grants` / `writing your application` / `documents` / `getting ready` / `community groups` (all from the closed vocabulary; stage tag `getting ready` because the guide's frame is assembling everything before a round opens).
+- **Outline ("On this page"):** new `frontend/src/lib/article-toc.ts` `buildArticleToc()` stamps slug ids on every h2/h3 in the rendered body (marked v18 emits none) and returns the nested outline; new `frontend/src/components/resources/ArticleToc.astro` renders it. `resources/articles/[slug].astro` shows it whenever an article has 4+ headings (so the first article gets it too): a collapsible `<details>` panel above the body under lg, and from lg a `15rem` sticky left rail (`top-28`, clears the floating navbar) beside the unchanged `max-w-3xl` article column. A ~1 KB page script (listeners bound once at module scope, lists re-collected on `astro:page-load`) marks the section under the navbar with `.is-active` + `aria-current` on both copies; nothing is active above the first heading, the last item is active at page bottom. Headings gained `scroll-margin-top: 7rem`; `h3` styling added to `.article-body` (was unstyled — the first article has no h3s).
+- **Gotcha:** headless-Chrome `--screenshot` of a `#hash` URL on this site comes back blank (reveal transitions don't play in non-visible tabs); Playwright (already in `frontend/node_modules`) renders it correctly — use that for scrolled-state checks.
+- **Verification without local Strapi:** built with `STRAPI_URL` pointed at a throwaway proxy that appended the seed article to production's `/api/articles` response — `frontend/dist` was regenerated from that build, so it already contains the new page; regenerate against production after the Strapi Cloud deploy before the usual `chore(build)` commit.
+
+## Rollout
+1. User local review (start local Strapi → bootstrap seeds the article locally; `STRAPI_URL=http://localhost:1337 npm run dev`), merge + push.
+2. Strapi Cloud restarts → seed creates + publishes the article → publish webhook rebuilds Vercel. Nothing to run by hand.
+
+---
+
+**Previous (still unmerged, branch `feature/wee-programme`):** Women Economic Empowerment Framework programme page — upload as DRAFT per `~/Downloads/WEE-UPLOAD-INSTRUCTIONS.md` + `womens-economic-empowerment-content.md`
+
+## Status
+- 🚧 In progress on branch `feature/wee-programme`. Backend + frontend builds pass. Awaiting user local review, then merge → Strapi Cloud schema deploy → run `backend/apply-wee-programme.js` against production (fresh token). **The entry is created as a DRAFT and must not be published until every `[CONFIRM]` marker in its body is resolved** — the outstanding list lives in section 5 of the upload instructions file.
+
+## What it is
+- The national MWYSSA consultation Empower Kiribati facilitated (designed, facilitated, analysed, reported — never built/developed/trained; the framework is the ministry's and is *in development* throughout). Roughly half the copy is final; the other half is `[CONFIRM]` gaps kept as inline markers in the draft body so nobody mistakes it for finished.
+- **Stack items from the upload doc, resolved:** the collection is `project` (REST `/api/projects`, displayName "Programme"); there is no separate long-body field — by production convention the richtext `description` IS the body (opening line doubles as the listing excerpt, so the doc's "subtitle" is the body's first line); tables aren't needed (partners map to `partner_links`, the participant list is a bullet list).
+- **Strapi:** Programme gains `what_it_is_not` (richtext, localized) — the doc insists this be a real field, not body copy, so the claim is checkable across programmes. `shared.programme-partner` `partner_role` enum gains `government` (user decision: MWYSSA's per-programme role is government, since "convened" had no enum value). Generated types hand-updated.
+- **Frontend:** `programme-partners.ts` role type + `ROLE_GROUP_LABELS` gain `government` → **"Convened by"**; detail page renders that group first (Convened by → Funded by → Delivered with → legacy roleless), renders `what_it_is_not` as an ek-paper "Our role / What we did, and what we did not" panel between the description grid and Objectives, and threads the field through the i18n fallback; content.config schema widened.
+- **`backend/apply-wee-programme.js`** (idempotent): creates the WEE entry as a **draft only** (POST with `?status=draft` — **gotcha:** a plain REST POST on this Strapi publishes immediately, verified locally) — title "Women Economic Empowerment Framework" (ministry's name: no "Women's", no "Programme"), body in `description` with `[CONFIRM]` markers, `what_it_is_not` filled, `project_status: completed`, `location: "South Tarawa"`, strategy → Building Partnership for Impact (user decision), `partner_links` MWYSSA/government + Caritas/funder. Also flips Caritas `consent_to_name` → true (user-approved; it was false, so contrary to the upload doc Caritas was NOT in the landing marquee, which filters `role ∈ {funder, government}` AND consent). Skips creation if a WEE entry exists as draft or published; 400s with a clear message pre-schema-deploy.
+- **Slug note:** slugs are title-derived at build time → `women-economic-empowerment-framework`, not the doc's `womens-economic-empowerment`. No redirect needed — no links exist yet.
+- **The nineteen organisations are NOT entered** — every name is `[CONFIRM]` (full names/spellings; AMAK, RAB, SDA must not publish as bare acronyms). Open design question flagged to the user before they're created: partner records would keep them out of the marquee (no funder/government role) but would list them on /our-partners as if they were partners; the planned Phase-2 people-and-partners type may be the right home instead. Each needs `consent_to_name: true`, and if one can't be named the count in the copy changes too.
+- **Editorial rules honoured:** facilitator-not-owner verbs, no amounts, quotes by role+month only ("a participant · [month] 2026" — narrower attribution is near-identifying when nineteen orgs are named), South Tarawa never "across Kiribati", no donate button, no staff names, no em dashes, close copy uses the landing "Work with us" vocabulary.
+
+## Rollout
+1. User local review (local Strapi picks up the schema; optionally run the script locally), merge + push → Strapi Cloud deploys schema, Vercel builds (draft renders nothing until published, so the live site is unchanged).
+2. `STRAPI_URL=https://determined-strength-17a6de9eef.strapiapp.com STRAPI_API_TOKEN=xxx node backend/apply-wee-programme.js` (fresh token, delete after use).
+3. Resolve the `[CONFIRM]` items in the admin (blocking list: the committee report, the nineteen names, orgs-vs-participants, twenty minutes on method), then publish — publish triggers the Vercel rebuild.
+
+---
+
+**Previous:** Per-programme partner roles — multiple partners on a programme, distinguished as funder vs co-implementer
 
 ## Status
 - ✅ Completed 2026-08-27 on branch `feature/partner-roles`, verified locally by the user, merged to `main` and pushed (`bff18de`). **Rollout still pending:** after the Strapi Cloud schema deploy, run `backend/apply-partner-roles.js` against production (fresh token, delete after use), then set the real roles in the admin (e.g. add Ministry of Education as co-implementer on American Corner). Until the script runs, the site renders the legacy roleless "In partnership with" list — nothing breaks.

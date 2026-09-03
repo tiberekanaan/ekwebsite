@@ -2,9 +2,11 @@
 import Eyebrow from '@/components/empower/Eyebrow.astro';
 import Layout from '@/layouts/Layout.astro';
 import PageHeader from '@/components/PageHeader.astro';
+import ArticleToc from '@/components/resources/ArticleToc.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { marked } from 'marked';
 import { relatedArticles } from '@/lib/related-articles';
+import { buildArticleToc } from '@/lib/article-toc';
 
 export async function getStaticPaths() {
   const articles = await getCollection('articles');
@@ -47,7 +49,7 @@ const reviewed = formatReviewed(last_reviewed);
 const rawHtml = body ? await marked.parse(body) : '';
 // `> **Label**` blockquotes become labelled callout panels; tables get a
 // scroll wrapper so wide rows never force the page to scroll horizontally.
-const bodyHtml = rawHtml
+const styledHtml = rawHtml
   .replace(
     /<blockquote>\s*<p><strong>([^<]+)<\/strong><\/p>/g,
     '<blockquote class="callout"><p class="callout-label">$1</p>',
@@ -57,6 +59,12 @@ const bodyHtml = rawHtml
   // paragraphs that are entirely one <strong> — the lead standfirst and
   // standalone pull-questions (glossary "**Term.** text" paras don't match)
   .replace(/<p><strong>([^<]+)<\/strong><\/p>/g, '<p class="pullout"><strong>$1</strong></p>');
+
+// Long guides get an "On this page" outline: a collapsible panel on small
+// screens, a sticky left rail from lg. Short pieces stay a single column.
+const { html: bodyHtml, sections: toc } = buildArticleToc(styledHtml);
+const headingCount = toc.reduce((total, section) => total + 1 + section.children.length, 0);
+const showToc = headingCount >= 4;
 
 const cardTag = (entry: CollectionEntry<'articles'>) =>
   entry.data.tags.find((tag) => tag.group === 'stage')?.name ??
@@ -100,11 +108,49 @@ const cardTag = (entry: CollectionEntry<'articles'>) =>
   </PageHeader>
 
   <div class="mx-auto max-w-7xl px-8 py-12">
-    <article class="article-body max-w-3xl" set:html={bodyHtml} />
-
     {
-      related.length > 0 && (
-        <section class="mt-16 max-w-3xl border-t-2 border-ek-500 pt-8">
+      showToc && (
+        <details class="toc-panel mb-8 max-w-3xl rounded-xl border border-ek-700/12 bg-ek-mist/60 lg:hidden">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 font-condensed text-[0.75rem] font-semibold uppercase tracking-[0.28em] text-ek-olive">
+            On this page
+            <svg
+              class="toc-chevron h-4 w-4 shrink-0 text-ek-600 transition-transform"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M5 8l5 5 5-5" />
+            </svg>
+          </summary>
+          <div class="px-5 pb-5">
+            <ArticleToc sections={toc} />
+          </div>
+        </details>
+      )
+    }
+
+    <div class:list={['lg:grid lg:gap-14', showToc && 'lg:grid-cols-[15rem_minmax(0,1fr)]']}>
+      {
+        showToc && (
+          <aside class="hidden lg:block">
+            <nav class="sticky top-28" aria-label="On this page" data-reveal>
+              <Eyebrow as="p" class="mb-4">On this page</Eyebrow>
+              <ArticleToc sections={toc} />
+            </nav>
+          </aside>
+        )
+      }
+
+      <div class="min-w-0">
+        <article class="article-body max-w-3xl" set:html={bodyHtml} />
+
+        {
+          related.length > 0 && (
+            <section class="mt-16 max-w-3xl border-t-2 border-ek-500 pt-8">
           <Eyebrow as="h2" class="mb-6">Related articles</Eyebrow>
           <div class="grid gap-4 sm:grid-cols-2">
             {related.map((entry) => (
@@ -130,8 +176,59 @@ const cardTag = (entry: CollectionEntry<'articles'>) =>
         </section>
       )
     }
+      </div>
+    </div>
   </div>
 </Layout>
+
+<script>
+  // Highlights the outline link for the section currently under the fixed
+  // navbar. Listeners bind once at module scope (ClientRouter keeps the module
+  // alive across navigations); the heading/link lists are re-collected on
+  // every astro:page-load.
+  const OFFSET = 120; // ≥ the headings' scroll-margin-top so a clicked link lights up
+
+  let headings: HTMLElement[] = [];
+  let links: HTMLAnchorElement[] = [];
+  let queued = false;
+
+  const update = () => {
+    queued = false;
+    if (!headings.length) return;
+    let current: HTMLElement | null = null;
+    for (const heading of headings) {
+      if (heading.offsetTop - OFFSET <= window.scrollY) current = heading;
+      else break;
+    }
+    const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+    if (atBottom) current = headings[headings.length - 1] ?? null;
+    const activeHref = current ? `#${current.id}` : '';
+    for (const link of links) {
+      const active = link.getAttribute('href') === activeHref;
+      link.classList.toggle('is-active', active);
+      if (active) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    }
+  };
+
+  const schedule = () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(update);
+  };
+
+  const collect = () => {
+    headings = Array.from(
+      document.querySelectorAll<HTMLElement>('.article-body h2[id], .article-body h3[id]'),
+    );
+    links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
+    update();
+  };
+
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule, { passive: true });
+  document.addEventListener('astro:page-load', collect);
+</script>
 
 <style is:global>
   .article-body {
@@ -154,6 +251,26 @@ const cardTag = (entry: CollectionEntry<'articles'>) =>
     font-size: 1.55rem;
     line-height: 1.25;
     color: var(--color-ek-800);
+  }
+  .article-body h3 {
+    margin: 2.1rem 0 0.7rem;
+    font-size: 1.2rem;
+    line-height: 1.3;
+    color: var(--color-ek-800);
+  }
+  .article-body h2 + h3 {
+    margin-top: 1.4rem;
+  }
+  /* Clear the fixed navbar when an outline link jumps to a heading. */
+  .article-body h2,
+  .article-body h3 {
+    scroll-margin-top: 7rem;
+  }
+  .toc-panel summary::-webkit-details-marker {
+    display: none;
+  }
+  .toc-panel[open] .toc-chevron {
+    transform: rotate(180deg);
   }
   .article-body strong {
     color: var(--color-ek-900);
