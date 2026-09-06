@@ -296,4 +296,167 @@ Funding rounds have closing dates, and the closing date is not the day to be gat
 
 *Empower Kiribati is a locally driven organisation working to strengthen leadership, enterprise and digital participation in Kiribati. If your group is working through an application and gets stuck, get in touch.*`,
   },
+  {
+    title: 'How to make a budget for your proposal',
+    slug: 'how-to-make-a-budget-for-your-proposal',
+    category: 'Grants and funding',
+    excerpt:
+      'Your story tells the funder what you want to do. Your budget shows them you know how to do it. A plain walk through every word, every line and a full worked example, using one village water tank.',
+    meta_description:
+      'A step-by-step budgeting guide for community groups in Kiribati: what each budget word means, how to build a budget line by line from real quotes, a full worked example for a village rainwater tank, and the mistakes that lose proposals.',
+    author: 'Empower Kiribati',
+    reading_time: 9,
+    last_reviewed: '2026-09',
+    tags: ['grants', 'budgeting', 'writing your application', 'applying', 'community groups'],
+    body: `**The budget is the part of your proposal that the funder reads most carefully. Your story tells the funder what you want to do. Your budget shows them that you know how to do it.**
+
+It answers three questions: what will you buy, how much does each thing cost, and who will pay for it.
+
+If the story and the budget do not match, the funder will worry. A proposal that says the group will build a water tank at the maneaba, with a budget that has no money for gutters or a tap, tells the funder the group has not planned properly. Many proposals in Kiribati are refused for this reason alone.
+
+A budget is only a list and some adding up. You do not need an accountant. You need to be careful, and you need to ask people the real prices.
+
+> **The example we use**
+>
+> A village group in Tarawa wants to put a 5,000 litre water tank at their maneaba. Every part of this guide comes back to that tank.
+
+## The words you will meet
+
+### Money going out and money coming in
+
+**Budget (te bwatiti).** Your plan for the money. It lists everything you need to buy or pay for, and the price of each one.
+
+**Cost or expense (kabanemwane).** Money that goes out. The tank, the gutters and the plumber are all expenses.
+
+**Income (karekemwane).** Money that comes in. For a project this is the grant, plus any money your group puts in. Most small budgets only show expenses, but some funder forms ask for both.
+
+### The parts of one budget line
+
+**Item or budget line.** One row in your budget table, one thing you will buy, with its price. "5,000 litre water tank" is one item. "Plumber" is another.
+
+**Category.** A group of items that belong together, so the funder can see quickly where the money goes. The usual categories for small grants in Kiribati are equipment, materials, transport, labour, training and administration. The tank is equipment. Cement is materials. The truck is transport. The plumber is labour.
+
+**Unit.** How you count an item: each, bag, day, litre, trip or person. Cement is counted by the bag. The plumber is counted by the day.
+
+**Quantity (te mwaiti).** How many units you need. Four bags of cement. Two days of plumber.
+
+**Unit cost (boon teuana).** The price of one unit. One bag of cement costs $18.
+
+**Total.** Quantity multiplied by unit cost. This is the only sum you need. Four bags at $18 is 4 × 18 = $72.
+
+Those parts sit side by side, and one row of your budget looks like this.
+
+| Item | Unit | Quantity | Unit cost | Total |
+|---|---|---:|---:|---:|
+| Cement | bag | 4 | $18 | $72 |
+
+### Kinds of cost
+
+**Direct cost.** Money spent on the project itself: the tank, the gutters, the cement, the plumber.
+
+**Administration cost (indirect cost).** Money spent on running the project rather than on the thing itself: phone credit to call the shop, bank fees, printing the report, a bus fare to the bank. Funders usually allow a small amount, often up to 10 percent of the budget. Keep it small and honest.
+
+**Contingency.** A small extra amount in case prices go up or something breaks. Prices in Tarawa change when the ship is late, and a fitting can crack while it is being put on. Contingency is usually 5 to 10 percent of your direct costs. Ask the funder first whether they allow it, because some do and some do not. If you ask and get no answer, put in 10 percent and show clearly how you worked it out.
+
+### Money that does not come from the funder
+
+**Community contribution or in-kind contribution (ibuobuoki mai iroun te kaawa).** What your group gives without money: labour to dig the base, food for the workers, a wheelbarrow, sand collected with permission, a truck lent by a member. You give it a dollar value so the funder can see it. Six people working two days each to build the base, valued at $20 a day, is 6 × 2 × 20 = $240 of in-kind contribution. Funders like to see this because it shows the project belongs to the community, not only to the funder.
+
+**Cash contribution.** Money your group puts in from its own account, for example from a botaki or fundraising. This is different from in-kind because it is real cash.
+
+**Co-funding.** Money for the same project from a second funder. If the Island Council has agreed to pay for the cement, that is co-funding and you must say so.
+
+### Papers, and checking your work
+
+**Quote.** A written price from the shop or the plumber. Get quotes before you write your budget. A quote from the hardware shop in Betio is worth far more to a funder than a price you remember from last year.
+
+**Receipt (riiti).** The paper the shop gives you after you pay. Keep every one from the first day. You will need them all when you report back to the funder.
+
+**Variance.** The difference between what you planned to spend and what you really spent. If you planned $18 a bag for cement and paid $20, the variance is $2 a bag. Funders expect small variances. They do not like large ones with no explanation.
+
+## How to build the budget
+
+### Step one: write down what the project will do
+
+Start with your proposal and write down each thing the project will do, in order. For the tank that means building a concrete base beside the maneaba, buying the tank and carrying it there, fitting gutters and a downpipe to the roof, connecting the tank and tap, and holding a short meeting so the village knows how to look after it.
+
+### Step two: write down what each thing needs
+
+For each of those, write down everything it needs. Walk through it in your mind as if you were doing it tomorrow. Who is there, what are they holding, what had to be bought or borrowed? The base needs cement, sand, aggregate, blocks and six people for two days. The tank needs the tank and a truck. The roof needs gutter, brackets, downpipe, screws and a plumber. This is where groups most often go wrong, because the tank is easy to remember while the brackets, the screws, the tap and the truck are easy to forget, and together they can be a third of the budget.
+
+### Step three: go and ask the prices
+
+Now go and ask the prices. Take your list to the hardware shop and ask for a quote. Ask the plumber what they charge per day. Ask the truck owner what a trip from Betio to your village costs. Write the prices down with the name of the shop and the date. If the shop will not give a written quote, write the price yourself with the date and the name of the person who told you. Do not add a little extra "just in case" to each price, because that is what contingency is for, and funders can tell when prices have been inflated.
+
+### Step four: put it in a table
+
+Put each item in a table, sorted into categories, with its unit, quantity and unit cost, and multiply to get the total. In the last column write who pays, the funder or the community.
+
+### Step five: add it up, then check three things
+
+- **Does the total fit inside the funder's limit?** If the funder gives up to $5,000 and your total is $5,400, you must cut something or find a co-funder, not hope.
+- **Does every activity have money, and does every item have a job?** Every activity in your story should have money in the budget, and every item in the budget should belong to an activity in your story. If an item belongs to nothing, take it out.
+- **Has someone else checked your adding?** A budget that does not add up is the first thing a funder notices.
+
+## The tank budget, filled in
+
+> **The prices here are examples only**
+>
+> Ask for your own quotes, because prices change. A funder can check prices at the same shops you can.
+
+This is the budget for the rainwater tank at the maneaba in Tarawa. All amounts are in Australian dollars.
+
+| Category | Item | Unit | Quantity | Unit cost | Total | Who pays |
+|---|---|---|---:|---:|---:|---|
+| Equipment | 5,000 litre poly water tank | each | 1 | $1,450 | $1,450 | Funder |
+| Equipment | Tap and outlet fittings | set | 1 | $60 | $60 | Funder |
+| Materials | Gutter, brackets and downpipe for maneaba roof | set | 1 | $390 | $390 | Funder |
+| Materials | Cement | bag | 4 | $18 | $72 | Funder |
+| Materials | Sand and aggregate | trailer load | 1 | $90 | $90 | Funder |
+| Materials | Concrete blocks for base | each | 40 | $2.20 | $88 | Funder |
+| Transport | Truck hire, Betio to village | trip | 1 | $80 | $80 | Funder |
+| Labour | Plumber to fit gutters, downpipe and tap | day | 2 | $100 | $200 | Funder |
+| Labour | Village members to build base (in-kind) | person-day | 12 | $20 | $240 | Community |
+| Administration | Phone credit and bank fees | lump sum | 1 | $30 | $30 | Funder |
+
+Then the lines are added up.
+
+| What it comes to | Amount |
+|---|---:|
+| Subtotal, cash costs | $2,460 |
+| Contingency, 10 percent of cash costs | $246 |
+| **Total requested from funder** | **$2,706** |
+| Community contribution, in-kind | $240 |
+| **Total project value** | **$2,946** |
+
+The table tells the same story as the proposal. The base has cement, sand, blocks and village labour. The tank has the tank and the truck. The roof has gutters and the plumber. Nothing is missing and nothing is extra. The community's labour is shown even though no money changes hands, so the funder sees that the village is giving twelve days of work.
+
+> **If you are on an outer island**
+>
+> Add one more transport line for boat freight from Tarawa, and ask the shipping office for the price first, because it may be one of the largest lines in your budget.
+
+## Common mistakes
+
+**Guessing the prices.** A funder can check prices at the same shops you can. If your tank is listed at $2,500 and the shop sells it for $1,450, the whole proposal looks careless.
+
+**Forgetting the small things.** Brackets, screws, tap, truck, phone credit. Walk through each activity in your mind and you will find them.
+
+**Asking for exactly the maximum.** If the limit is $5,000 and your budget comes to exactly $5,000, the funder will suspect you worked backwards from their limit rather than forwards from real prices. Build the budget from the quotes and let the total be what it is.
+
+**Adding contingency without asking.** Some funders will simply cross it out, and some will refuse the whole application.
+
+**Totals that do not add up.** Check every multiplication and every sum, then have a second person check again.
+
+**Budget and story that do not match.** Training in the story but no training costs in the budget, or a laptop in the budget that the story never mentions, and the funder will ask why.
+
+**No community contribution.** A budget where the funder pays for everything and the village gives nothing looks like a request for a gift rather than a partnership. Labour, food for workers and a borrowed wheelbarrow all count.
+
+## After the money arrives
+
+Your budget becomes the plan you spend against. Keep it where you can see it, tick off each item as you buy it, write the real price beside the planned price, and keep every receipt in one envelope from the very first purchase. When the time comes to report back to the funder you will have everything you need, and your group will be trusted with the next grant. Our next resource, **How to report back to your funder**, takes you through that step by step.
+
+---
+
+*Empower Kiribati is a locally driven organisation working to strengthen leadership, enterprise and digital participation in Kiribati. If your group is working through a budget and gets stuck, get in touch.*`,
+  },
 ];

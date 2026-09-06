@@ -54,8 +54,14 @@ const styledHtml = rawHtml
     /<blockquote>\s*<p><strong>([^<]+)<\/strong><\/p>/g,
     '<blockquote class="callout"><p class="callout-label">$1</p>',
   )
-  .replace(/<table>/g, '<div class="table-wrap"><table>')
-  .replace(/<\/table>/g, '</table></div>')
+  // Tables get a scroll wrapper so wide rows never force the page to scroll
+  // horizontally; anything past five columns (a budget table, say) is marked
+  // wide so it keeps a readable minimum width and tells the reader to swipe.
+  .replace(/<table>([\s\S]*?)<\/table>/g, (_match, inner: string) => {
+    const columns = (inner.match(/<th[ >]/g) ?? []).length;
+    if (columns <= 5) return `<div class="table-wrap"><table>${inner}</table></div>`;
+    return `<p class="table-hint">Scroll sideways to see every column</p><div class="table-wrap" data-wide><table>${inner}</table></div>`;
+  })
   // paragraphs that are entirely one <strong> — the lead standfirst and
   // standalone pull-questions (glossary "**Term.** text" paras don't match)
   .replace(/<p><strong>([^<]+)<\/strong><\/p>/g, '<p class="pullout"><strong>$1</strong></p>');
@@ -196,8 +202,10 @@ const cardTag = (entry: CollectionEntry<'articles'>) =>
     queued = false;
     if (!headings.length) return;
     let current: HTMLElement | null = null;
+    // Viewport geometry rather than document offsets: it stays correct through
+    // late reflows (font swap, a revealed block) that stale offsets miss.
     for (const heading of headings) {
-      if (heading.offsetTop - OFFSET <= window.scrollY) current = heading;
+      if (heading.getBoundingClientRect().top <= OFFSET) current = heading;
       else break;
     }
     const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
@@ -227,6 +235,8 @@ const cardTag = (entry: CollectionEntry<'articles'>) =>
 
   window.addEventListener('scroll', schedule, { passive: true });
   window.addEventListener('resize', schedule, { passive: true });
+  window.addEventListener('load', schedule);
+  document.fonts?.ready.then(schedule);
   document.addEventListener('astro:page-load', collect);
 </script>
 
@@ -317,6 +327,28 @@ const cardTag = (entry: CollectionEntry<'articles'>) =>
     width: 100%;
     border-collapse: collapse;
     font-size: 0.92rem;
+    font-variant-numeric: tabular-nums;
+  }
+  /* Five columns or more: hold a readable width and let the wrapper scroll. */
+  .article-body .table-wrap[data-wide] table {
+    min-width: 40rem;
+  }
+  .article-body .table-hint + .table-wrap {
+    margin-top: 0;
+  }
+  .article-body .table-hint {
+    margin: 1.75rem 0 0.5rem;
+    font-family: var(--font-condensed);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ek-muted);
+  }
+  @media (min-width: 48rem) {
+    .article-body .table-hint {
+      display: none;
+    }
   }
   .article-body th,
   .article-body td {
@@ -324,6 +356,21 @@ const cardTag = (entry: CollectionEntry<'articles'>) =>
     border-bottom: 1px solid color-mix(in oklab, var(--color-ek-700) 12%, transparent);
     text-align: left;
     vertical-align: top;
+  }
+  /* marked writes GFM column alignment as the legacy align attribute, which
+     any stylesheet rule outranks — restore it so money columns line up. */
+  .article-body th[align='right'],
+  .article-body td[align='right'] {
+    text-align: right;
+    /* Money and counts stay on one line; only the wordy columns wrap. */
+    white-space: nowrap;
+  }
+  .article-body th[align='center'],
+  .article-body td[align='center'] {
+    text-align: center;
+  }
+  .article-body tbody tr:last-child td {
+    border-bottom: 0;
   }
   .article-body th {
     background: var(--color-ek-paper);

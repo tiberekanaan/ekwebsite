@@ -1,9 +1,31 @@
 # Current Feature
 
-**Feature:** Resource article "How to prepare your grant application" + "On this page" outline for long articles
+**Feature:** Resource article "How to make a budget for your proposal" + wide-table handling
 
 ## Status
-- 🚧 In progress on branch `feature/grant-application-guide` (branched from `main`; the unmerged `feature/wee-programme` working-tree changes were carried along uncommitted and are NOT part of this feature — stage only the files listed below). Backend type-check and frontend build pass; verified in Playwright at 1440px and 390px. Awaiting user local review, then merge + push. **No apply-script needed:** the article ships through the idempotent bootstrap seed, so the Strapi Cloud deploy creates and publishes it (its publish webhook then rebuilds Vercel).
+- 🚧 In progress on branch `feature/budget-article` (branched from `main`; the unmerged `feature/wee-programme` working-tree changes are carried along uncommitted and are NOT part of this feature — stage only the four files below). Backend type-check and frontend build pass; verified in Playwright at 1440px and 390px. Awaiting user review, then commit + merge + push. **No apply-script needed** — the article ships through the idempotent bootstrap seed, so the Strapi Cloud deploy creates and publishes it and the publish webhook rebuilds Vercel.
+- Files: `backend/src/seed/grants-articles.ts`, `frontend/src/pages/resources/articles/[slug].astro`, this doc.
+
+## What it is
+- **Article:** third entry in `GRANT_ARTICLES`, source `~/Downloads/how-to-make-a-budget-for-your-proposal.md`. Slug `how-to-make-a-budget-for-your-proposal`, 9-minute read, reviewed 2026-09, tags `grants` / `budgeting` / `writing your application` / `applying` / `community groups` (stage `applying` is new to the collection, so related-articles falls to the shared topic tag and both existing articles surface).
+- **Copy is the author's, with formatting added** (the ask was explicitly for clearer presentation): the opening three sentences became the bold standfirst; the "one example all the way through" line became a callout, as did the prices caveat and the outer-island note; the 17-term glossary was grouped under five h3 subheadings so it is scannable and reachable from the outline; "How to build the budget" became five numbered step headings over the author's own prose; the three final checks became a bulleted list; a small five-column table was added after the budget-line glossary showing the cement line as one worked row (no new numbers, all four values are the author's).
+- **The big table was split in two** — line items in one table, the totals in a second "What it comes to" table — because the original's five summary rows had five empty leading cells each. Every number and label is unchanged. Money and quantity columns use GFM right-alignment.
+- **Two source fixes:** the mojibake multiplication signs (`4 Ã 18`) are now `4 × 18`, and "Ask the plumber what he charges" is "what they charge".
+- **Wide-table handling in `[slug].astro`** (general, not article-specific): the table post-processor now counts header cells; six or more columns gets `data-wide` on the wrapper, a `min-width: 40rem` so cells never crush, and a condensed "Scroll sideways to see every column" hint rendered *outside* the scroll container (inside, it scrolled away with the table) and hidden from 48rem. Also: `marked` writes GFM alignment as the legacy `align` attribute, which the stylesheet's `text-align: left` silently outranked — added `th[align]`/`td[align]` rules, so right-aligned columns finally align; right-aligned cells are `white-space: nowrap` and tables are `tabular-nums` so money lines up; last row loses its border.
+- **Scroll-spy hardening:** the outline now picks the active section from `getBoundingClientRect().top` rather than `offsetTop` vs `scrollY`, and re-runs on `load` and `document.fonts.ready`, so a late reflow cannot leave the highlight stale. This was robustness, not a live bug.
+- **Gotcha (cost me a detour):** the site sets `scroll-behavior: smooth` globally, so a Playwright `scrollIntoView()` returns while the page is still travelling and the scroll-spy assertion reads a mid-flight position — it looked exactly like an off-by-one highlight bug. Use `scrollIntoView({ behavior: 'instant' })` in tests.
+- **Flagged, not changed:** the closing line promises "Our next resource, **How to report back to your funder**", which does not exist yet. Left verbatim.
+
+## Rollout
+1. Review, merge + push.
+2. Strapi Cloud restarts → the seed creates and publishes the article → publish webhook rebuilds Vercel. Nothing to run by hand. Expect roughly fifteen minutes for the Strapi build before the page can exist.
+
+---
+
+**Previous:** Resource article "How to prepare your grant application" + "On this page" outline for long articles
+
+## Status
+- ✅ Completed 2026-09-04 on branch `feature/grant-application-guide`, merged ff to `main` (`b1460cb`) and pushed; **live on empower.org.ki**. The Strapi Cloud restart took roughly fifteen minutes, during which Vercel had already deployed the outline but the article itself could not exist yet — the page 404'd until the seed ran and its publish webhook fired the second Vercel build. **No apply-script was needed:** the article ships through the idempotent bootstrap seed, so the Strapi Cloud deploy creates and publishes it (its publish webhook then rebuilds Vercel).
 
 ## What it is
 - **Article:** the second entry in `backend/src/seed/grants-articles.ts` `GRANT_ARTICLES` — source `~/Downloads/how-to-prepare-your-grant-application.md`, copy verbatim apart from formatting: the `# ` title became the `title` field, the bold audience line is the standfirst, the mid-document `---` rules were dropped (the page's `hr ~ p` rule would otherwise mute every paragraph after the first rule), the checklist's bold group labels became `###` headings (a whole-bold paragraph would render as a pull-question card), and the "keep a folder" paragraph became a `> **A good habit**` callout. Sign-off mirrors the first article but says "in Kiribati" rather than "across Kiribati" (donor-review flagged phrasing). Slug `how-to-prepare-your-grant-application`, 12-minute read, last reviewed 2026-09, tags `grants` / `writing your application` / `documents` / `getting ready` / `community groups` (all from the closed vocabulary; stage tag `getting ready` because the guide's frame is assembling everything before a round opens).
