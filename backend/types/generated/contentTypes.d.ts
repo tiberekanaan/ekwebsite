@@ -701,6 +701,7 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
         'blocks.threats',
         'blocks.impact',
         'blocks.partner-marquee',
+        'blocks.news',
         'blocks.pillars',
         'blocks.testimonials',
         'blocks.future',
@@ -726,7 +727,7 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
 export interface ApiNewsUpdateNewsUpdate extends Struct.CollectionTypeSchema {
   collectionName: 'news_updates';
   info: {
-    description: 'Short-form news posts surfaced in the landing-page hero and on a dedicated detail route.';
+    description: "Short-form news posts: the latest one is linked from the landing-page hero, the latest three render in the homepage What's new section, all of them list at /news.";
     displayName: 'News Update';
     pluralName: 'news-updates';
     singularName: 'news-update';
@@ -757,6 +758,7 @@ export interface ApiNewsUpdateNewsUpdate extends Struct.CollectionTypeSchema {
     >;
     photo: Schema.Attribute.Media<'images'>;
     publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'title'>;
     summary: Schema.Attribute.Text &
       Schema.Attribute.SetPluginOptions<{
         i18n: {

@@ -306,14 +306,20 @@ const testimonials = defineCollection({
 
 const news = defineCollection({
   loader: async () => {
-    const entries = await softFetchStrapi('/api/news-updates?populate=*');
+    const entries = await softFetchStrapi<StrapiEntry & { title: string; slug?: string | null }>(
+      '/api/news-updates?populate=*',
+    );
+    // Entries created before the uid field existed carry no slug — derive one
+    // from the title, as the programmes loader does.
     return entries.map(({ documentId, id: _strapiNumericId, ...rest }) => ({
       id: documentId,
       ...rest,
+      slug: rest.slug || slugify(rest.title),
     }));
   },
   schema: z.object({
     title: z.string(),
+    slug: z.string(),
     summary: z.string().nullable().optional(),
     content: z.string().nullable().optional(),
     date: z.coerce.date(),

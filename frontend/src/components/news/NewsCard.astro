@@ -1,0 +1,87 @@
+---
+import { STRAPI_URL } from 'astro:env/server';
+import { formatNewsDate } from '@/lib/news';
+
+interface Props {
+  href: string;
+  title: string;
+  date: Date;
+  summary?: string | null;
+  photo?: { url: string; alternativeText?: string | null } | null;
+  /** Stagger for Motion.astro's reveal, in ms. */
+  revealDelay?: number;
+  /** h2 on the /news index (page-level list), h3 under the homepage section heading. */
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { href, title, date, summary, photo, revealDelay = 0, headingLevel: Heading = 'h3' } =
+  Astro.props;
+
+const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
+---
+
+<article
+  data-reveal
+  data-reveal-delay={revealDelay}
+  class="group relative flex flex-col overflow-hidden rounded-3xl bg-white shadow-[0_10px_30px_rgba(15,50,58,0.08)] ring-1 ring-ek-700/10 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_22px_50px_rgba(15,50,58,0.18)] focus-within:ring-2 focus-within:ring-ek-500"
+>
+  <div class="relative aspect-[16/10] overflow-hidden bg-ek-mist">
+    {
+      photo?.url ? (
+        <img
+          src={absoluteUrl(photo.url)}
+          alt={photo.alternativeText ?? ''}
+          loading="lazy"
+          decoding="async"
+          class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+        />
+      ) : (
+        <svg
+          class="absolute -bottom-[18%] -right-[6%] w-[62%] text-ek-500 opacity-[0.16]"
+          viewBox="0 0 200 200"
+          aria-hidden="true"
+        >
+          <path
+            d="M100 20c-25 0-45 20-45 50s20 60 45 60 45-30 45-60-20-50-45-50z"
+            fill="currentColor"
+          />
+        </svg>
+      )
+    }
+  </div>
+
+  <div class="flex flex-1 flex-col px-6 pb-7 pt-5">
+    <time
+      datetime={date.toISOString().slice(0, 10)}
+      class="mb-3 font-condensed text-[0.75rem] font-semibold uppercase tracking-[0.22em] text-ek-olive"
+    >
+      {formatNewsDate(date)}
+    </time>
+    <Heading class="mb-3 font-serif text-[1.35rem] font-bold leading-tight text-ek-ink">
+      <a
+        href={href}
+        class="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none"
+      >
+        {title}
+      </a>
+    </Heading>
+    {summary && <p class="line-clamp-3 text-ek-muted">{summary}</p>}
+    <span
+      class="mt-auto inline-flex items-center gap-2 pt-5 font-condensed text-[0.8rem] font-semibold uppercase tracking-[0.12em] text-ek-700 transition-colors duration-200 group-hover:text-ek-olive"
+      aria-hidden="true"
+    >
+      Read more
+      <svg
+        class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M5 12h14M13 6l6 6-6 6" />
+      </svg>
+    </span>
+  </div>
+</article>

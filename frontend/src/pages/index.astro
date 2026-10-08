@@ -20,6 +20,7 @@ import PartnersBlock, { type PartnersBlockData } from '@/components/blocks/Partn
 import PartnerMarqueeBlock, {
   type PartnerMarqueeBlockData,
 } from '@/components/blocks/PartnerMarqueeBlock.astro';
+import NewsBlock, { type NewsBlockData } from '@/components/blocks/NewsBlock.astro';
 
 type Block =
   | ({ __component: 'blocks.hero' } & HeroBlockData)
@@ -33,10 +34,11 @@ type Block =
   | ({ __component: 'blocks.testimonials' } & TestimonialsBlockData)
   | ({ __component: 'blocks.future' } & FutureBlockData)
   | ({ __component: 'blocks.partners' } & PartnersBlockData)
-  | ({ __component: 'blocks.partner-marquee' } & PartnerMarqueeBlockData);
+  | ({ __component: 'blocks.partner-marquee' } & PartnerMarqueeBlockData)
+  | ({ __component: 'blocks.news' } & NewsBlockData);
 
 // Explicitly populate the dynamic zone, its nested components, relations and media.
-const POPULATE = [
+const POPULATE_LEGACY = [
   'populate[blocks][on][blocks.hero][populate]=*',
   'populate[blocks][on][blocks.what-we-do][populate][items][populate]=*',
   'populate[blocks][on][blocks.programmes][populate]=*',
@@ -51,6 +53,10 @@ const POPULATE = [
   'populate[blocks][on][blocks.partners][populate][logos][populate]=*',
   'populate[blocks][on][blocks.partners][populate][categories]=true',
 ].join('&');
+// Strapi 400s on a populate key for a component it does not know, so the
+// newest block is appended separately and dropped on retry while the target
+// Strapi still runs the previous schema.
+const POPULATE = `${POPULATE_LEGACY}&populate[blocks][on][blocks.news][populate]=*`;
 
 // Contact details for the Work-with-us close come from the Global single
 // type (same source as the footer) so one admin edit updates both.
@@ -66,7 +72,8 @@ let blocks: Block[] = [];
 try {
   // Public read is granted on the homepage endpoint (no token — a scoped
   // API token would 403 on newly-added content types).
-  const res = await fetch(`${STRAPI_URL}/api/homepage?${POPULATE}`);
+  let res = await fetch(`${STRAPI_URL}/api/homepage?${POPULATE}`);
+  if (res.status === 400) res = await fetch(`${STRAPI_URL}/api/homepage?${POPULATE_LEGACY}`);
   if (res.ok) {
     const json = (await res.json()) as { data: { blocks?: Block[] } | null };
     blocks = json.data?.blocks ?? [];
@@ -82,6 +89,11 @@ try {
 const marqueeIdx = blocks.findIndex((b) => b.__component === 'blocks.partner-marquee');
 const marqueeData: PartnerMarqueeBlockData =
   marqueeIdx > -1 ? (blocks.splice(marqueeIdx, 1)[0] as PartnerMarqueeBlockData) : {};
+
+// Same arrangement for What's new: it follows the marquee, and a CMS entry
+// only supplies its heading copy.
+const newsIdx = blocks.findIndex((b) => b.__component === 'blocks.news');
+const newsData: NewsBlockData = newsIdx > -1 ? (blocks.splice(newsIdx, 1)[0] as NewsBlockData) : {};
 
 // Featured projects renders above the pull quote regardless of the CMS zone
 // order — reordering these two blocks in the admin has no effect here.
@@ -118,6 +130,7 @@ if (programmesIdx > -1 && testimonialsIdx > -1 && testimonialsIdx < programmesId
               <Fragment>
                 <ProgrammesBlock block={block} />
                 <PartnerMarqueeBlock block={marqueeData} />
+                <NewsBlock block={newsData} />
               </Fragment>
             );
           case 'blocks.close':
@@ -148,6 +161,7 @@ if (programmesIdx > -1 && testimonialsIdx > -1 && testimonialsIdx < programmesId
         <ImpactBlock block={{}} />
         <ProgrammesBlock block={{}} />
         <PartnerMarqueeBlock block={{}} />
+        <NewsBlock block={{}} />
         <TestimonialsBlock block={{}} />
         <CloseBlock block={{}} contact={contact} />
       </Fragment>

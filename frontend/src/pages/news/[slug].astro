@@ -3,8 +3,10 @@ import Layout from '@/layouts/Layout.astro';
 import PageHeader from '@/components/PageHeader.astro';
 import LanguageToggle from '@/components/empower/LanguageToggle.astro';
 import { marked } from 'marked';
+import { getCollection } from 'astro:content';
 import { STRAPI_URL } from 'astro:env/server';
 import { STRAPI_LOCALES, resolveLang, type Lang } from '@/lib/i18n';
+import { formatNewsDate, newsHref } from '@/lib/news';
 
 export const prerender = false;
 
@@ -19,13 +21,26 @@ interface StrapiNewsUpdate {
   localizations: Array<{ documentId: string; locale: string }> | null;
 }
 
-const { id } = Astro.params;
+const { slug } = Astro.params;
 const lang = resolveLang(Astro.url.searchParams.get('lang'));
+
+// The slug resolves against the build-time collection; the entry's documentId
+// then drives the localized runtime fetch below (same split as /our-programs).
+const entries = await getCollection('news');
+const entry = entries.find((e) => e.data.slug === slug);
+if (!entry) {
+  // Links from before slugs existed carry the documentId — send them on.
+  const legacy = entries.find((e) => e.id === slug);
+  if (legacy) return Astro.redirect(newsHref(legacy.data.slug), 301);
+  // A 404 response gets the prerendered 404 page; rewriting to '/404' from an
+  // on-demand route is forbidden and would 500 instead.
+  return new Response(null, { status: 404 });
+}
 
 const fetchNewsUpdate = async (locale: string): Promise<StrapiNewsUpdate | null> => {
   try {
     const res = await fetch(
-      `${STRAPI_URL}/api/news-updates/${id}?locale=${locale}&populate[photo]=true&populate[localizations]=true`,
+      `${STRAPI_URL}/api/news-updates/${entry.id}?locale=${locale}&populate[photo]=true&populate[localizations]=true`,
     );
     if (!res.ok) return null;
     const { data } = (await res.json()) as { data: StrapiNewsUpdate };
@@ -38,17 +53,13 @@ const fetchNewsUpdate = async (locale: string): Promise<StrapiNewsUpdate | null>
 let item = await fetchNewsUpdate(STRAPI_LOCALES[lang]);
 // fall back to English when the requested translation doesn't exist
 if (!item && lang !== 'en') item = await fetchNewsUpdate(STRAPI_LOCALES.en);
-if (!item) return Astro.rewrite('/404');
+if (!item) return new Response(null, { status: 404 });
 
 const { title, summary, content, photo } = item;
 const hasTranslation = (item.localizations ?? []).length > 0;
 const currentLang: Lang = item.locale === STRAPI_LOCALES.kir ? 'kir' : 'en';
 
-const formattedDate = new Date(item.date).toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-});
+const formattedDate = formatNewsDate(new Date(item.date));
 
 const contentHtml = content ? marked.parse(content) : '';
 
@@ -64,11 +75,14 @@ const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_U
     eyebrow="News"
     title={title}
     description={summary ?? undefined}
-    backHref="/"
-    backLabel="Back to home"
+    backHref="/news"
+    backLabel="Back to news"
   >
     <div class="mt-6 flex flex-wrap items-center gap-4" data-reveal data-reveal-delay="200">
-      <time class="text-sm font-semibold uppercase tracking-widest text-[#9fb9b4]">
+      <time
+        datetime={item.date}
+        class="text-sm font-semibold uppercase tracking-widest text-[#9fb9b4]"
+      >
         {formattedDate}
       </time>
       {hasTranslation && <LanguageToggle current={currentLang} path={Astro.url.pathname} />}

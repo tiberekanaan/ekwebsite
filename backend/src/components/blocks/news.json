@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_blocks_news",
+  "info": {
+    "displayName": "News",
+    "icon": "bulletList",
+    "description": "Copy for the homepage What's new section; the three latest News Updates render beneath it. Position on the page is fixed by the frontend."
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "buttonText": {
+      "type": "string"
+    },
+    "buttonLink": {
+      "type": "string"
+    }
+  }
+}

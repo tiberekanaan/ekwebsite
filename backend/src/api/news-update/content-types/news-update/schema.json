@@ -5,7 +5,7 @@
     "singularName": "news-update",
     "pluralName": "news-updates",
     "displayName": "News Update",
-    "description": "Short-form news posts surfaced in the landing-page hero and on a dedicated detail route."
+    "description": "Short-form news posts: the latest one is linked from the landing-page hero, the latest three render in the homepage What's new section, all of them list at /news."
   },
   "options": {
     "draftAndPublish": true
@@ -24,6 +24,10 @@
           "localized": true
         }
       }
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title"
     },
     "summary": {
       "type": "text",
@@ -49,7 +53,9 @@
       "type": "media",
       "multiple": false,
       "required": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     }
   }
 }

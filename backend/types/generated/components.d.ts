@@ -89,6 +89,22 @@ export interface BlocksImpact extends Struct.ComponentSchema {
   };
 }
 
+export interface BlocksNews extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_news';
+  info: {
+    description: "Copy for the homepage What's new section; the three latest News Updates render beneath it. Position on the page is fixed by the frontend.";
+    displayName: 'News';
+    icon: 'bulletList';
+  };
+  attributes: {
+    buttonLink: Schema.Attribute.String;
+    buttonText: Schema.Attribute.String;
+    description: Schema.Attribute.Text;
+    eyebrow: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface BlocksPartnerMarquee extends Struct.ComponentSchema {
   collectionName: 'components_blocks_partner_marquees';
   info: {
@@ -444,6 +460,7 @@ declare module '@strapi/strapi' {
       'blocks.future': BlocksFuture;
       'blocks.hero': BlocksHero;
       'blocks.impact': BlocksImpact;
+      'blocks.news': BlocksNews;
       'blocks.partner-marquee': BlocksPartnerMarquee;
       'blocks.partners': BlocksPartners;
       'blocks.pillars': BlocksPillars;

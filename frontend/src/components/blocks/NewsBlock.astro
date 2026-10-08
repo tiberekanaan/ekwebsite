@@ -1,0 +1,75 @@
+---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
+import NewsCard from '@/components/news/NewsCard.astro';
+import { getCollection } from 'astro:content';
+import { byNewest, newsHref } from '@/lib/news';
+
+export interface NewsBlockData {
+  eyebrow?: string | null;
+  title?: string | null;
+  description?: string | null;
+  buttonText?: string | null;
+  buttonLink?: string | null;
+}
+
+interface Props {
+  block: NewsBlockData;
+}
+
+const { block } = Astro.props;
+
+const buttonText = block.buttonText ?? 'All news';
+const buttonLink = block.buttonLink ?? '/news';
+
+// The three most recent published News Updates. The section stays out of the
+// page entirely until the first one exists — an empty "What's new" would say
+// the opposite of what it is for.
+const items = (await getCollection('news')).sort(byNewest).slice(0, 3);
+---
+
+{
+  items.length > 0 && (
+    <section id="news" class="bg-ek-mist py-24">
+      <div class="mx-auto max-w-6xl px-7">
+        <div class="mb-14 max-w-[640px]" data-reveal>
+          <Eyebrow as="span" class="mb-4">
+            {block.eyebrow ?? 'News'}
+          </Eyebrow>
+          <h2 class="mb-4 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl">
+            {block.title ?? "What's new"}
+          </h2>
+          <span
+            class="mb-5 block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500"
+            aria-hidden="true"
+          />
+          <p class="text-lg text-ek-muted">
+            {block.description ??
+              'Grants awarded, sessions delivered and partnerships agreed, as they happen.'}
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {items.map((item, i) => (
+            <NewsCard
+              href={newsHref(item.data.slug)}
+              title={item.data.title}
+              date={item.data.date}
+              summary={item.data.summary}
+              photo={item.data.photo}
+              revealDelay={i * 100}
+            />
+          ))}
+        </div>
+
+        <div class="mt-9" data-reveal>
+          <a
+            href={buttonLink}
+            class="inline-flex items-center gap-2 rounded-full border-[1.5px] border-ek-700/20 px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-ek-700 transition-colors duration-200 hover:border-ek-olive hover:text-ek-olive"
+          >
+            {buttonText}
+          </a>
+        </div>
+      </div>
+    </section>
+  )
+}
