@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_shared_challenge_steps",
+  "info": {
+    "displayName": "Challenge step",
+    "icon": "bulletList",
+    "description": "One step of the Challenge cycle on the landing page."
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "text",
+      "required": true
+    }
+  }
+}

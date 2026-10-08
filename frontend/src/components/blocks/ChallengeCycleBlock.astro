@@ -18,13 +18,30 @@ import Eyebrow from '@/components/empower/Eyebrow.astro';
  * upgrade. Steps are hidden with opacity/transform only, so screen readers
  * always get the full text in document order.
  *
- * The copy is final and locked by the donor brief — do not shorten, reword,
- * or "correct" it (fortnight, "can turn into", "as they always have", no
- * school fees are all deliberate). CMS wiring is deferred; the section is
- * not yet a blocks.* component in the Strapi dynamic zone.
+ * Copy comes from the CMS `blocks.challenge-cycle` entry (position is fixed
+ * here, directly under the hero). The constants below are the donor brief's
+ * final text and remain the fallback — do not shorten, reword, or "correct"
+ * them (fortnight, "can turn into", "as they always have", no school fees are
+ * all deliberate).
  */
 
-const STEPS = [
+export interface ChallengeCycleBlockData {
+  eyebrow?: string | null;
+  title?: string | null;
+  steps?: { text: string }[] | null;
+  closeLead?: string | null;
+  closeConditions?: string | null;
+  closeHighlight?: string | null;
+  closeStatement?: string | null;
+}
+
+interface Props {
+  block?: ChallengeCycleBlockData;
+}
+
+const { block = {} } = Astro.props;
+
+const DEFAULT_STEPS = [
   'Kiribati has a small economy with few industries. That means few jobs, and most of them are with government.',
   'Every year many students finish school and university. There are not enough jobs for all of them, even for those who did well.',
   'Those who left school early do not have the skills for the jobs that do exist.',
@@ -35,9 +52,23 @@ const STEPS = [
   "Financial pressure takes a parent's attention away from important responsibilities, such as raising their children well and supporting their education. Children need help and encouragement to do well at school. Without it, many fall behind and leave early. They then face the same job market their parents did, and the pattern begins again.",
   'The harm does not stay inside the home. Where there is no work and no purpose, young people drift into groups that get into trouble, and pressure inside families can turn into violence against women and children.',
 ];
+
+const eyebrow = block.eyebrow || 'The challenge';
+const title = block.title || 'Our challenges are not loud, but their effects are real.';
+const steps =
+  block.steps && block.steps.length > 0 ? block.steps.map((s) => s.text) : DEFAULT_STEPS;
+const closeLead =
+  block.closeLead ||
+  'This cycle repeats itself in every generation. It passes from parents to children, and starts again.';
+const closeConditions =
+  block.closeConditions || 'What holds it in place is conditions, not a lack of effort or ambition.';
+const closeHighlight = block.closeHighlight || 'Conditions can be changed.';
+const closeStatement =
+  block.closeStatement ||
+  'Kiribati will not be changed from outside. It will be changed by I-Kiribati people with the skills, the systems and the standing to do it. We exist to build all three, and to raise the leaders who will keep building long after us.';
 ---
 
-<section id="the-challenge" class="ek-ch relative bg-white">
+<section id="the-challenge" class="ek-ch relative bg-white" style={`--ek-steps: ${steps.length}`}>
   <div
     class="pointer-events-none absolute inset-0"
     style="background: radial-gradient(55% 45% at 80% 8%, rgba(221, 241, 232, 0.65), transparent 70%);"
@@ -47,11 +78,11 @@ const STEPS = [
 
   <div class="ek-flow-wrap relative mx-auto max-w-6xl px-7 pt-24">
     <div class="ek-flow-head max-w-[640px]" data-reveal>
-      <Eyebrow as="span" class="mb-4">The challenge</Eyebrow>
+      <Eyebrow as="span" class="mb-4">{eyebrow}</Eyebrow>
       <h2
         class="mb-4 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl"
       >
-        Our challenges are not loud, but their effects are real.
+        {title}
       </h2>
       <span
         class="block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500"
@@ -67,11 +98,11 @@ const STEPS = [
              is visually hidden then but stays for screen readers, so this
              copy is decorative). -->
         <div class="ek-stage-head" aria-hidden="true">
-          <Eyebrow as="span" class="mb-4">The challenge</Eyebrow>
+          <Eyebrow as="span" class="mb-4">{eyebrow}</Eyebrow>
           <h2
             class="mb-5 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-4xl font-bold leading-[1.1] text-transparent xl:text-5xl"
           >
-            Our challenges are not loud, but their effects are real.
+            {title}
           </h2>
           <span
             class="block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500"
@@ -82,20 +113,20 @@ const STEPS = [
           <div class="ek-rail-inner">
             <span class="ek-rail-line"></span>
             <span class="ek-rail-fill"></span>
-            {STEPS.map((_, i) => <span class="ek-dot">{i + 1}</span>)}
+            {steps.map((_, i) => <span class="ek-dot">{i + 1}</span>)}
           </div>
         </div>
 
         <ol class="ek-slides">
           {
-            STEPS.map((step, i) => (
+            steps.map((step, i) => (
               <li class="ek-slide">
                 <span class="ek-ghost" aria-hidden="true">
                   {i + 1}
                 </span>
                 <div class="ek-slide-inner">
                   <p class="ek-step-label font-condensed" aria-hidden="true">
-                    Step {i + 1} <span class="ek-step-of">of {STEPS.length}</span>
+                    Step {i + 1} <span class="ek-step-of">of {steps.length}</span>
                   </p>
                   <p class="ek-step-text">{step}</p>
                 </div>
@@ -141,14 +172,11 @@ const STEPS = [
           <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
         </svg>
       </span>
-      <p class="pt-1.5 text-[1.05rem] leading-relaxed text-ek-ink sm:text-lg">
-        This cycle repeats itself in every generation. It passes from parents to children, and
-        starts again.
-      </p>
+      <p class="pt-1.5 text-[1.05rem] leading-relaxed text-ek-ink sm:text-lg">{closeLead}</p>
       <p class="mt-6 text-[1.05rem] leading-relaxed text-ek-ink sm:text-lg">
-        What holds it in place is conditions, not a lack of effort or ambition.
+        {closeConditions}{' '}
         <strong class="rounded-sm bg-ek-lime/30 px-1 font-semibold [box-decoration-break:clone]">
-          Conditions can be changed.
+          {closeHighlight}
         </strong>
       </p>
     </div>
@@ -182,9 +210,7 @@ const STEPS = [
       <p
         class="relative max-w-[46rem] bg-gradient-to-br from-white via-white to-ek-lime-bright bg-clip-text font-serif text-2xl font-bold leading-[1.32] text-transparent sm:text-3xl xl:text-[2.4rem] xl:leading-[1.28]"
       >
-        Kiribati will not be changed from outside. It will be changed by I-Kiribati people with the
-        skills, the systems and the standing to do it. We exist to build all three, and to raise
-        the leaders who will keep building long after us.
+        {closeStatement}
       </p>
     </div>
   </div>
@@ -251,8 +277,9 @@ const STEPS = [
   /* ---------- Enhanced: the pinned, scroll-driven stage ---------- */
 
   .ek-ch.ek-enhanced .ek-wrap {
-    /* Nine scroll segments of ~65svh each, plus the pinned viewport itself. */
-    height: calc(9 * 65svh + 100svh);
+    /* One scroll segment of ~65svh per step (--ek-steps is set inline from
+       the step count), plus the pinned viewport itself. */
+    height: calc(var(--ek-steps, 9) * 65svh + 100svh);
     padding: 0;
   }
 

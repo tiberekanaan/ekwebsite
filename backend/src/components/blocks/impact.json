@@ -33,7 +33,15 @@
       "type": "media",
       "multiple": true,
       "required": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "voyageStart": {
+      "type": "string"
+    },
+    "voyageEnd": {
+      "type": "string"
     }
   }
 }

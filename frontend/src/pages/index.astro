@@ -6,7 +6,9 @@ import type { ContactDetails } from '@/types/global';
 
 // Block components (dynamic-zone driven)
 import HeroBlock, { type HeroBlockData } from '@/components/blocks/HeroBlock.astro';
-import ChallengeCycleBlock from '@/components/blocks/ChallengeCycleBlock.astro';
+import ChallengeCycleBlock, {
+  type ChallengeCycleBlockData,
+} from '@/components/blocks/ChallengeCycleBlock.astro';
 import WhatWeDoBlock, { type WhatWeDoBlockData } from '@/components/blocks/WhatWeDoBlock.astro';
 import ProgrammesBlock, { type ProgrammesBlockData } from '@/components/blocks/ProgrammesBlock.astro';
 import CloseBlock, { type CloseBlockData } from '@/components/blocks/CloseBlock.astro';
@@ -35,7 +37,8 @@ type Block =
   | ({ __component: 'blocks.future' } & FutureBlockData)
   | ({ __component: 'blocks.partners' } & PartnersBlockData)
   | ({ __component: 'blocks.partner-marquee' } & PartnerMarqueeBlockData)
-  | ({ __component: 'blocks.news' } & NewsBlockData);
+  | ({ __component: 'blocks.news' } & NewsBlockData)
+  | ({ __component: 'blocks.challenge-cycle' } & ChallengeCycleBlockData);
 
 // Explicitly populate the dynamic zone, its nested components, relations and media.
 const POPULATE_LEGACY = [
@@ -54,9 +57,13 @@ const POPULATE_LEGACY = [
   'populate[blocks][on][blocks.partners][populate][categories]=true',
 ].join('&');
 // Strapi 400s on a populate key for a component it does not know, so the
-// newest block is appended separately and dropped on retry while the target
+// newest blocks are appended separately and dropped on retry while the target
 // Strapi still runs the previous schema.
-const POPULATE = `${POPULATE_LEGACY}&populate[blocks][on][blocks.news][populate]=*`;
+const POPULATE = [
+  POPULATE_LEGACY,
+  'populate[blocks][on][blocks.news][populate]=*',
+  'populate[blocks][on][blocks.challenge-cycle][populate]=*',
+].join('&');
 
 // Contact details for the Work-with-us close come from the Global single
 // type (same source as the footer) so one admin edit updates both.
@@ -68,15 +75,22 @@ const contact: ContactDetails = {
   utcNote: global?.utcNote,
 };
 
+interface HomepageSeo {
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+}
+
 let blocks: Block[] = [];
+let seo: HomepageSeo = {};
 try {
   // Public read is granted on the homepage endpoint (no token — a scoped
   // API token would 403 on newly-added content types).
   let res = await fetch(`${STRAPI_URL}/api/homepage?${POPULATE}`);
   if (res.status === 400) res = await fetch(`${STRAPI_URL}/api/homepage?${POPULATE_LEGACY}`);
   if (res.ok) {
-    const json = (await res.json()) as { data: { blocks?: Block[] } | null };
+    const json = (await res.json()) as { data: ({ blocks?: Block[] } & HomepageSeo) | null };
     blocks = json.data?.blocks ?? [];
+    seo = { seoTitle: json.data?.seoTitle, seoDescription: json.data?.seoDescription };
   }
 } catch {
   // Strapi unreachable — fall back to the default landing below.
@@ -95,6 +109,11 @@ const marqueeData: PartnerMarqueeBlockData =
 const newsIdx = blocks.findIndex((b) => b.__component === 'blocks.news');
 const newsData: NewsBlockData = newsIdx > -1 ? (blocks.splice(newsIdx, 1)[0] as NewsBlockData) : {};
 
+// The Challenge sits directly under the hero; its CMS entry supplies copy only.
+const challengeIdx = blocks.findIndex((b) => b.__component === 'blocks.challenge-cycle');
+const challengeData: ChallengeCycleBlockData =
+  challengeIdx > -1 ? (blocks.splice(challengeIdx, 1)[0] as ChallengeCycleBlockData) : {};
+
 // Featured projects renders above the pull quote regardless of the CMS zone
 // order — reordering these two blocks in the admin has no effect here.
 const programmesIdx = blocks.findIndex((b) => b.__component === 'blocks.programmes');
@@ -105,8 +124,11 @@ if (programmesIdx > -1 && testimonialsIdx > -1 && testimonialsIdx < programmesId
 ---
 
 <Layout
-  title="Empower Kiribati — Thriving, resilient futures"
-  description="Empower Kiribati is a platform for community initiatives. We partner with ministries, funders and community organisations to design, deliver and measure work that cultivates the conditions for a resilient Kiribati."
+  title={seo.seoTitle || 'Thriving, resilient futures'}
+  description={
+    seo.seoDescription ||
+    'Empower Kiribati is a platform for community initiatives. We partner with ministries, funders and community organisations to design, deliver and measure work that cultivates the conditions for a resilient Kiribati.'
+  }
   floatingHeader
 >
   {
@@ -114,13 +136,10 @@ if (programmesIdx > -1 && testimonialsIdx > -1 && testimonialsIdx < programmesId
       blocks.map((block) => {
         switch (block.__component) {
           case 'blocks.hero':
-            // The Challenge sits directly under the hero. Its copy is locked
-            // by the donor brief, so it renders from the component's own
-            // constants — not from the CMS dynamic zone (wiring deferred).
             return (
               <Fragment>
                 <HeroBlock block={block} />
-                <ChallengeCycleBlock />
+                <ChallengeCycleBlock block={challengeData} />
               </Fragment>
             );
           case 'blocks.what-we-do':
@@ -156,7 +175,7 @@ if (programmesIdx > -1 && testimonialsIdx > -1 && testimonialsIdx < programmesId
     ) : (
       <Fragment>
         <HeroBlock block={{}} />
-        <ChallengeCycleBlock />
+        <ChallengeCycleBlock block={{}} />
         <WhatWeDoBlock block={{}} />
         <ImpactBlock block={{}} />
         <ProgrammesBlock block={{}} />

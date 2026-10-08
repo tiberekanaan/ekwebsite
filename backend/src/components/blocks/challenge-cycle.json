@@ -1,0 +1,34 @@
+{
+  "collectionName": "components_blocks_challenge_cycles",
+  "info": {
+    "displayName": "Challenge cycle",
+    "icon": "rotate",
+    "description": "The Challenge section under the hero: heading, the steps of the cycle (scroll-pinned on the frontend) and the three-part close. Position on the page is fixed by the frontend."
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "steps": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.challenge-step"
+    },
+    "closeLead": {
+      "type": "text"
+    },
+    "closeConditions": {
+      "type": "text"
+    },
+    "closeHighlight": {
+      "type": "string"
+    },
+    "closeStatement": {
+      "type": "text"
+    }
+  }
+}

@@ -1,5 +1,23 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface BlocksChallengeCycle extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_challenge_cycles';
+  info: {
+    description: 'The Challenge section under the hero: heading, the steps of the cycle (scroll-pinned on the frontend) and the three-part close. Position on the page is fixed by the frontend.';
+    displayName: 'Challenge cycle';
+    icon: 'rotate';
+  };
+  attributes: {
+    closeConditions: Schema.Attribute.Text;
+    closeHighlight: Schema.Attribute.String;
+    closeLead: Schema.Attribute.Text;
+    closeStatement: Schema.Attribute.Text;
+    eyebrow: Schema.Attribute.String;
+    steps: Schema.Attribute.Component<'shared.challenge-step', true>;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface BlocksChallenges extends Struct.ComponentSchema {
   collectionName: 'components_blocks_challenges';
   info: {
@@ -63,6 +81,8 @@ export interface BlocksHero extends Struct.ComponentSchema {
     description: Schema.Attribute.Text;
     eyebrow: Schema.Attribute.String;
     heritage: Schema.Attribute.Text;
+    photo: Schema.Attribute.Media<'images'>;
+    photoLabel: Schema.Attribute.String;
     primaryButtonLink: Schema.Attribute.String;
     primaryButtonText: Schema.Attribute.String;
     secondaryButtonLink: Schema.Attribute.String;
@@ -86,6 +106,8 @@ export interface BlocksImpact extends Struct.ComponentSchema {
     outcomes: Schema.Attribute.Component<'shared.outcome-item', true>;
     photos: Schema.Attribute.Media<'images', true>;
     title: Schema.Attribute.String;
+    voyageEnd: Schema.Attribute.String;
+    voyageStart: Schema.Attribute.String;
   };
 }
 
@@ -284,6 +306,18 @@ export interface SharedChallengeItem extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedChallengeStep extends Struct.ComponentSchema {
+  collectionName: 'components_shared_challenge_steps';
+  info: {
+    description: 'One step of the Challenge cycle on the landing page.';
+    displayName: 'Challenge step';
+    icon: 'bulletList';
+  };
+  attributes: {
+    text: Schema.Attribute.Text & Schema.Attribute.Required;
+  };
+}
+
 export interface SharedFutureStat extends Struct.ComponentSchema {
   collectionName: 'components_shared_future_stats';
   info: {
@@ -455,6 +489,7 @@ export interface SharedValueItem extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'blocks.challenge-cycle': BlocksChallengeCycle;
       'blocks.challenges': BlocksChallenges;
       'blocks.close': BlocksClose;
       'blocks.future': BlocksFuture;
@@ -473,6 +508,7 @@ declare module '@strapi/strapi' {
       'content-blocks.video': ContentBlocksVideo;
       'shared.area-item': SharedAreaItem;
       'shared.challenge-item': SharedChallengeItem;
+      'shared.challenge-step': SharedChallengeStep;
       'shared.future-stat': SharedFutureStat;
       'shared.impact-metric': SharedImpactMetric;
       'shared.link': SharedLink;

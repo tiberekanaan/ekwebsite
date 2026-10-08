@@ -682,7 +682,7 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
 export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
   collectionName: 'homepages';
   info: {
-    description: 'Editable hero copy and impact metrics for the landing page.';
+    description: 'Landing page: SEO fields plus the editable blocks of the dynamic zone.';
     displayName: 'Homepage';
     pluralName: 'homepages';
     singularName: 'homepage';
@@ -694,6 +694,7 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
     blocks: Schema.Attribute.DynamicZone<
       [
         'blocks.hero',
+        'blocks.challenge-cycle',
         'blocks.what-we-do',
         'blocks.programmes',
         'blocks.close',
@@ -718,6 +719,8 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    seoDescription: Schema.Attribute.Text;
+    seoTitle: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

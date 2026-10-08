@@ -6,6 +6,7 @@ import { Image } from 'astro:assets';
 import heroPhoto from '@/assets/images/hero-photo.jpg';
 import { getCollection } from 'astro:content';
 import { byNewest, formatNewsDate, newsHref } from '@/lib/news';
+import { STRAPI_URL } from 'astro:env/server';
 
 export interface HeroBlockData {
   eyebrow?: string | null;
@@ -17,6 +18,10 @@ export interface HeroBlockData {
   primaryButtonLink?: string | null;
   secondaryButtonText?: string | null;
   secondaryButtonLink?: string | null;
+  /** Replaces the bundled (pre-graded) hero photo when set. */
+  photo?: { url: string; alternativeText?: string | null } | null;
+  /** Caption chip on the photo. */
+  photoLabel?: string | null;
 }
 
 interface Props {
@@ -33,6 +38,15 @@ const primaryText = block.primaryButtonText ?? 'See our work';
 const primaryLink = block.primaryButtonLink ?? '#our-work';
 const secondaryText = block.secondaryButtonText ?? 'Partner with us';
 const secondaryLink = block.secondaryButtonLink ?? '/contact';
+const photoLabel = block.photoLabel || 'South Tarawa · Kiribati';
+const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
+const cmsPhoto = block.photo?.url
+  ? { src: absoluteUrl(block.photo.url), alt: block.photo.alternativeText ?? '' }
+  : null;
+const bundledAlt = 'Children laughing together in a game under the roof of a maneaba in Kiribati';
+// `*text*` in the CMS title renders as the lime emphasis (CloseBlock pattern);
+// the fallback is the brief's headline with the same emphasis.
+const titleParts = (block.title || '*Thriving, resilient* futures').split(/\*([^*]+)\*/g);
 
 // The newest News Update, surfaced as a one-line "Latest" link so a returning
 // visitor can see the site has moved without scrolling. Omitted until one exists.
@@ -55,14 +69,26 @@ const [latest] = (await getCollection('news')).sort(byNewest);
     class="absolute inset-y-0 right-0 z-[1] hidden w-1/2 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_45%)] lg:block"
     data-reveal
   >
-    <Image
-      src={heroPhoto}
-      alt="Children laughing together in a game under the roof of a maneaba in Kiribati"
-      widths={[700, 1000, 1200]}
-      sizes="50vw"
-      class="hero-photo-drift h-full w-full object-cover"
-      loading="eager"
-    />
+    {
+      cmsPhoto ? (
+        <img
+          src={cmsPhoto.src}
+          alt={cmsPhoto.alt}
+          class="hero-photo-drift h-full w-full object-cover"
+          loading="eager"
+          fetchpriority="high"
+        />
+      ) : (
+        <Image
+          src={heroPhoto}
+          alt={bundledAlt}
+          widths={[700, 1000, 1200]}
+          sizes="50vw"
+          class="hero-photo-drift h-full w-full object-cover"
+          loading="eager"
+        />
+      )
+    }
     <div
       class="absolute inset-0 bg-gradient-to-r from-ek-900/70 via-ek-900/15 to-transparent"
       aria-hidden="true"
@@ -82,7 +108,7 @@ const [latest] = (await getCollection('news')).sort(byNewest);
       class="absolute bottom-8 right-8 inline-flex items-center gap-2 rounded-full bg-ek-900/55 px-4 py-2 font-condensed text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/90 ring-1 ring-white/20 backdrop-blur-md"
     >
       <span class="h-1.5 w-1.5 rounded-full bg-ek-lime" aria-hidden="true"></span>
-      South Tarawa · Kiribati
+      {photoLabel}
     </p>
   </div>
 
@@ -97,12 +123,8 @@ const [latest] = (await getCollection('news')).sort(byNewest);
         class="mb-6 bg-gradient-to-br from-white via-white to-ek-lime-bright bg-clip-text font-serif text-5xl font-bold leading-[1.06] text-transparent sm:text-6xl lg:text-7xl"
       >
         {
-          block.title ? (
-            block.title
-          ) : (
-            <Fragment>
-              <em class="not-italic text-ek-lime-bright">Thriving, resilient</em> futures
-            </Fragment>
+          titleParts.map((part, i) =>
+            i % 2 === 1 ? <em class="not-italic text-ek-lime-bright">{part}</em> : part,
           )
         }
       </h1>
@@ -163,14 +185,25 @@ const [latest] = (await getCollection('news')).sort(byNewest);
     </div>
 
     <div class="relative overflow-hidden rounded-2xl ring-1 ring-white/15 lg:hidden" data-reveal data-reveal-delay="200">
-      <Image
-        src={heroPhoto}
-        alt="Children laughing together in a game under the roof of a maneaba in Kiribati"
-        widths={[400, 800]}
-        sizes="100vw"
-        class="aspect-[16/10] h-auto w-full object-cover"
-        loading="eager"
-      />
+      {
+        cmsPhoto ? (
+          <img
+            src={cmsPhoto.src}
+            alt={cmsPhoto.alt}
+            class="aspect-[16/10] h-auto w-full object-cover"
+            loading="eager"
+          />
+        ) : (
+          <Image
+            src={heroPhoto}
+            alt={bundledAlt}
+            widths={[400, 800]}
+            sizes="100vw"
+            class="aspect-[16/10] h-auto w-full object-cover"
+            loading="eager"
+          />
+        )
+      }
       <div
         class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-ek-900/60 to-transparent"
         aria-hidden="true"

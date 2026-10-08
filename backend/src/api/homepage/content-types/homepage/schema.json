@@ -5,7 +5,7 @@
     "singularName": "homepage",
     "pluralName": "homepages",
     "displayName": "Homepage",
-    "description": "Editable hero copy and impact metrics for the landing page."
+    "description": "Landing page: SEO fields plus the editable blocks of the dynamic zone."
   },
   "options": {
     "draftAndPublish": true
@@ -15,6 +15,7 @@
       "type": "dynamiczone",
       "components": [
         "blocks.hero",
+        "blocks.challenge-cycle",
         "blocks.what-we-do",
         "blocks.programmes",
         "blocks.close",
@@ -28,6 +29,12 @@
         "blocks.future",
         "blocks.partners"
       ]
+    },
+    "seoTitle": {
+      "type": "string"
+    },
+    "seoDescription": {
+      "type": "text"
     }
   }
 }

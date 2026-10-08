@@ -30,6 +30,17 @@
     },
     "secondaryButtonLink": {
       "type": "string"
+    },
+    "photo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "photoLabel": {
+      "type": "string"
     }
   }
 }
