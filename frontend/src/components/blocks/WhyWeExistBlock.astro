@@ -1,0 +1,83 @@
+---
+import Eyebrow from '@/components/empower/Eyebrow.astro';
+import type { ChallengeCycleBlockData } from '@/components/blocks/ChallengeCycleBlock.astro';
+
+/**
+ * Homepage teaser for "Why we exist". The full nine-step Challenge cycle now
+ * lives on /about#why-we-exist; this block condenses it with the cycle's own
+ * words (heading, highlight and closing statement — no new copy) and links
+ * there. Reads the same blocks.challenge-cycle CMS entry as the About page.
+ */
+interface Props {
+  block: ChallengeCycleBlockData;
+}
+
+const { block } = Astro.props;
+
+const title = block.title || 'Our challenges are not loud, but their effects are real.';
+const closeConditions =
+  block.closeConditions || 'What holds it in place is conditions, not a lack of effort or ambition.';
+const closeHighlight = block.closeHighlight || 'Conditions can be changed.';
+const closeStatement =
+  block.closeStatement ||
+  'Kiribati will not be changed from outside. It will be changed by I-Kiribati people with the skills, the systems and the standing to do it. We exist to build all three, and to raise the leaders who will keep building long after us.';
+---
+
+<section id="why-we-exist" class="bg-white py-24">
+  <div class="mx-auto max-w-6xl px-7">
+    <div class="grid items-end gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+      <div data-reveal>
+        <Eyebrow as="span" class="mb-4">Why we exist</Eyebrow>
+        <h2
+          class="mb-4 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl"
+        >
+          {title}
+        </h2>
+        <span
+          class="mb-6 block h-1 w-16 rounded-full bg-gradient-to-r from-ek-lime to-ek-500"
+          aria-hidden="true"></span>
+        <p class="text-lg leading-relaxed text-ek-ink">
+          {closeConditions}{' '}
+          <strong class="rounded-sm bg-ek-lime/30 px-1 font-semibold [box-decoration-break:clone]">
+            {closeHighlight}
+          </strong>
+        </p>
+      </div>
+
+      <div
+        class="relative overflow-hidden rounded-3xl bg-ek-900 px-8 py-10 sm:px-10 lg:px-12 lg:py-12"
+        data-reveal
+        data-reveal-delay="120"
+      >
+        <div
+          class="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_90%_at_85%_15%,rgba(42,128,137,0.35),transparent_70%)]"
+          aria-hidden="true"
+        >
+        </div>
+        <p
+          class="relative bg-gradient-to-br from-white via-white to-ek-lime-bright bg-clip-text font-serif text-2xl font-bold leading-[1.32] text-transparent sm:text-[1.7rem]"
+        >
+          {closeStatement}
+        </p>
+        <a
+          href="/about#why-we-exist"
+          class="relative mt-8 inline-flex items-center gap-2 rounded-full bg-ek-lime px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-ek-900 transition-all duration-200 hover:-translate-y-0.5 hover:bg-ek-lime-bright"
+        >
+          Read why we exist
+          <svg
+            class="h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M5 12h14M13 6l6 6-6 6"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

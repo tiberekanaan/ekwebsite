@@ -1,6 +1,8 @@
 ---
 import Eyebrow from '@/components/empower/Eyebrow.astro';
 import Layout from '@/layouts/Layout.astro';
+import ChallengeCycleBlock from '@/components/blocks/ChallengeCycleBlock.astro';
+import { fetchChallengeCycle } from '@/lib/challenge';
 import { Image } from 'astro:assets';
 import { marked } from 'marked';
 import { STRAPI_URL } from 'astro:env/server';
@@ -30,6 +32,7 @@ if (res.ok) {
 }
 
 const title = page?.title ?? 'About';
+const challenge = await fetchChallengeCycle();
 const md = page?.content ?? '';
 
 // Split richtext by `## ` H2 headings so each section gets its own visual treatment.
@@ -148,10 +151,15 @@ const arrowRight = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
     </div>
   </section>
 
+  {/* Why we exist — the Challenge cycle, moved here from the homepage (which
+       keeps a short teaser linking to this anchor). Copy is the homepage's
+       blocks.challenge-cycle entry. */}
+  <ChallengeCycleBlock block={challenge} anchorId="why-we-exist" eyebrowOverride="Why we exist" />
+
   {/* Origin narrative — magazine column with drop cap + offset photo pair */}
   {
     originHtml && (
-      <section class="bg-white py-24">
+      <section class="border-t border-ek-700/10 bg-white py-24">
         <div class="mx-auto grid w-full max-w-6xl items-start gap-x-14 gap-y-12 px-7 lg:grid-cols-[1.1fr_0.9fr]">
           <div data-reveal>
             <Eyebrow as="span" class="mb-4">Our story</Eyebrow>
@@ -196,7 +204,7 @@ const arrowRight = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
       <section class="bg-ek-mist py-24">
         <div class="mx-auto w-full max-w-6xl px-7">
           <div class="mb-14 max-w-[640px]" data-reveal>
-            <Eyebrow as="span" class="mb-4">Why we exist</Eyebrow>
+            <Eyebrow as="span" class="mb-4">What we stand for</Eyebrow>
             <h2 class="mb-4 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl">
               The seed we plant, the horizon we work toward
             </h2>

@@ -37,9 +37,13 @@ export interface ChallengeCycleBlockData {
 
 interface Props {
   block?: ChallengeCycleBlockData;
+  /** Section id (anchor target). */
+  anchorId?: string;
+  /** Overrides the CMS eyebrow, e.g. "Why we exist" on the About page. */
+  eyebrowOverride?: string;
 }
 
-const { block = {} } = Astro.props;
+const { block = {}, anchorId = 'the-challenge', eyebrowOverride } = Astro.props;
 
 const DEFAULT_STEPS = [
   'Kiribati has a small economy with few industries. That means few jobs, and most of them are with government.',
@@ -53,7 +57,7 @@ const DEFAULT_STEPS = [
   'The harm does not stay inside the home. Where there is no work and no purpose, young people drift into groups that get into trouble, and pressure inside families can turn into violence against women and children.',
 ];
 
-const eyebrow = block.eyebrow || 'The challenge';
+const eyebrow = eyebrowOverride || block.eyebrow || 'The challenge';
 const title = block.title || 'Our challenges are not loud, but their effects are real.';
 const steps =
   block.steps && block.steps.length > 0 ? block.steps.map((s) => s.text) : DEFAULT_STEPS;
@@ -68,7 +72,7 @@ const closeStatement =
   'Kiribati will not be changed from outside. It will be changed by I-Kiribati people with the skills, the systems and the standing to do it. We exist to build all three, and to raise the leaders who will keep building long after us.';
 ---
 
-<section id="the-challenge" class="ek-ch relative bg-white" style={`--ek-steps: ${steps.length}`}>
+<section id={anchorId} class="ek-ch relative scroll-mt-24 bg-white" style={`--ek-steps: ${steps.length}`}>
   <div
     class="pointer-events-none absolute inset-0"
     style="background: radial-gradient(55% 45% at 80% 8%, rgba(221, 241, 232, 0.65), transparent 70%);"
@@ -607,7 +611,7 @@ const closeStatement =
   };
 
   const init = () => {
-    section = document.getElementById('the-challenge');
+    section = document.querySelector<HTMLElement>('.ek-ch');
     wrap = section?.querySelector('.ek-wrap') ?? null;
     slides = section ? Array.from(section.querySelectorAll('.ek-slide')) : [];
     dots = section ? Array.from(section.querySelectorAll('.ek-dot')) : [];

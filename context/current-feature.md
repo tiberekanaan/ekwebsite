@@ -1,6 +1,23 @@
 # Current Feature
 
-**Feature:** Landing-page copy made permanent CMS content (the hard-coded Challenge cycle and every fallback string become editable Strapi fields, seeded on local and live)
+**Feature:** Landing page restructure — activity first; the Challenge cycle moves to About as "Why we exist"
+
+## Status
+- 🚧 In progress on branch `feature/landing-restructure`. `astro check` clean (pre-existing Search error only), `astro build` passes, Playwright ✓ at 1440/390. Awaiting user browser review, then commit + merge + push. **No CMS schema change and no apply-script** — all copy is already in Strapi; the deploy alone changes the live page.
+- Files: `frontend/src/pages/index.astro`, `frontend/src/pages/about.astro`, `frontend/src/components/blocks/{ChallengeCycleBlock,NewsBlock}.astro`, `frontend/src/components/blocks/WhyWeExistBlock.astro` (new), `frontend/src/lib/challenge.ts` (new), this doc.
+
+## What it is
+- **Why:** the user wants the homepage to read as a live organisation, not a donor argument. An independent analyst review (2026-10-15) found four of five audiences want freshness and programmes within two screens and the ~6.5-screen pinned cycle under the hero taxed everyone; recommended a hybrid keeping a short argument teaser, the one role-attributed quote and its anonymity note. User picked: **Hero → Featured projects → What's new → Track record → Strategic focus → Why-we-exist teaser → partners → quote → Work with us** (Strategic focus placement chosen by the user when it was missing from their list). This supersedes the 2026-10-08 "keep News low" decision and the donor brief's hero → Challenge sequence.
+- **Homepage order is fixed in code** (`index.astro` `take()`s each block by component; admin drag-reordering has no effect — previously only marquee/news/challenge were injected and programmes/testimonials swapped). Legacy blocks (challenges/threats/pillars/future/partners) are not in the production zone; if added they render before the close.
+- **Teaser (`WhyWeExistBlock`)**: white section, the cycle's own heading + "What holds it in place… / Conditions can be changed." on the left, the closing statement in the dark ek-900 panel on the right with a lime "Read why we exist" → `/about#why-we-exist`. No new copy; reads the homepage `blocks.challenge-cycle` entry.
+- **About:** the full pinned cycle is the first section after the About hero (`anchorId="why-we-exist"`, eyebrow overridden to "Why we exist"), copy via new `src/lib/challenge.ts` `fetchChallengeCycle()` from the homepage entry (single source). The mission/vision duet's eyebrow "Why we exist" → **"What we stand for"** (avoid two sections of the same name); "Our story" gains a top hairline (two white sections now meet). `ChallengeCycleBlock` gained `anchorId`/`eyebrowOverride` props and its scroll script finds `.ek-ch` instead of the hard-coded id.
+- **Backgrounds:** dark hero → mist Featured → **white** What's new (was mist) → dark Track record → mist Strategic focus → white teaser → white marquee (hairline) → paper quote → dark close.
+- **Not changed:** the homepage pull quote + anonymity note stay (analyst: the only place the consent posture is stated); programme pages already show their own testimonials. Hero "Latest" line stays. Recommended follow-ups (owner side): a steady news cadence (monthly or better), replacing the placeholder story photos, and telling the donor-brief authors the cycle moved.
+- **Gotcha:** the running local Strapi regenerated `backend/types/generated/components.d.ts` without the challenge-cycle types (dev-server type generation can lag schema files) — restored from git; don't commit that drift.
+
+---
+
+**Previous:** Landing-page copy made permanent CMS content (the hard-coded Challenge cycle and every fallback string become editable Strapi fields, seeded on local and live)
 
 ## Status
 - ✅ Completed 2026-10-08 on branch `feature/cms-landing-content`, merged ff to `main` (`025ef81`) and pushed. **Rolled out 2026-10-08:** all three scripts run against production (`apply-landing-content.js` → 2 repairs + fills + 3 inserted blocks + SEO + 13 Global fields; `apply-news-nav.js` → navbar News; `apply-news-items.js` → 3 stories + placeholder photo, published). The REST PUTs published directly. The publish webhook rebuilt Vercel in ~40 s; **live on empower.org.ki** and verified: What's new section, hero Latest line, News nav, Work-with-us close copy, Featured projects heading, 9 CMS challenge steps, footer legal line, title no longer doubled. Gotcha: the first token the user pasted 401'd on both live and local — a Transfer token looks identical to an API token (256 hex); only Settings → API Tokens → Full access works for the scripts.
