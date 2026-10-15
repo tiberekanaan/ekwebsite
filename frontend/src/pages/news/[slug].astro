@@ -7,6 +7,9 @@ import { getCollection } from 'astro:content';
 import { STRAPI_URL } from 'astro:env/server';
 import { STRAPI_LOCALES, resolveLang, type Lang } from '@/lib/i18n';
 import { formatNewsDate, newsHref } from '@/lib/news';
+import JsonLd from '@/components/seo/JsonLd.astro';
+import { createNewsArticleSchema } from '@/lib/schema';
+import siteConfig from '@/config/site.config';
 
 export const prerender = false;
 
@@ -64,6 +67,15 @@ const formattedDate = formatNewsDate(new Date(item.date));
 const contentHtml = content ? marked.parse(content) : '';
 
 const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
+
+const articleSchema = createNewsArticleSchema({
+  title,
+  description: summary,
+  url: `${siteConfig.url}${newsHref(entry.data.slug)}`,
+  image: photo ? absoluteUrl(photo.url) : null,
+  datePublished: item.date,
+  dateModified: entry.data.updatedAt?.toISOString().slice(0, 10),
+});
 ---
 
 <Layout
@@ -71,6 +83,7 @@ const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_U
   description={summary ?? `${title} — News update from Empower Kiribati`}
   floatingHeader
 >
+  <JsonLd schema={articleSchema} />
   <PageHeader
     eyebrow="News"
     title={title}

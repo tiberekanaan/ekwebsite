@@ -53,7 +53,11 @@ const siteConfig: SiteConfig = {
   name: 'Empower Kiribati',
   description:
     'Empower Kiribati is a platform for community initiatives. We partner with ministries, funders and community organisations to design, deliver and measure work that cultivates the conditions for a resilient Kiribati.',
-  url: SITE_URL || 'https://empower.org.ki',
+  // Mirrors astro.config.mjs: never canonicalise to a *.vercel.app host.
+  url:
+    SITE_URL && !new URL(SITE_URL).hostname.endsWith('.vercel.app')
+      ? SITE_URL.replace(/\/$/, '')
+      : 'https://empower.org.ki',
   ogImage: '/og-default.png',
   author: 'Empower Kiribati',
   email: 'externalaffairs@empower.org.ki',

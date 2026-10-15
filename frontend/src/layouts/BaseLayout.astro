@@ -8,7 +8,7 @@ import ConsentBanner from '@/components/ui/overlay/ConsentBanner';
 import { ClientRouter } from 'astro:transitions';
 import { Font } from 'astro:assets';
 import { createWebsiteSchema, createOrganizationSchema } from '@/lib/schema';
-import type { WebSite, Organization, WithContext } from 'schema-dts';
+import type { WebSite, NGO, WithContext } from 'schema-dts';
 import siteConfig from '@/config/site.config';
 
 interface Props {
@@ -45,7 +45,7 @@ const {
 } = Astro.props;
 
 // Build JSON-LD schemas
-const schemas: Array<WithContext<WebSite> | WithContext<Organization>> = [createWebsiteSchema()];
+const schemas: Array<WithContext<WebSite> | WithContext<NGO>> = [createWebsiteSchema()];
 if (includeOrgSchema) {
   schemas.push(createOrganizationSchema());
 }

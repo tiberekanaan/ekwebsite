@@ -108,7 +108,12 @@ const compassIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" 
 const arrowRight = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
 ---
 
-<Layout title={title} description={`${title} — Empower Kiribati`} floatingHeader>
+<Layout
+  title={title}
+  description="Who we are and why we exist: Empower Kiribati is a locally-led NGO in Bikenibeu, South Tarawa, working on leadership, digital skills and financial confidence in the communities we come from."
+  floatingHeader
+  includeOrgSchema
+>
   {/* Hero — full-bleed dark panel under the floating pill navbar */}
   <section
     class="relative overflow-hidden bg-ek-900 bg-[radial-gradient(1200px_600px_at_75%_-10%,rgba(42,128,137,0.55),transparent_60%),linear-gradient(160deg,var(--color-ek-800)_0%,var(--color-ek-900)_70%)] text-white"

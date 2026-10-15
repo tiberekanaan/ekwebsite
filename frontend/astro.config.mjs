@@ -111,8 +111,61 @@ const pagefindDev = {
   },
 };
 
+// The canonical address. A missing or *.vercel.app SITE_URL (a preview host,
+// or the stale value that pointed every canonical tag, the sitemap and
+// robots.txt at a dead domain until 2026-10) falls back to the real domain.
+const CANONICAL_SITE = 'https://empower.org.ki';
+const SITE = (() => {
+  const raw = process.env.SITE_URL;
+  if (!raw) return CANONICAL_SITE;
+  try {
+    return new URL(raw).hostname.endsWith('.vercel.app') ? CANONICAL_SITE : raw;
+  } catch {
+    return CANONICAL_SITE;
+  }
+})();
+
+// Detail pages rendered on request (news, programmes, resources, blog posts)
+// are invisible to the sitemap generator, so their URLs are listed here from
+// Strapi at build time. Every content publish triggers a rebuild through the
+// Strapi webhook, so the list stays current. A Strapi outage just yields the
+// static pages.
+const slugifyTitle = (value) =>
+  value
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+async function onDemandPages() {
+  const strapi = process.env.STRAPI_URL || 'http://localhost:1337';
+  const list = async (path) => {
+    try {
+      const res = await fetch(`${strapi}${path}`, { signal: AbortSignal.timeout(15000) });
+      if (!res.ok) return [];
+      return (await res.json()).data ?? [];
+    } catch {
+      return [];
+    }
+  };
+  const [news, projects, resources, blogs] = await Promise.all([
+    list('/api/news-updates?fields[0]=slug&fields[1]=title&pagination[pageSize]=200'),
+    list('/api/projects?fields[0]=title&pagination[pageSize]=200'),
+    list('/api/resources?fields[0]=title&pagination[pageSize]=200'),
+    list('/api/blogs?fields[0]=title&pagination[pageSize]=200'),
+  ]);
+  return [
+    ...news.map((n) => `/news/${n.slug || slugifyTitle(n.title)}`),
+    ...projects.map((p) => `/our-programs/${slugifyTitle(p.title)}`),
+    ...resources.map((r) => `/resources/${r.documentId}`),
+    ...blogs.map((b) => `/blog/${b.documentId}`),
+  ].map((path) => new URL(path, SITE).href);
+}
+
 export default defineConfig({
-  site: process.env.SITE_URL || 'https://empower.org.ki',
+  site: SITE,
 
   env: {
     schema: {
@@ -191,7 +244,11 @@ export default defineConfig({
   integrations: [
     react(),
     mdx(),
-    sitemap(),
+    sitemap({
+      customPages: await onDemandPages(),
+      // Not real content pages.
+      filter: (page) => !/\/(404|pillars)(\/|$)/.test(new URL(page).pathname),
+    }),
     strapiAutoRefresh,
     pagefindDev,
   ],

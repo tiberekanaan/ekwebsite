@@ -1,6 +1,24 @@
 # Current Feature
 
-**Feature:** Landing page restructure — activity first; the Challenge cycle moves to About as "Why we exist"
+**Feature:** SEO indexing fixes — canonical address guard, complete sitemap, NGO + NewsArticle structured data
+
+## Status
+- 🚧 In progress on branch `fix/seo-indexing`. `astro check` clean (pre-existing Search error only); `astro build` against production Strapi passes; all 12 newly listed sitemap URLs return 200 live. Awaiting user go-ahead to commit + merge + push. No CMS change.
+- Files: `frontend/astro.config.mjs`, `frontend/src/config/{site,nav}.config.ts`, `frontend/src/lib/schema.ts`, `frontend/src/layouts/BaseLayout.astro`, `frontend/src/pages/{index,about}.astro`, `frontend/src/pages/news/[slug].astro`, `frontend/public/logo.png` (new), `frontend/src/pages/components.astro` (deleted), this doc.
+
+## What it is
+- **Why:** an SEO audit (2026-10-15) found every canonical tag, the sitemap, robots.txt, OG images and JSON-LD pointing at the dead `ekwebsite-mu.vercel.app` — the Vercel Production `SITE_URL` env var held it. The user fixed the env var via the Vercel CLI (the session's permission rules blocked the agent from changing production config) and redeployed; live tags verified. Search Console verified; homepage, /our-programs, /about indexed, the rest requested.
+- **Guard:** `astro.config.mjs` and `site.config.ts` now ignore a missing or `*.vercel.app` `SITE_URL` and use `https://empower.org.ki`, so the stale value can't come back. Verified by building with the old value set.
+- **Sitemap:** on-request pages (news stories, programme pages, resources, blog posts) were invisible to `@astrojs/sitemap`; `onDemandPages()` lists them from Strapi at build time via `customPages` (every publish rebuilds through the webhook, so new stories land in the sitemap automatically). 404/pillars filtered out.
+- **Removed:** the Velocity demo page `/components` (live and indexable) and its starter-nav entry; the starter layouts that only it used are left untouched.
+- **Structured data:** WebSite no longer claims a nonexistent `/search` SearchAction; new `NGO` Organization (legal name Digital Kiribati Inc, founded 2024-05-06, address, phone, email, logo, Facebook/LinkedIn) on the homepage and About; `NewsArticle` on each story. `public/logo.png` (1200px PNG from the full-colour logo) backs both — previously `/logo.png` 404'd.
+- **About:** real meta description (was "About Us — Empower Kiribati").
+- **Not done:** prebuilding news stories to remove the ~3.6 s cold first load — they are on-request pages for the `?lang=kir` toggle, so prebuilding would change behaviour; left for a separate decision. `www.empower.org.ki` still has no certificate — needs the domain added as a redirect in Vercel → Settings → Domains (user action).
+
+---
+
+**Previous:** Landing page restructure — activity first; the Challenge cycle moves to About as "Why we exist"
+
 
 ## Status
 - ✅ Completed 2026-10-15 on branch `feature/landing-restructure`, reviewed by the user, merged ff to `main` (`2ea0868`) and pushed. `astro check` clean (pre-existing Search error only), `astro build` passes, Playwright ✓ at 1440/390. **No CMS schema change and no apply-script** — all copy is already in Strapi; the deploy alone changes the live page.

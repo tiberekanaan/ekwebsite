@@ -1,16 +1,17 @@
 import type {
   WebSite,
-  Organization,
   BlogPosting,
   BreadcrumbList,
   FAQPage,
   WithContext,
-  SearchAction,
+  NGO,
+  NewsArticle,
 } from 'schema-dts';
 import siteConfig from '@/config/site.config';
 
 /**
- * Create WebSite schema for homepage
+ * WebSite schema (every page). No SearchAction: the site has no /search URL
+ * (search is the in-page Pagefind modal), and a claimed one is a broken signal.
  */
 export function createWebsiteSchema(): WithContext<WebSite> {
   return {
@@ -19,39 +20,65 @@ export function createWebsiteSchema(): WithContext<WebSite> {
     name: siteConfig.name,
     url: siteConfig.url,
     description: siteConfig.description,
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${siteConfig.url}/search?q={search_term_string}`,
-      },
-      'query-input': {
-        '@type': 'PropertyValueSpecification',
-        valueRequired: true,
-        valueName: 'search_term_string',
-      },
-    } as SearchAction,
+    publisher: { '@id': `${siteConfig.url}/#organization` },
   };
 }
 
 /**
- * Create Organization schema
+ * Organization schema (homepage + About): a registered NGO, so Google can
+ * build an information panel for "Empower Kiribati".
  */
-export function createOrganizationSchema(): WithContext<Organization> {
+export function createOrganizationSchema(): WithContext<NGO> {
   return {
     '@context': 'https://schema.org',
-    '@type': 'Organization',
+    '@type': 'NGO',
+    '@id': `${siteConfig.url}/#organization`,
     name: siteConfig.name,
+    legalName: 'Digital Kiribati Inc',
     url: siteConfig.url,
     logo: `${siteConfig.url}/logo.png`,
+    description: siteConfig.description,
+    foundingDate: '2024-05-06',
+    email: siteConfig.email,
+    telephone: siteConfig.phone,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: siteConfig.address?.street,
+      addressLocality: siteConfig.address?.city,
+      addressCountry: siteConfig.address?.country,
+    },
+    areaServed: { '@type': 'Country', name: 'Kiribati' },
     sameAs: siteConfig.socialLinks,
-    contactPoint: siteConfig.phone
-      ? {
-          '@type': 'ContactPoint',
-          telephone: siteConfig.phone,
-          contactType: 'customer service',
-        }
-      : undefined,
+  };
+}
+
+/**
+ * NewsArticle schema for /news/[slug].
+ */
+export function createNewsArticleSchema(article: {
+  title: string;
+  description?: string | null;
+  url: string;
+  image?: string | null;
+  datePublished: string;
+  dateModified?: string | null;
+}): WithContext<NewsArticle> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: article.title,
+    description: article.description ?? undefined,
+    url: article.url,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': article.url },
+    image: article.image ?? `${siteConfig.url}/logo.png`,
+    datePublished: article.datePublished,
+    dateModified: article.dateModified ?? article.datePublished,
+    author: { '@type': 'Organization', name: siteConfig.name, url: siteConfig.url },
+    publisher: {
+      '@type': 'Organization',
+      name: siteConfig.name,
+      logo: { '@type': 'ImageObject', url: `${siteConfig.url}/logo.png` },
+    },
   };
 }
 
