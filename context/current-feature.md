@@ -3,7 +3,7 @@
 **Feature:** Landing page restructure — activity first; the Challenge cycle moves to About as "Why we exist"
 
 ## Status
-- 🚧 In progress on branch `feature/landing-restructure`. `astro check` clean (pre-existing Search error only), `astro build` passes, Playwright ✓ at 1440/390. Awaiting user browser review, then commit + merge + push. **No CMS schema change and no apply-script** — all copy is already in Strapi; the deploy alone changes the live page.
+- ✅ Completed 2026-10-15 on branch `feature/landing-restructure`, reviewed by the user, merged ff to `main` (`2ea0868`) and pushed. `astro check` clean (pre-existing Search error only), `astro build` passes, Playwright ✓ at 1440/390. **No CMS schema change and no apply-script** — all copy is already in Strapi; the deploy alone changes the live page.
 - Files: `frontend/src/pages/index.astro`, `frontend/src/pages/about.astro`, `frontend/src/components/blocks/{ChallengeCycleBlock,NewsBlock}.astro`, `frontend/src/components/blocks/WhyWeExistBlock.astro` (new), `frontend/src/lib/challenge.ts` (new), this doc.
 
 ## What it is
@@ -255,6 +255,8 @@
 **Previous:** Landing page content v3 — ✅ completed 2026-08-25, live on empower.org.ki (see History).
 
 ## History
+
+- 2026-10-15 — **Landing restructure: activity first, Challenge cycle to About**. Homepage order fixed in code: Hero → Featured projects → What's new (now white) → Track record → Strategic focus → new `WhyWeExistBlock` teaser (cycle heading + highlight + closing statement, links `/about#why-we-exist`) → partners → quote → close. Full pinned cycle opens About (`fetchChallengeCycle()` reads the homepage entry; `ChallengeCycleBlock` gained `anchorId`/`eyebrowOverride`); mission/vision relabelled "What we stand for". Based on an independent analyst review; supersedes the donor brief's hero → Challenge order. No schema change or apply-script. Branch `feature/landing-restructure`, merged ff (`2ea0868`).
 
 - 2026-10-08 — **Landing-page copy made permanent CMS content**. Audit found the Challenge cycle was pure constants and that `apply-editable-globals.js` / `apply-featured-projects.js` had never run on production (live still showed the v3 "Rome is not built in a day" close and "What we are running now"; every Global footer/contact field empty). New `blocks.challenge-cycle` (+`shared.challenge-step`) in the homepage zone, spliced out and injected under the hero (marquee pattern), step count drives `--ek-steps` for the pinned-stage height; hero `photo` + `photoLabel` (field only, bundled graded photo kept — user decision) and `*text*` emphasis parsing for the title; impact `voyageStart`/`voyageEnd`; homepage `seoTitle`/`seoDescription` (title no longer doubles the site name). `backend/apply-landing-content.js` (idempotent, fill-where-unset; guarded repairs for the stale close copy, the projects heading and the doubled SEO title; inserts challenge/marquee/news entries; seeds Global). UI chrome, Strategic-focus icons and unrendered schema leftovers stay in code by design. Run locally ✓ (run 2 no-op), build + Playwright ✓. Branch `feature/cms-landing-content`, merged ff (`025ef81`).
 
