@@ -3,7 +3,7 @@
 **Feature:** SEO indexing fixes — canonical address guard, complete sitemap, NGO + NewsArticle structured data
 
 ## Status
-- 🚧 In progress on branch `fix/seo-indexing`. `astro check` clean (pre-existing Search error only); `astro build` against production Strapi passes; all 12 newly listed sitemap URLs return 200 live. Awaiting user go-ahead to commit + merge + push. No CMS change.
+- ✅ Completed 2026-10-15 on branch `fix/seo-indexing`, merged ff to `main` (`5fdfa31`) and pushed. `astro check` clean (pre-existing Search error only); build against production Strapi passes; all 12 newly listed sitemap URLs return 200 live. No CMS change. User to resubmit the sitemap in Search Console once deployed.
 - Files: `frontend/astro.config.mjs`, `frontend/src/config/{site,nav}.config.ts`, `frontend/src/lib/schema.ts`, `frontend/src/layouts/BaseLayout.astro`, `frontend/src/pages/{index,about}.astro`, `frontend/src/pages/news/[slug].astro`, `frontend/public/logo.png` (new), `frontend/src/pages/components.astro` (deleted), this doc.
 
 ## What it is
@@ -273,6 +273,8 @@
 **Previous:** Landing page content v3 — ✅ completed 2026-08-25, live on empower.org.ki (see History).
 
 ## History
+
+- 2026-10-15 — **SEO indexing fixes**. Vercel Production `SITE_URL` held the dead `ekwebsite-mu.vercel.app` (every canonical, sitemap, robots.txt, OG and JSON-LD URL); user replaced it via the Vercel CLI and redeployed. Code: `*.vercel.app`/missing `SITE_URL` now falls back to empower.org.ki; sitemap `customPages` lists on-request news/programme/resource/blog pages from Strapi at build time; NGO Organization JSON-LD on home + About (no fake SearchAction), NewsArticle on stories, `public/logo.png` added; real About description; Velocity `/components` demo page removed. Search Console verified (home, /our-programs, /about indexed; rest requested). Pending user actions: add `www.empower.org.ki` as a redirect domain in Vercel (no certificate yet). Branch `fix/seo-indexing`, merged ff (`5fdfa31`).
 
 - 2026-10-15 — **Landing restructure: activity first, Challenge cycle to About**. Homepage order fixed in code: Hero → Featured projects → What's new (now white) → Track record → Strategic focus → new `WhyWeExistBlock` teaser (cycle heading + highlight + closing statement, links `/about#why-we-exist`) → partners → quote → close. Full pinned cycle opens About (`fetchChallengeCycle()` reads the homepage entry; `ChallengeCycleBlock` gained `anchorId`/`eyebrowOverride`); mission/vision relabelled "What we stand for". Based on an independent analyst review; supersedes the donor brief's hero → Challenge order. No schema change or apply-script. Branch `feature/landing-restructure`, merged ff (`2ea0868`).
 
