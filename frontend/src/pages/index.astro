@@ -12,7 +12,7 @@ import ChallengesBlock, { type ChallengesBlockData } from '@/components/blocks/C
 import ThreatsBlock, { type ThreatsBlockData } from '@/components/blocks/ThreatsBlock.astro';
 import ImpactBlock, { type ImpactBlockData } from '@/components/blocks/ImpactBlock.astro';
 import PillarsBlock, { type PillarsBlockData } from '@/components/blocks/PillarsBlock.astro';
-import TestimonialsBlock, { type TestimonialsBlockData } from '@/components/blocks/TestimonialsBlock.astro';
+import type { TestimonialsBlockData } from '@/components/blocks/TestimonialsBlock.astro';
 import FutureBlock, { type FutureBlockData } from '@/components/blocks/FutureBlock.astro';
 import PartnersBlock, { type PartnersBlockData } from '@/components/blocks/PartnersBlock.astro';
 import PartnerMarqueeBlock, {
@@ -99,7 +99,8 @@ const impact = take('blocks.impact');
 const whatWeDo = take('blocks.what-we-do');
 const challenge: ChallengeCycleBlockData = take('blocks.challenge-cycle');
 const marquee = take('blocks.partner-marquee');
-const testimonials = take('blocks.testimonials');
+// Testimonials hidden for now: spliced out of the zone so the entry never renders.
+take('blocks.testimonials');
 const close = take('blocks.close');
 // Legacy blocks (challenges, threats, pillars, future, partners) are not in the
 // production zone; if one is ever added it renders before the close.
@@ -122,7 +123,6 @@ const legacy = blocks;
   <WhatWeDoBlock block={whatWeDo} />
   <WhyWeExistBlock block={challenge} />
   <PartnerMarqueeBlock block={marquee} />
-  <TestimonialsBlock block={testimonials} />
   {
     legacy.map((block) => {
       switch (block.__component) {

@@ -1,6 +1,18 @@
 # Current Feature
 
-**Feature:** Partner logo strip — make it move, add Irish Aid, show the US Embassy and American Spaces
+**Feature:** Hide the homepage testimonial section; partner strip takes its paper background
+
+## Status
+- ✅ Completed 2026-11-26 on branch `fix/drop-testimonials`, merged ff to `main` and pushed. `astro check` clean (pre-existing Search error only); build against production Strapi passes. No CMS change.
+- Files: `frontend/src/pages/index.astro`, `frontend/src/components/blocks/PartnerMarqueeBlock.astro`, this doc.
+
+## What it is
+- `TestimonialsBlock` no longer renders on the homepage ("not needed for now"). The CMS `blocks.testimonials` entry is still spliced out of the zone, so it can't fall through; component and Strapi data stay for later.
+- Partner strip `bg-white` → `bg-ek-paper` (the testimonial's colour); its top hairline dropped, since white teaser → paper strip already marks the seam. Order now: … white Why-we-exist teaser → paper partners → dark close.
+
+---
+
+**Previous:** Partner logo strip — make it move, add Irish Aid, show the US Embassy and American Spaces
 
 ## Status
 - ✅ Completed 2026-11-26 on branch `fix/partner-marquee`, merged ff to `main` and pushed. `backend/apply-partner-marquee.js` **ran against production** (Irish Aid + Oxfam created, VSA logo replaced, US Embassy Suva + American Spaces → funder, duplicate "U.S. Embassy Suva" deleted); a second run was a no-op. Strip now shows 9 partners. Marquee speed 46 s → 34 s per loop (~18 px/s, user request). `astro check` clean (pre-existing Search error only); build passes. **The token was pasted in chat — user to delete it in Strapi Cloud admin.**
