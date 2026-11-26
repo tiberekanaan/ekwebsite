@@ -1,6 +1,6 @@
-# Developer Knowledge Hub
+# Empower Kiribati Website
 
-A developer knowledge hub for snippets, commands, prompts, notes, files, images, links and custom types for our Astro 6 + Strapi 5 project.
+The public website and headless CMS for Empower Kiribati: programmes, news, grant guides and pages, built with Astro 6 and edited in Strapi 5.
 
 ## Context Files
 
