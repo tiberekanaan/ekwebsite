@@ -39,7 +39,10 @@ const plates = partnerEntries
 
 // Two or more plates scroll. A short list is repeated within each set (at
 // least SET_MIN plates) so the moving strip never shows a gap; the whole set
-// is then duplicated so the -50% translate loops seamlessly. Only the first
+// is then duplicated so the -50% translate loops seamlessly: the track has no
+// gap of its own (each set carries its trailing pr-6), so its width is exactly
+// two sets and the reset lands on an identical frame. Logos load eagerly —
+// lazy images clipped by the overflow pop in mid-strip. Only the first
 // occurrence of each partner is exposed to screen readers.
 const SET_MIN = 8;
 const useMarquee = plates.length >= 2;
@@ -52,11 +55,11 @@ const trackSets = useMarquee ? [false, true] : [false];
 
 {
   plates.length > 0 && (
-    <section id="funding-partners" class="bg-ek-paper py-20">
-      <div class="mx-auto max-w-6xl px-7">
-        <div class="mx-auto mb-11 max-w-[640px] text-center" data-reveal>
-          <h2 class="mb-4 font-serif text-2xl font-bold text-ek-800">
-            {block.eyebrow ?? 'Our funding and government partners'}
+    <section id="funding-partners" class="flex min-h-[32rem] flex-col justify-center bg-ek-paper py-28">
+      <div class="mx-auto w-full max-w-6xl px-7">
+        <div class="mx-auto mb-14 max-w-[640px] text-center" data-reveal>
+          <h2 class="mb-4 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl">
+            {block.eyebrow ?? 'Our partners'}
           </h2>
           <p class="text-lg text-ek-muted">
             {block.intro ??
@@ -74,7 +77,7 @@ const trackSets = useMarquee ? [false, true] : [false];
         >
           <div
             class:list={[
-              'partner-marquee-track flex items-center gap-6',
+              'partner-marquee-track flex items-center',
               useMarquee ? 'w-max animate-funder-marquee' : 'w-full flex-wrap justify-center',
             ]}
           >
@@ -95,7 +98,6 @@ const trackSets = useMarquee ? [false, true] : [false];
                           src={logo}
                           alt={p.logo?.alternativeText ?? p.name}
                           class="max-h-20 max-w-full object-contain"
-                          loading="lazy"
                         />
                       ) : (
                         <span class="text-center font-condensed text-[0.82rem] font-bold uppercase leading-tight tracking-[0.06em] text-ek-600">

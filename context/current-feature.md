@@ -1,6 +1,19 @@
 # Current Feature
 
-**Feature:** Hide the homepage testimonial section; partner strip takes its paper background
+**Feature:** Partner strip — seamless loop, taller centred section, "Our partners" as a landing h2
+
+## Status
+- ✅ Completed 2026-11-26 on branch `fix/partner-marquee-loop`, merged ff to `main` and pushed. Build against production Strapi passes; loop geometry measured in Playwright at 1440/390 (second set starts at exactly half the track width, 16/16 logos loaded). **CMS edit needed:** the live heading comes from the marquee block's `eyebrow` field ("Our funding and government partners"); change it to "Our partners" in the admin.
+- Files: `frontend/src/components/blocks/PartnerMarqueeBlock.astro`, this doc.
+
+## What it is
+- **The hitch:** the track had `gap-6` between its two sets while each set also carried `pr-6`, so the track was 2 sets + 24 px and the -50% reset jumped 12 px. Track gap removed. Logos were `loading="lazy"`; images clipped by the overflow can load only as they scroll in, so they popped in mid-strip. Now eager.
+- **Section:** `py-20` → `py-28` with `min-h-[32rem]` and the content centred vertically; heading-to-strip gap `mb-11` → `mb-14`.
+- **Heading:** now the landing h2 style (gradient ek-800 → ek-500, serif, `text-4xl sm:text-5xl`), fallback "Our partners" (sentence case like the other landing headings).
+
+---
+
+**Previous:** Hide the homepage testimonial section; partner strip takes its paper background
 
 ## Status
 - ✅ Completed 2026-11-26 on branch `fix/drop-testimonials`, merged ff to `main` and pushed. `astro check` clean (pre-existing Search error only); build against production Strapi passes. No CMS change.
