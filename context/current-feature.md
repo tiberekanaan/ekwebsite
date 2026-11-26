@@ -1,6 +1,17 @@
 # Current Feature
 
-**Feature:** Policy pages in first person; overview tables removed
+**Feature:** Safeguarding policy page retitled "Safety of Vulnerable Persons"
+
+## Status
+- ✅ Completed 2026-11-26 on branch `fix/safety-policy-title`, merged ff to `main` and pushed. Build passes; page `<title>` verified.
+- Files: `frontend/src/pages/{safety-of-vulnerable-persons,privacy-policy}.astro`, this doc.
+
+## What it is
+- Page heading and `<title>` "Policy for Safety of Vulnerable Persons" → "Safety of Vulnerable Persons" (matches the footer link). The Privacy Policy's in-text link now reads "our Safety of Vulnerable Persons policy". URL unchanged.
+
+---
+
+**Previous:** Policy pages in first person; overview tables removed
 
 ## Status
 - ✅ Completed 2026-11-26 on branch `fix/policy-pages-voice`, merged ff to `main` and pushed. `astro check` clean (pre-existing Search error only); build against production Strapi passes; neither page renders a table.
