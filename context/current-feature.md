@@ -1,6 +1,20 @@
 # Current Feature
 
-**Feature:** New partner role "partner"; American Council for International Education Kiribati joins the logo strip
+**Feature:** Safety of Vulnerable Persons links open the Google Drive master document
+
+## Status
+- ✅ Completed 2026-11-26 on branch `fix/safety-policy-drive-link`, merged ff to `main` and pushed. `astro check` clean (pre-existing Search error only); build passes; footer (every page) and the Privacy Policy link to the Drive file with `target="_blank"`; nothing links to `/safety-of-vulnerable-persons` any more.
+- Files: `frontend/src/lib/policies.ts` (new), `frontend/src/components/empower/Footer.astro`, `frontend/src/pages/privacy-policy.astro`, this doc.
+
+## What it is
+- **Why:** the policy is maintained in Google Drive; linking there means updates show without a site change.
+- `SAFETY_OF_VULNERABLE_PERSONS_URL` in `src/lib/policies.ts` (single place to change the link). Footer link and the Privacy Policy's in-text link use it, open in a new tab (`rel="noopener noreferrer"`, screen-reader "(opens in a new tab)").
+- **The on-site page stays** at `/safety-of-vulnerable-persons` (user decision: exists, unused). It is still in the sitemap, so search engines can find this older copy.
+- A brief detour (restoring the page's original PDF wording) was undone at the user's request; the page is unchanged from `main`.
+
+---
+
+**Previous:** New partner role "partner"; American Council for International Education Kiribati joins the logo strip
 
 ## Status
 - 🚀 Merged ff to `main` and pushed 2026-11-26 (branch `feature/partner-role`); **script run against production pending** the Strapi Cloud deploy and a fresh token. Schema JSON valid, backend `tsc` clean, `astro check` clean (pre-existing Search error only), build passes. The script was not run locally (local Strapi was not running).

@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import logoWhite from '@/assets/branding/empower-logo-white.webp';
 import { telHref, type GlobalSettings } from '@/types/global';
+import { SAFETY_OF_VULNERABLE_PERSONS_URL } from '@/lib/policies';
 
 interface Props {
   /** Global settings from Strapi; every field falls back to the defaults below. */
@@ -273,8 +274,13 @@ const year = new Date().getFullYear();
           <a href="/privacy-policy" class="transition-colors hover:text-ek-lime-bright">Privacy Policy</a>
         </li>
         <li>
-          <a href="/safety-of-vulnerable-persons" class="transition-colors hover:text-ek-lime-bright">
-            Safety of Vulnerable Persons
+          <a
+            href={SAFETY_OF_VULNERABLE_PERSONS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="transition-colors hover:text-ek-lime-bright"
+          >
+            Safety of Vulnerable Persons<span class="sr-only"> (opens in a new tab)</span>
           </a>
         </li>
       </ul>

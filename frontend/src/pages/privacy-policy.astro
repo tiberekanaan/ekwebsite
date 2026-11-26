@@ -1,6 +1,7 @@
 ---
 import PolicyLayout from '@/components/policy/PolicyLayout.astro';
 import { fetchGlobal } from '@/lib/global';
+import { SAFETY_OF_VULNERABLE_PERSONS_URL } from '@/lib/policies';
 
 const global = await fetchGlobal();
 const email = global?.generalEmail ?? 'externalaffairs@empower.org.ki';
@@ -60,7 +61,9 @@ const email = global?.generalEmail ?? 'externalaffairs@empower.org.ki';
     <li>
       <strong>Safeguarding &amp; International Alignment:</strong> All digital handling of participant
       data must comply with international conventions, our
-      <a href="/safety-of-vulnerable-persons">Safety of Vulnerable Persons</a> policy, and Kiribati
+      <a href={SAFETY_OF_VULNERABLE_PERSONS_URL} target="_blank" rel="noopener noreferrer"
+        >Safety of Vulnerable Persons<span class="sr-only"> (opens in a new tab)</span></a
+      > policy, and Kiribati
       national child welfare and family protection legislation.
     </li>
   </ul>
