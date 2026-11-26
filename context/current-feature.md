@@ -1,6 +1,22 @@
 # Current Feature
 
-**Feature:** Privacy Policy contact card removed
+**Feature:** New partner role "partner"; American Council for International Education Kiribati joins the logo strip
+
+## Status
+- 🚀 Merged ff to `main` and pushed 2026-11-26 (branch `feature/partner-role`); **script run against production pending** the Strapi Cloud deploy and a fresh token. Schema JSON valid, backend `tsc` clean, `astro check` clean (pre-existing Search error only), build passes. The script was not run locally (local Strapi was not running).
+- Files: `backend/src/api/partner/content-types/partner/schema.json`, `backend/types/generated/contentTypes.d.ts`, `backend/apply-partner-marquee.js`, `backend/src/seed/assets/acie-kiribati-logo.jpg` (new), `frontend/src/content.config.ts`, `frontend/src/components/blocks/PartnerMarqueeBlock.astro`, this doc.
+
+## What it is
+- **Schema:** partner-level `role` enum gains `partner` (funder / government / in_kind_donor / co_implementor / partner). Frontend Zod enum widened; the logo strip now shows funder, government **and partner** roles (consent still required). Nothing else reads this field.
+- **Data (`apply-partner-marquee.js`):** creates American Council for International Education Kiribati (role partner, consent true, user-supplied logo, 709×709 JPEG on its own red square, uploaded as-is since the red field is part of the mark). Re-deletes the duplicate "U.S. Embassy Suva", which reappeared after the first deletion (funder, consent true, no logo, rendered as a text label in the strip); same guard (no logo, no programme links). Deletion re-approved by the user. If it comes back again, someone is recreating it in the admin.
+
+## Rollout
+1. Merge + push → Strapi Cloud deploys the enum (~15 min).
+2. `STRAPI_URL=https://determined-strength-17a6de9eef.strapiapp.com STRAPI_API_TOKEN=xxx node backend/apply-partner-marquee.js` (fresh full-access token; delete after). Run before the deploy finishes, the ACIE create 400s on the unknown role value.
+
+---
+
+**Previous:** Privacy Policy contact card removed
 
 ## Status
 - ✅ Completed 2026-11-26 on branch `fix/privacy-contact-card`, merged ff to `main` and pushed. `astro check` clean (pre-existing Search error only); build passes; the only `<address>` left on the page is the footer's.

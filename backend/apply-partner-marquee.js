@@ -1,10 +1,12 @@
 /**
  * Fills the homepage funding-partners logo strip, idempotently. The strip
- * shows partners whose role is funder or government AND consent_to_name is
- * true; three of ours were missing:
+ * shows partners whose role is funder, government or partner AND
+ * consent_to_name is true; some of ours were missing:
  *
- *   - Irish Aid and Oxfam: no partner entries existed. Creates each (role
- *     funder, consent true) with its logo from src/seed/assets/, uploaded once
+ *   - Irish Aid and Oxfam (role funder) and American Council for International
+ *     Education Kiribati (role partner — needs the `partner` enum value
+ *     deployed first): no partner entries existed. Creates each (its role,
+ *     consent true) with its logo from src/seed/assets/, uploaded once
  *     and looked up by file name. If an entry already exists, only its unset
  *     logo / role / consent are filled.
  *   - Volunteer Service Abroad, New Zealand High Commission and the Ministry
@@ -14,7 +16,8 @@
  *     "American Spaces": role was unset → set to funder (only while unset).
  *   - "U.S. Embassy Suva" (with full stops): an unused duplicate — no logo,
  *     consent false, linked to nothing. Deleted, but only while it still has
- *     no logo and no programme links of either kind (user-approved 2026-11-26).
+ *     no logo and no programme links of either kind (user-approved 2026-11-26;
+ *     it reappeared, deletion re-approved the same day).
  *
  * A plain REST write on this Strapi publishes directly; the publish webhook
  * then rebuilds Vercel. Defaults to local dev (backend/.env). For production,
@@ -37,7 +40,15 @@ const NEW_PARTNERS = [
     alt: "Government of Ireland, International Development Programme (Irish Aid)",
   },
   { name: "Oxfam", file: "oxfam-logo.png", alt: "Oxfam" },
+  {
+    name: "American Council for International Education Kiribati",
+    file: "acie-kiribati-logo.jpg",
+    alt: "American Council for International Education Kiribati",
+    role: "partner",
+  },
 ];
+
+const MIME = { ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg" };
 
 function readEnvToken() {
   if (process.env.STRAPI_API_TOKEN) return process.env.STRAPI_API_TOKEN;
@@ -85,7 +96,7 @@ async function ensureLogo(headers, file, alt) {
     return files[0].id;
   }
   const form = new FormData();
-  form.append("files", new Blob([fs.readFileSync(path.join(ASSETS, file))], { type: "image/png" }), file);
+  form.append("files", new Blob([fs.readFileSync(path.join(ASSETS, file))], { type: MIME[path.extname(file)] }), file);
   form.append("fileInfo", JSON.stringify({ name: file, alternativeText: alt }));
   const up = await fetch(`${STRAPI_URL}/api/upload`, { method: "POST", headers: { Authorization }, body: form });
   if (!up.ok) throw new Error(`POST upload ${up.status}: ${await up.text()}`);
@@ -94,19 +105,19 @@ async function ensureLogo(headers, file, alt) {
   return uploaded.id;
 }
 
-async function ensureNewPartner(headers, { name, file, alt }) {
+async function ensureNewPartner(headers, { name, file, alt, role = "funder" }) {
   const existing = await findPartner(headers, name);
   const logoId = existing?.logo ? null : await ensureLogo(headers, file, alt);
   if (!existing) {
     await api(headers, "POST", "/api/partners", {
-      data: { name, role: "funder", consent_to_name: true, logo: logoId },
+      data: { name, role, consent_to_name: true, logo: logoId },
     });
-    console.log(`Created partner "${name}" (funder, consent, logo).`);
+    console.log(`Created partner "${name}" (${role}, consent, logo).`);
     return;
   }
   const patch = {};
   if (logoId) patch.logo = logoId;
-  if (!existing.role) patch.role = "funder";
+  if (!existing.role) patch.role = role;
   if (existing.consent_to_name !== true) patch.consent_to_name = true;
   if (Object.keys(patch).length === 0) {
     console.log(`"${name}" already complete.`);

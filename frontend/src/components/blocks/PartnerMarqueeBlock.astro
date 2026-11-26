@@ -15,14 +15,14 @@ const { block } = Astro.props;
 
 const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
 
-// Funders and government bodies only, and only where the organisation has
-// agreed to be named — a logo here reads as endorsement, so civil society,
-// schools and community groups are deliberately excluded.
+// Funders, government bodies and partners only, and only where the
+// organisation has agreed to be named — a logo here reads as endorsement, so
+// in-kind donors and co-implementors are deliberately excluded.
 const partnerEntries = await getCollection('partners');
 const plates = partnerEntries
   .filter(
     (p) =>
-      (p.data.role === 'funder' || p.data.role === 'government') &&
+      (p.data.role === 'funder' || p.data.role === 'government' || p.data.role === 'partner') &&
       p.data.consent_to_name === true,
   )
   .map((p) => ({

@@ -186,7 +186,7 @@ const partners = defineCollection({
     // civil_society/community are legacy values kept so builds tolerate
     // production data entered before the in_kind_donor/co_implementor rename.
     role: z
-      .enum(['funder', 'government', 'in_kind_donor', 'co_implementor', 'civil_society', 'community'])
+      .enum(['funder', 'government', 'in_kind_donor', 'co_implementor', 'partner', 'civil_society', 'community'])
       .nullable()
       .optional(),
     consent_to_name: z.boolean().nullable().optional(),

@@ -810,7 +810,7 @@ export interface ApiPartnerPartner extends Struct.CollectionTypeSchema {
     projects: Schema.Attribute.Relation<'manyToMany', 'api::project.project'>;
     publishedAt: Schema.Attribute.DateTime;
     role: Schema.Attribute.Enumeration<
-      ['funder', 'government', 'in_kind_donor', 'co_implementor']
+      ['funder', 'government', 'in_kind_donor', 'co_implementor', 'partner']
     >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
