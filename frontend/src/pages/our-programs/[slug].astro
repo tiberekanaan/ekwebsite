@@ -29,7 +29,7 @@ const lang = resolveLang(Astro.url.searchParams.get('lang'));
 
 const projects = await getCollection('projects');
 const project = projects.find((entry) => entry.data.slug === slug);
-if (!project) return Astro.rewrite('/404');
+if (!project) return new Response(null, { status: 404 });
 
 const fetchLocalized = async (locale: string): Promise<LocalizedProject | null> => {
   try {

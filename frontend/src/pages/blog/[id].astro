@@ -37,7 +37,7 @@ const fetchBlog = async (locale: string): Promise<StrapiBlog | null> => {
 let post = await fetchBlog(STRAPI_LOCALES[lang]);
 // fall back to English when the requested translation doesn't exist
 if (!post && lang !== 'en') post = await fetchBlog(STRAPI_LOCALES.en);
-if (!post) return Astro.rewrite('/404');
+if (!post) return new Response(null, { status: 404 });
 
 const { title, content, publish_date, publishedAt } = post;
 const hasTranslation = (post.localizations ?? []).length > 0;

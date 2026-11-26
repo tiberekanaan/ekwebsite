@@ -49,7 +49,7 @@ const fetchResource = async (locale: string): Promise<StrapiResource | null> => 
 let resource = await fetchResource(STRAPI_LOCALES[lang]);
 // fall back to English when the requested translation doesn't exist
 if (!resource && lang !== 'en') resource = await fetchResource(STRAPI_LOCALES.en);
-if (!resource) return Astro.rewrite('/404');
+if (!resource) return new Response(null, { status: 404 });
 
 const { title, description } = resource;
 const content_blocks = resource.content_blocks ?? [];

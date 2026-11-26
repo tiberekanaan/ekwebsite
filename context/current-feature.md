@@ -1,6 +1,18 @@
 # Current Feature
 
-**Feature:** SEO indexing fixes — canonical address guard, complete sitemap, NGO + NewsArticle structured data
+**Feature:** Real 404s on detail pages (build-plan #21)
+
+## Status
+- ✅ Completed 2026-11-26 on branch `fix/detail-404s`, verified locally by the user, merged ff to `main` and pushed. Build passes against production Strapi.
+- Files: `frontend/src/pages/{our-programs/[slug],blog/[id],resources/[id]}.astro`, this doc.
+
+## What it is
+- Unknown URLs on these three on-request pages returned 500 live: `Astro.rewrite('/404')` to a prerendered page is forbidden. Now `new Response(null, { status: 404 })`, which serves the prerendered 404 page (the news page's fix).
+- `events/[id]` and `our-partners/[id]` are prerendered and already 404; unchanged.
+
+---
+
+**Previous:** SEO indexing fixes — canonical address guard, complete sitemap, NGO + NewsArticle structured data
 
 ## Status
 - ✅ Completed 2026-10-15 on branch `fix/seo-indexing`, merged ff to `main` (`5fdfa31`) and pushed. `astro check` clean (pre-existing Search error only); build against production Strapi passes; all 12 newly listed sitemap URLs return 200 live. No CMS change. User to resubmit the sitemap in Search Console once deployed.
@@ -273,6 +285,8 @@
 **Previous:** Landing page content v3 — ✅ completed 2026-08-25, live on empower.org.ki (see History).
 
 ## History
+
+- 2026-11-26 — **Real 404s on detail pages**. `our-programs/[slug]`, `blog/[id]` and `resources/[id]` replaced the forbidden `Astro.rewrite('/404')` (500 live) with `new Response(null, { status: 404 })`, the news page's fix. `events/[id]` and `our-partners/[id]` are prerendered and already 404'd. Same day: CLAUDE.md retitled, project overview committed, four merged branches deleted. Branch `fix/detail-404s`.
 
 - 2026-11-26 — **AI Blueprint adopted**. `npx create-ai-blueprint@latest update` failed (Blueprint was not installed), so it was installed fresh for Claude Code (`--claude --force`; the stale Next.js `AGENTS.md` notice is backed up under `blueprint/.state/backups/`) and `/adopt` was followed from the local skill file: `blueprint/project-plan.md`, `blueprint/build-plan.md` (20 shipped, 9 roadmap items, 3 `TODO (confirm)` left open by the user: WEE page, News vs Blog, news cold-start), `blueprint/context/coding-standards.md` rewritten to the real Astro + Strapi conventions, `AGENTS.md` description + real commands (no test runner, lint not a gate, no Verify). `.gitignore` now tracks `.claude/skills/` (user chose committed visibility). Open: `CLAUDE.md` still titled "Developer Knowledge Hub"; `context/` and `blueprint/` rule sets overlap until consolidated; next step `/overview` after restarting Claude Code. Branch `chore/ai-blueprint`.
 

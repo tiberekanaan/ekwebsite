@@ -30,10 +30,10 @@ Do not renumber completed features.
 - [x] 18. **All landing copy editable in Strapi** - Challenge cycle, hero photo field, impact labels, SEO fields, seeded on production
 - [x] 19. **Landing restructure** - activity-first homepage, Why-we-exist cycle moved to About with a homepage teaser
 - [x] 20. **SEO indexing fixes** - canonical domain guard, complete sitemap, NGO and NewsArticle structured data
+- [x] 21. **Real 404s on all detail pages** - unknown programme, blog and resource URLs return 404 instead of 500 (events and partners were prerendered and already fine)
 
 ## Roadmap
 
-- [ ] 21. **Real 404s on all detail pages** - `our-programs`, `blog`, `resources`, `events` and `our-partners` detail pages return 500 for unknown URLs (forbidden rewrite to the prerendered 404); apply the news page's fix
 - [ ] 22. **Women Economic Empowerment Framework programme page** - draft entry with `what_it_is_not` field and government partner role
   > TODO (confirm): the earlier `feature/wee-programme` work is not on `main` and its branch no longer exists locally. Rebuild from `~/Downloads/WEE-UPLOAD-INSTRUCTIONS.md`, or drop?
 - [ ] 23. **People and partners** - person type, partner consent and roles (content-structure plan phase 2)
