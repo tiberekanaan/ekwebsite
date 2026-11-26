@@ -62,75 +62,11 @@ const { title, subtitle, description } = Astro.props;
   .policy-body :global(a:hover) {
     color: var(--color-ek-800);
   }
-  .policy-body :global(table) {
-    width: 100%;
-    margin: 0 0 1rem;
-    border-collapse: collapse;
-    font-size: 1rem;
-  }
-  .policy-body :global(caption) {
-    padding-bottom: 0.75rem;
-    text-align: left;
-    font-weight: 600;
-    color: var(--color-ek-800);
-  }
-  .policy-body :global(th),
-  .policy-body :global(td) {
-    padding: 0.85rem 1rem;
-    border-bottom: 1px solid color-mix(in oklab, var(--color-ek-700) 12%, transparent);
-    text-align: left;
-    vertical-align: top;
-  }
-  .policy-body :global(tbody th) {
-    width: 38%;
-    font-weight: 600;
-    color: var(--color-ek-900);
-  }
-  .policy-body :global(thead th) {
-    background: var(--color-ek-mist);
-    font-family: var(--font-condensed);
-    font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--color-ek-800);
-  }
-  .policy-body :global(tr:last-child th),
-  .policy-body :global(tr:last-child td) {
-    border-bottom: 0;
-  }
-  .policy-body :global(.policy-table) {
-    overflow: hidden;
-    margin-bottom: 1rem;
-    border-radius: 1rem;
-    background: white;
-    box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-ek-700) 10%, transparent);
-  }
-  .policy-body :global(.policy-table table) {
-    margin: 0;
-  }
   .policy-body :global(address) {
     margin-top: 1.5rem;
     padding: 1.5rem 1.75rem;
     border-radius: 1rem;
     background: var(--color-ek-mist);
     font-style: normal;
-  }
-  @media (max-width: 40rem) {
-    .policy-body :global(thead) {
-      display: none;
-    }
-    .policy-body :global(tbody th),
-    .policy-body :global(tbody td) {
-      display: block;
-      width: auto;
-    }
-    .policy-body :global(tbody th) {
-      padding-bottom: 0.15rem;
-      border-bottom: 0;
-    }
-    .policy-body :global(tbody td) {
-      padding-top: 0;
-    }
   }
 </style>

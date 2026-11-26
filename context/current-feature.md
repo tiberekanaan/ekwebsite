@@ -1,6 +1,20 @@
 # Current Feature
 
-**Feature:** Footer policy links (Privacy Policy, Safety of Vulnerable Persons) replace the "Mauri from Kiribati" tagline
+**Feature:** Policy pages in first person; overview tables removed
+
+## Status
+- ✅ Completed 2026-11-26 on branch `fix/policy-pages-voice`, merged ff to `main` and pushed. `astro check` clean (pre-existing Search error only); build against production Strapi passes; neither page renders a table.
+- Files: `frontend/src/pages/{privacy-policy,safety-of-vulnerable-persons}.astro`, `frontend/src/components/policy/PolicyLayout.astro`, this doc.
+
+## What it is
+- **Title:** "Website Privacy Policy" → "Privacy Policy" (it lives on the website).
+- **Voice:** body copy rewritten from "Empower Kiribati …" / "the organization …" to "we / our" on both pages. Meta descriptions (search results), the privacy contact card and the footer keep the organization's name.
+- **Tables reviewed, both removed:** every privacy-table row repeats the body (address → contact card, Data Protection Act → sections 6–7, oversight roles → sections 5–7, scope → sections 2 and 5). The vulnerable-persons table held two facts found nowhere else, the Guidance Circle and "elderly", so they moved into a short opening paragraph with the scope and audience. Table CSS removed from `PolicyLayout`.
+- The privacy page's link to the other policy now uses its real title, "Policy for Safety of Vulnerable Persons".
+
+---
+
+**Previous:** Footer policy links (Privacy Policy, Safety of Vulnerable Persons) replace the "Mauri from Kiribati" tagline
 
 ## Status
 - ✅ Completed 2026-11-26 on branch `fix/footer-tagline`, merged ff to `main` and pushed. `astro check` clean (pre-existing Search error only); build against production Strapi passes; both pages in the sitemap; Playwright screenshots at 1440/390, no horizontal scroll.
