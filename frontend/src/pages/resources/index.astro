@@ -1,5 +1,4 @@
 ---
-import Eyebrow from '@/components/empower/Eyebrow.astro';
 import Layout from '@/layouts/Layout.astro';
 import PageHeader from '@/components/PageHeader.astro';
 import { getCollection } from 'astro:content';
@@ -23,7 +22,6 @@ const articles = (await getCollection('articles')).sort((a, b) => {
   floatingHeader
 >
   <PageHeader
-    eyebrow="Resources"
     title="Community Resources"
     description="Guides, downloads, videos and links — built to empower Kiribati through shared knowledge, on every atoll."
   />
@@ -31,7 +29,7 @@ const articles = (await getCollection('articles')).sort((a, b) => {
     {
       articles.length > 0 && (
         <section class="mb-14">
-          <Eyebrow as="h2" class="mb-6" data-reveal>Guides &amp; articles</Eyebrow>
+          <h2 class="mb-6 font-serif text-2xl font-bold text-ek-800" data-reveal>Guides &amp; articles</h2>
           <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {articles.map((article, index) => (
               <li>
@@ -69,7 +67,7 @@ const articles = (await getCollection('articles')).sort((a, b) => {
     }
     {
       articles.length > 0 && resources.length > 0 && (
-        <Eyebrow as="h2" class="mb-6" data-reveal>Videos, downloads &amp; links</Eyebrow>
+        <h2 class="mb-6 font-serif text-2xl font-bold text-ek-800" data-reveal>Videos, downloads &amp; links</h2>
       )
     }
     {

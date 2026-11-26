@@ -1,5 +1,4 @@
 ---
-import Eyebrow from '@/components/empower/Eyebrow.astro';
 interface ImpactMetric {
   number: string;
   label: string;
@@ -12,6 +11,7 @@ export interface ImpactBlockData {
   title?: string | null;
   description?: string | null;
   metrics?: ImpactMetric[] | null;
+  /** Still in the CMS payload; no longer rendered. */
   note?: string | null;
   outcomes?: { text: string }[] | null;
   photos?: { url: string; alternativeText?: string | null }[] | null;
@@ -42,19 +42,16 @@ const stats: ImpactMetric[] =
 
 const voyageStart = block.voyageStart || 'May 2024';
 const voyageEnd = block.voyageEnd || 'Today';
-
-const note =
-  block.note ??
-  'Every initiative we take on is designed against national priorities, measured before and after, and reported in full.';
 ---
 
+<!-- min-h keeps the height the section had before its closing note was
+     removed (1218px phone, 715px lg); the content is centred within it. -->
 <section
   id="impact"
-  class="bg-ek-900 bg-[radial-gradient(1000px_500px_at_80%_-10%,rgba(42,128,137,0.45),transparent_60%)] py-24 text-white"
+  class="flex min-h-[1218px] flex-col justify-center bg-ek-900 bg-[radial-gradient(1000px_500px_at_80%_-10%,rgba(42,128,137,0.45),transparent_60%)] py-24 text-white lg:min-h-[715px]"
 >
-  <div class="mx-auto max-w-6xl px-7">
-    <div class="mb-14 max-w-[640px]" data-reveal>
-      <Eyebrow as="span" class="mb-4" tone="dark">{block.eyebrow ?? 'Track record'}</Eyebrow>
+  <div class="mx-auto w-full max-w-6xl px-7">
+    <div class="mb-14 max-w-[640px] lg:mb-20" data-reveal>
       <h2 class="mb-4 font-serif text-4xl font-bold leading-[1.08] sm:text-5xl bg-gradient-to-br from-white via-white to-ek-lime-bright bg-clip-text text-transparent">
         {block.title ?? 'Delivered, and measured'}
       </h2>
@@ -72,7 +69,7 @@ const note =
       so with gap-x-0 the four column centres land exactly on it); below lg
       it collapses to a vertical ship's-log rail on the left.
     -->
-    <div class="voyage relative mb-14" data-reveal>
+    <div class="voyage relative" data-reveal>
       <svg
         class="voyage-swell pointer-events-none absolute inset-x-0 -top-[13px] hidden h-10 w-full lg:block"
         viewBox="0 0 800 40"
@@ -139,13 +136,6 @@ const note =
         {voyageEnd}
       </span>
     </div>
-
-    <p
-      class="max-w-[660px] border-l-2 border-ek-lime pl-[18px] text-base text-[#8fb0ab]"
-      data-reveal
-    >
-      {note}
-    </p>
   </div>
 </section>
 

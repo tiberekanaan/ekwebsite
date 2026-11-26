@@ -1,5 +1,4 @@
 ---
-import Eyebrow from '@/components/empower/Eyebrow.astro';
 import { getCollection } from 'astro:content';
 import { STRAPI_URL } from 'astro:env/server';
 
@@ -52,9 +51,9 @@ const trackSets = useMarquee ? [false, true] : [false];
     <section id="funding-partners" class="border-t border-ek-700/10 bg-white py-20">
       <div class="mx-auto max-w-6xl px-7">
         <div class="mx-auto mb-11 max-w-[640px] text-center" data-reveal>
-          <Eyebrow as="span" class="mb-4">
+          <h2 class="mb-4 font-serif text-2xl font-bold text-ek-800">
             {block.eyebrow ?? 'Our funding and government partners'}
-          </Eyebrow>
+          </h2>
           <p class="text-lg text-ek-muted">
             {block.intro ??
               'The ministries, embassies and funds that back our work and shape it alongside national priorities.'}

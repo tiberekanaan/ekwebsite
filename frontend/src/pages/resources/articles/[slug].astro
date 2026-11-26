@@ -1,5 +1,4 @@
 ---
-import Eyebrow from '@/components/empower/Eyebrow.astro';
 import Layout from '@/layouts/Layout.astro';
 import PageHeader from '@/components/PageHeader.astro';
 import ArticleToc from '@/components/resources/ArticleToc.astro';
@@ -24,7 +23,6 @@ interface Props {
 const { article, related } = Astro.props;
 const {
   title,
-  category,
   excerpt,
   meta_description,
   body,
@@ -84,7 +82,6 @@ const cardTag = (entry: CollectionEntry<'articles'>) =>
   floatingHeader
 >
   <PageHeader
-    eyebrow={category ?? 'Resources'}
     title={title}
     backHref="/resources"
     backLabel="Back to resources"
@@ -144,7 +141,7 @@ const cardTag = (entry: CollectionEntry<'articles'>) =>
         showToc && (
           <aside class="hidden lg:block">
             <nav class="sticky top-28" aria-label="On this page" data-reveal>
-              <Eyebrow as="p" class="mb-4">On this page</Eyebrow>
+              <p class="mb-4 text-sm font-semibold text-ek-800">On this page</p>
               <ArticleToc sections={toc} />
             </nav>
           </aside>
@@ -157,7 +154,7 @@ const cardTag = (entry: CollectionEntry<'articles'>) =>
         {
           related.length > 0 && (
             <section class="mt-16 max-w-3xl border-t-2 border-ek-500 pt-8">
-          <Eyebrow as="h2" class="mb-6">Related articles</Eyebrow>
+          <h2 class="mb-6 font-serif text-2xl font-bold text-ek-800">Related articles</h2>
           <div class="grid gap-4 sm:grid-cols-2">
             {related.map((entry) => (
               <a

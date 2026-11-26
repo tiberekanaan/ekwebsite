@@ -1,5 +1,4 @@
 ---
-import Eyebrow from '@/components/empower/Eyebrow.astro';
 import { getCollection } from 'astro:content';
 
 interface ThreatItem {
@@ -101,7 +100,6 @@ const resolveAnswerHref = (answerTitle: string) => {
 
   <div class="relative mx-auto max-w-6xl px-7" data-roots-tabs>
     <div class="mb-10 max-w-[680px]" data-reveal>
-      <Eyebrow as="span" class="mb-4">{block.eyebrow ?? 'How we adapt'}</Eyebrow>
       <h2 class="mb-4 font-serif text-4xl font-bold leading-[1.08] sm:text-5xl bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text text-transparent">
         {block.title ?? 'Our roots of empowerment'}
       </h2>

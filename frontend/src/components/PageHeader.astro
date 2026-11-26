@@ -1,19 +1,16 @@
 ---
-import Eyebrow from '@/components/empower/Eyebrow.astro';
 interface Props {
   /** Main page heading. */
   title: string;
   /** Optional subtitle shown below the title. */
   description?: string;
-  /** Optional small accent label shown above the title. */
-  eyebrow?: string;
-  /** Optional back link rendered above the eyebrow. */
+  /** Optional back link rendered above the title. */
   backHref?: string;
   /** Label for the back link; defaults to "Back". */
   backLabel?: string;
 }
 
-const { title, description, eyebrow, backHref, backLabel } = Astro.props;
+const { title, description, backHref, backLabel } = Astro.props;
 ---
 
 <header
@@ -38,11 +35,6 @@ const { title, description, eyebrow, backHref, backLabel } = Astro.props;
             ← {backLabel ?? 'Back'}
           </a>
         </p>
-      )
-    }
-    {
-      eyebrow && (
-        <Eyebrow class="mb-4" tone="dark" data-reveal>{eyebrow}</Eyebrow>
       )
     }
     <h1

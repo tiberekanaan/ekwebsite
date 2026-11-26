@@ -1,5 +1,4 @@
 ---
-import Eyebrow from '@/components/empower/Eyebrow.astro';
 import Layout from '@/layouts/Layout.astro';
 import PageHeader from '@/components/PageHeader.astro';
 import { getCollection } from 'astro:content';
@@ -38,7 +37,7 @@ const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_U
   description="The programmes Empower Kiribati is running now and has delivered, grouped under our four areas of work."
   floatingHeader
 >
-  <PageHeader eyebrow="Our work" title="What we are running" />
+  <PageHeader title="What we are running" />
   <section class="bg-white">
     <div class="mx-auto max-w-7xl px-8 py-12">
       <div class="max-w-3xl" data-reveal>
@@ -57,7 +56,6 @@ const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_U
             {groups.map((group, gi) => (
               <section id={group.strategy.data.slug} class="mt-16 scroll-mt-28">
                 <div class="mb-8 max-w-[640px]" data-reveal>
-                  <Eyebrow as="span" class="mb-3">Area of work</Eyebrow>
                   <h2 class="bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-3xl font-bold leading-[1.1] text-transparent sm:text-4xl">
                     {group.strategy.data.title}
                   </h2>

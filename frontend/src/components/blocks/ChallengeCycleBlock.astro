@@ -1,5 +1,4 @@
 ---
-import Eyebrow from '@/components/empower/Eyebrow.astro';
 
 /**
  * "The Challenge" — nine steps experienced as a cycle, not a list.
@@ -39,11 +38,9 @@ interface Props {
   block?: ChallengeCycleBlockData;
   /** Section id (anchor target). */
   anchorId?: string;
-  /** Overrides the CMS eyebrow, e.g. "Why we exist" on the About page. */
-  eyebrowOverride?: string;
 }
 
-const { block = {}, anchorId = 'the-challenge', eyebrowOverride } = Astro.props;
+const { block = {}, anchorId = 'the-challenge' } = Astro.props;
 
 const DEFAULT_STEPS = [
   'Kiribati has a small economy with few industries. That means few jobs, and most of them are with government.',
@@ -57,7 +54,6 @@ const DEFAULT_STEPS = [
   'The harm does not stay inside the home. Where there is no work and no purpose, young people drift into groups that get into trouble, and pressure inside families can turn into violence against women and children.',
 ];
 
-const eyebrow = eyebrowOverride || block.eyebrow || 'The challenge';
 const title = block.title || 'Our challenges are not loud, but their effects are real.';
 const steps =
   block.steps && block.steps.length > 0 ? block.steps.map((s) => s.text) : DEFAULT_STEPS;
@@ -82,7 +78,6 @@ const closeStatement =
 
   <div class="ek-flow-wrap relative mx-auto max-w-6xl px-7 pt-24">
     <div class="ek-flow-head max-w-[640px]" data-reveal>
-      <Eyebrow as="span" class="mb-4">{eyebrow}</Eyebrow>
       <h2
         class="mb-4 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl"
       >
@@ -102,7 +97,6 @@ const closeStatement =
              is visually hidden then but stays for screen readers, so this
              copy is decorative). -->
         <div class="ek-stage-head" aria-hidden="true">
-          <Eyebrow as="span" class="mb-4">{eyebrow}</Eyebrow>
           <h2
             class="mb-5 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-4xl font-bold leading-[1.1] text-transparent xl:text-5xl"
           >

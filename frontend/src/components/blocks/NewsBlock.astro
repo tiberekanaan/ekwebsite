@@ -1,5 +1,4 @@
 ---
-import Eyebrow from '@/components/empower/Eyebrow.astro';
 import NewsCard from '@/components/news/NewsCard.astro';
 import { getCollection } from 'astro:content';
 import { byNewest, newsHref } from '@/lib/news';
@@ -32,9 +31,6 @@ const items = (await getCollection('news')).sort(byNewest).slice(0, 3);
     <section id="news" class="bg-white py-24">
       <div class="mx-auto max-w-6xl px-7">
         <div class="mb-14 max-w-[640px]" data-reveal>
-          <Eyebrow as="span" class="mb-4">
-            {block.eyebrow ?? 'News'}
-          </Eyebrow>
           <h2 class="mb-4 bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text font-serif text-4xl font-bold leading-[1.08] text-transparent sm:text-5xl">
             {block.title ?? "What's new"}
           </h2>

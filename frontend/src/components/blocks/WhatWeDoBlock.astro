@@ -1,5 +1,4 @@
 ---
-import Eyebrow from '@/components/empower/Eyebrow.astro';
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import { STRAPI_URL } from 'astro:env/server';
@@ -88,7 +87,6 @@ const hrefFor = (title: string): string => {
 <section id="what-we-do" class="bg-ek-mist py-24">
   <div class="mx-auto max-w-6xl px-7">
     <div class="mb-14 max-w-[640px]" data-reveal>
-      <Eyebrow as="span" class="mb-4">{block.eyebrow ?? 'How we respond'}</Eyebrow>
       <h2 class="mb-4 font-serif text-4xl font-bold leading-[1.08] sm:text-5xl bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text text-transparent">
         {block.title ?? 'Strategic focus'}
       </h2>

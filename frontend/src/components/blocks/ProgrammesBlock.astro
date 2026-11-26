@@ -1,5 +1,4 @@
 ---
-import Eyebrow from '@/components/empower/Eyebrow.astro';
 import { getCollection } from 'astro:content';
 import { STRAPI_URL } from 'astro:env/server';
 
@@ -50,7 +49,6 @@ const cards = (await getCollection('projects'))
 <section id="our-work" class="bg-ek-mist py-24">
   <div class="mx-auto max-w-6xl px-7">
     <div class="mb-14 max-w-[640px]" data-reveal>
-      <Eyebrow as="span" class="mb-4">{block.eyebrow ?? 'Our work'}</Eyebrow>
       <h2 class="mb-4 font-serif text-4xl font-bold leading-[1.08] sm:text-5xl bg-gradient-to-r from-ek-800 to-ek-500 bg-clip-text text-transparent">
         {block.title ?? 'Featured projects'}
       </h2>

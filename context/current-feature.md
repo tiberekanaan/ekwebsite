@@ -1,6 +1,23 @@
 # Current Feature
 
-**Feature:** Real 404s on detail pages (build-plan #21)
+**Feature:** Remove eyebrow labels site-wide; drop the hero Latest pill and location chip
+
+## Status
+- ✅ Completed 2026-11-26 on branch `feature/remove-eyebrows`, reviewed by the user on the dev server, merged ff to `main` and pushed. `astro check` clean (pre-existing Search error only); build against production Strapi passes. No CMS change.
+
+## What it is
+- **Why:** the user sees the small-caps + wave-glyph eyebrows above every heading as typical AI design.
+- **Removed:** every `<Eyebrow>` (landing blocks, About, Contact, 404, Partners, Programmes, Resources) and the `eyebrow` prop of `PageHeader` (inner-page banners keep title, back link, meta); `components/empower/Eyebrow.astro` deleted. Programme banners no longer show their strategy and article banners their category (both came through the eyebrow).
+- **Sole labels kept as plain headings** (user decision): partner strip, "In their words", Resources "Guides & articles" / "Videos, downloads & links", article "On this page" / "Related articles" — `font-serif text-2xl font-bold text-ek-800` (TOC label `text-sm font-semibold`).
+- **Hero:** eyebrow, "Latest" news pill and "South Tarawa · Kiribati" photo chip removed; reveal delays moved up one step. CMS `eyebrow` / `photoLabel` fields stay in Strapi, unrendered (hero `heritage` pattern). `ChallengeCycleBlock` lost `eyebrowOverride`.
+- **Work-with-us contact strip removed** (user: the footer covers it): "Talk to us directly", the "Start a conversation" mailto button, Email/Phone/Office rows and the UTC+12 note; the heading + three route cards stay. `index.astro` no longer fetches Global for it. CMS `buttonText`/`buttonLink`/`contactHeading`/`contactText` stay in Strapi, unrendered. Side effect: `partnership@` no longer appears on the homepage (the footer shows the general address).
+- **Hero: full-bleed photo under one even `ek-900/70` overlay** (user's reference; the old heavy mask + three scrims + radial glow read as AI-generated). No gradients or fades; leaf watermark removed; one image for all sizes (`object-[50%_65%]`), drift kept; text block `max-w-[40rem]`, vertically centred; lede now pure white. **Contrast measured, not assumed:** a Playwright script hid the text, screenshotted the hero with the drift frozen at its most zoomed frame, and composited each text colour over every background pixel in its box. Worst case at 1440 / 1024 / 390: headline 6.08:1, lime emphasis 4.01:1 (large text, needs 3), lede 6.08:1, secondary button ≥ 6.08:1, header nav (white/85) 4.94:1 — all pass WCAG AA. At 65% the lede (4.36) and nav (4.24) failed, hence 70% + white lede. Two earlier options were built and set aside: a flat colour block (C) and a soft side fade (copies in the session scratchpad only).
+- **"Our impact so far" note removed** (the "All of this work has been on South Tarawa…" counting-method paragraph; CMS `note` stays in Strapi, unrendered). The section keeps its previous height via `min-h-[1218px] lg:min-h-[715px]` (measured before the change: 715px at 1440/1024, 1218px at 390; identical after) with the content centred and the heading-to-timeline gap widened to `lg:mb-20`.
+- **Left alone:** other condensed caps that are not section eyebrows — route-card audience labels, quote attribution, news dates, contact row labels, partner role chips.
+
+---
+
+**Previous:** Real 404s on detail pages (build-plan #21)
 
 ## Status
 - ✅ Completed 2026-11-26 on branch `fix/detail-404s`, verified locally by the user, merged ff to `main` and pushed. Build passes against production Strapi.
@@ -285,6 +302,8 @@
 **Previous:** Landing page content v3 — ✅ completed 2026-08-25, live on empower.org.ki (see History).
 
 ## History
+
+- 2026-11-26 — **Less "AI design": eyebrows removed, new hero, trimmed sections**. Every `Eyebrow` (small caps + wave glyph) removed site-wide and the component deleted; `PageHeader` lost its `eyebrow` prop; sole section labels became plain serif headings. Hero: eyebrow, "Latest" pill and location chip removed, then restyled as a full-bleed photo under one even `ek-900/70` overlay (no fades), contrast measured against the real photo pixels (all AA). Work-with-us contact strip removed (footer covers it). Impact note removed with the section height kept. CMS fields kept, unrendered. Branch `feature/remove-eyebrows`.
 
 - 2026-11-26 — **Real 404s on detail pages**. `our-programs/[slug]`, `blog/[id]` and `resources/[id]` replaced the forbidden `Astro.rewrite('/404')` (500 live) with `new Response(null, { status: 404 })`, the news page's fix. `events/[id]` and `our-partners/[id]` are prerendered and already 404'd. Same day: CLAUDE.md retitled, project overview committed, four merged branches deleted. Branch `fix/detail-404s`.
 

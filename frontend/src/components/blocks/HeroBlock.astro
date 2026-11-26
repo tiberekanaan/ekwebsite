@@ -1,14 +1,12 @@
 ---
-import Eyebrow from '@/components/empower/Eyebrow.astro';
 import { Image } from 'astro:assets';
 // Real photo, pre-cropped 4:5 and graded to the ek palette — regenerate via
 // sharp (1200x1500, teal soft-light overlay) if the source photo changes.
 import heroPhoto from '@/assets/images/hero-photo.jpg';
-import { getCollection } from 'astro:content';
-import { byNewest, formatNewsDate, newsHref } from '@/lib/news';
 import { STRAPI_URL } from 'astro:env/server';
 
 export interface HeroBlockData {
+  /** Still in the CMS payload; no longer rendered. */
   eyebrow?: string | null;
   title?: string | null;
   description?: string | null;
@@ -20,7 +18,7 @@ export interface HeroBlockData {
   secondaryButtonLink?: string | null;
   /** Replaces the bundled (pre-graded) hero photo when set. */
   photo?: { url: string; alternativeText?: string | null } | null;
-  /** Caption chip on the photo. */
+  /** Still in the CMS payload; no longer rendered. */
   photoLabel?: string | null;
 }
 
@@ -30,7 +28,6 @@ interface Props {
 
 const { block } = Astro.props;
 
-const eyebrow = block.eyebrow ?? 'A locally-led NGO · South Tarawa, Kiribati';
 const lede =
   block.description ??
   'Empower Kiribati is a platform for community initiatives. We partner with ministries, funders and community organisations to design, deliver and measure work that cultivates the conditions for a resilient Kiribati.';
@@ -38,7 +35,6 @@ const primaryText = block.primaryButtonText ?? 'See our work';
 const primaryLink = block.primaryButtonLink ?? '#our-work';
 const secondaryText = block.secondaryButtonText ?? 'Partner with us';
 const secondaryLink = block.secondaryButtonLink ?? '/contact';
-const photoLabel = block.photoLabel || 'South Tarawa · Kiribati';
 const absoluteUrl = (url: string) => (url.startsWith('http') ? url : `${STRAPI_URL}${url}`);
 const cmsPhoto = block.photo?.url
   ? { src: absoluteUrl(block.photo.url), alt: block.photo.alternativeText ?? '' }
@@ -47,34 +43,21 @@ const bundledAlt = 'Children laughing together in a game under the roof of a man
 // `*text*` in the CMS title renders as the lime emphasis (CloseBlock pattern);
 // the fallback is the brief's headline with the same emphasis.
 const titleParts = (block.title || '*Thriving, resilient* futures').split(/\*([^*]+)\*/g);
-
-// The newest News Update, surfaced as a one-line "Latest" link so a returning
-// visitor can see the site has moved without scrolling. Omitted until one exists.
-const [latest] = (await getCollection('news')).sort(byNewest);
 ---
 
-<section
-  id="top"
-  class="relative flex min-h-svh flex-col overflow-hidden bg-ek-900 bg-[radial-gradient(1200px_600px_at_75%_-10%,rgba(42,128,137,0.55),transparent_60%),linear-gradient(160deg,var(--color-ek-800)_0%,var(--color-ek-900)_70%)] text-white"
->
-  <svg
-    class="pointer-events-none absolute -top-[6%] right-[-8%] z-0 w-[600px] opacity-[0.06]"
-    viewBox="0 0 200 200"
-    aria-hidden="true"
-  >
-    <path d="M100 20c-25 0-45 20-45 50s20 60 45 60 45-30 45-60-20-50-45-50z" fill="#aecb3a" />
-  </svg>
-
-  <div
-    class="absolute inset-y-0 right-0 z-[1] hidden w-1/2 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_45%)] lg:block"
-    data-reveal
-  >
+<!--
+  Full-bleed photo hero under one even ek-900 overlay (no fades). The overlay
+  is strong enough that white body text keeps 4.5:1 and the lime headline
+  emphasis 3:1 even over the brightest pixels in the photo (white shirts).
+-->
+<section id="top" class="relative flex min-h-svh flex-col overflow-hidden bg-ek-900 text-white">
+  <div class="absolute inset-0 overflow-hidden">
     {
       cmsPhoto ? (
         <img
           src={cmsPhoto.src}
           alt={cmsPhoto.alt}
-          class="hero-photo-drift h-full w-full object-cover"
+          class="hero-photo-drift absolute inset-0 h-full w-full object-cover object-[50%_65%]"
           loading="eager"
           fetchpriority="high"
         />
@@ -82,46 +65,19 @@ const [latest] = (await getCollection('news')).sort(byNewest);
         <Image
           src={heroPhoto}
           alt={bundledAlt}
-          widths={[700, 1000, 1200]}
-          sizes="50vw"
-          class="hero-photo-drift h-full w-full object-cover"
+          widths={[600, 1000, 1200]}
+          sizes="100vw"
+          class="hero-photo-drift absolute inset-0 h-full w-full object-cover object-[50%_65%]"
           loading="eager"
         />
       )
     }
-    <div
-      class="absolute inset-0 bg-gradient-to-r from-ek-900/70 via-ek-900/15 to-transparent"
-      aria-hidden="true"
-    >
-    </div>
-    <div
-      class="absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-ek-900/80 via-ek-900/30 to-transparent"
-      aria-hidden="true"
-    >
-    </div>
-    <div
-      class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ek-900/70 to-transparent"
-      aria-hidden="true"
-    >
-    </div>
-    <p
-      class="absolute bottom-8 right-8 inline-flex items-center gap-2 rounded-full bg-ek-900/55 px-4 py-2 font-condensed text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/90 ring-1 ring-white/20 backdrop-blur-md"
-    >
-      <span class="h-1.5 w-1.5 rounded-full bg-ek-lime" aria-hidden="true"></span>
-      {photoLabel}
-    </p>
+    <div class="absolute inset-0 bg-ek-900/70" aria-hidden="true"></div>
   </div>
 
-  <div class="relative z-[2] mx-auto grid w-full max-w-6xl flex-1 items-center gap-10 px-7 pt-28 pb-8 lg:grid-cols-[1.1fr_0.8fr] lg:pt-32">
-    <!-- min-w-0: the no-wrap Latest line below must truncate, not widen the column. -->
-    <div class="min-w-0">
-      <Eyebrow class="mb-5" tone="dark" data-reveal>{eyebrow}</Eyebrow>
-
-      <h1
-        data-reveal
-        data-reveal-delay="80"
-        class="mb-6 bg-gradient-to-br from-white via-white to-ek-lime-bright bg-clip-text font-serif text-5xl font-bold leading-[1.06] text-transparent sm:text-6xl lg:text-7xl"
-      >
+  <div class="relative mx-auto flex w-full max-w-6xl flex-1 items-center px-7 pt-32 pb-20 lg:pb-24">
+    <div class="max-w-[40rem]">
+      <h1 data-reveal class="mb-6 font-serif text-5xl font-bold leading-[1.04] text-white sm:text-6xl lg:text-7xl">
         {
           titleParts.map((part, i) =>
             i % 2 === 1 ? <em class="not-italic text-ek-lime-bright">{part}</em> : part,
@@ -129,11 +85,11 @@ const [latest] = (await getCollection('news')).sort(byNewest);
         }
       </h1>
 
-      <p data-reveal data-reveal-delay="160" class="mb-9 max-w-[30em] text-lg text-[#cfe0db]">
+      <p data-reveal data-reveal-delay="80" class="mb-9 max-w-[30em] text-lg text-white">
         {lede}
       </p>
 
-      <div data-reveal data-reveal-delay="240" class="flex flex-wrap items-center gap-4">
+      <div data-reveal data-reveal-delay="160" class="flex flex-wrap items-center gap-4">
         <a
           href={primaryLink}
           class="inline-flex items-center gap-2 rounded-full bg-ek-lime px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-ek-900 transition-all duration-200 hover:-translate-y-0.5 hover:bg-ek-lime-bright hover:shadow-[0_8px_22px_rgba(174,203,58,0.3)]"
@@ -142,76 +98,13 @@ const [latest] = (await getCollection('news')).sort(byNewest);
         </a>
         <a
           href={secondaryLink}
-          class="inline-flex items-center gap-2 rounded-full border-[1.5px] border-white/35 px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-white transition-colors duration-200 hover:border-ek-lime-bright hover:text-ek-lime-bright"
+          class="inline-flex items-center gap-2 rounded-full border-[1.5px] border-white/50 px-[22px] py-3 font-condensed text-[0.92rem] font-semibold uppercase tracking-[0.06em] text-white transition-colors duration-200 hover:border-ek-lime-bright hover:text-ek-lime-bright"
         >
           {secondaryText}
         </a>
       </div>
-
-      {
-        latest && (
-          <a
-            href={newsHref(latest.data.slug)}
-            data-reveal
-            data-reveal-delay="320"
-            class="group mt-7 inline-flex max-w-full items-center gap-3 rounded-full bg-white/[0.06] py-2 pl-3 pr-4 text-sm text-[#cfe0db] ring-1 ring-white/15 backdrop-blur-md transition-colors duration-200 hover:bg-white/10 hover:text-white"
-          >
-            <span class="h-2 w-2 shrink-0 rounded-full bg-ek-lime" aria-hidden="true" />
-            <span class="shrink-0 font-condensed text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-ek-lime-bright">
-              Latest
-            </span>
-            <span class="min-w-0 truncate">{latest.data.title}</span>
-            <time
-              datetime={latest.data.date.toISOString().slice(0, 10)}
-              class="hidden shrink-0 text-[#9fb9b4] sm:inline"
-            >
-              {formatNewsDate(latest.data.date, 'short')}
-            </time>
-            <svg
-              class="h-4 w-4 shrink-0 text-ek-lime-bright transition-transform duration-300 group-hover:translate-x-1"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M5 12h14M13 6l6 6-6 6" />
-            </svg>
-          </a>
-        )
-      }
-    </div>
-
-    <div class="relative overflow-hidden rounded-2xl ring-1 ring-white/15 lg:hidden" data-reveal data-reveal-delay="200">
-      {
-        cmsPhoto ? (
-          <img
-            src={cmsPhoto.src}
-            alt={cmsPhoto.alt}
-            class="aspect-[16/10] h-auto w-full object-cover"
-            loading="eager"
-          />
-        ) : (
-          <Image
-            src={heroPhoto}
-            alt={bundledAlt}
-            widths={[400, 800]}
-            sizes="100vw"
-            class="aspect-[16/10] h-auto w-full object-cover"
-            loading="eager"
-          />
-        )
-      }
-      <div
-        class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-ek-900/60 to-transparent"
-        aria-hidden="true"
-      >
-      </div>
     </div>
   </div>
-
 </section>
 
 <style is:global>
