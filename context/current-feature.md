@@ -1,6 +1,17 @@
 # Current Feature
 
-**Feature:** Safeguarding policy page retitled "Safety of Vulnerable Persons"
+**Feature:** Privacy Policy contact card removed
+
+## Status
+- ✅ Completed 2026-11-26 on branch `fix/privacy-contact-card`, merged ff to `main` and pushed. `astro check` clean (pre-existing Search error only); build passes; the only `<address>` left on the page is the footer's.
+- Files: `frontend/src/pages/privacy-policy.astro`, `frontend/src/components/policy/PolicyLayout.astro`, this doc.
+
+## What it is
+- The "Technology Steward / Compliance Lead" card (name, legal entity, address, website, email) is gone at the user's request. The "Privacy Inquiries & Escalations" bullet, which ended "may contact:", now ends "may contact us at <general email>." so a privacy request route remains (Global `generalEmail`). Unused `address` styles removed from `PolicyLayout`.
+
+---
+
+**Previous:** Safeguarding policy page retitled "Safety of Vulnerable Persons"
 
 ## Status
 - ✅ Completed 2026-11-26 on branch `fix/safety-policy-title`, merged ff to `main` and pushed. Build passes; page `<title>` verified.
