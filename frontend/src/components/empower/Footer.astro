@@ -98,7 +98,6 @@ const addressLines = (global?.footerAddress ?? 'Te Kimatore CS Compound\nBikenib
 const legalLine =
   global?.legalLine ??
   'Empower Kiribati is the operating name of Digital Kiribati Inc, incorporated under the Republic of Kiribati Incorporated Societies Act 2002 on 6 May 2024 (Reg. No 21/24) and registered as a National NGO with the Ministry for Women, Youth, Sports and Social Affairs.';
-const tagline = global?.footerTagline ?? 'Mauri from Kiribati';
 const siteName = global?.siteName ?? 'Empower Kiribati';
 
 const year = new Date().getFullYear();
@@ -269,9 +268,16 @@ const year = new Date().getFullYear();
       class="mt-6 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-[#9fb9b4] sm:flex-row sm:items-center sm:justify-between"
     >
       <p>&copy; {year} {siteName}. All rights reserved.</p>
-      <p class="font-condensed font-medium uppercase tracking-widest text-[#7fc8d2]">
-        {tagline}
-      </p>
+      <ul class="flex flex-wrap gap-x-5 gap-y-2">
+        <li>
+          <a href="/privacy-policy" class="transition-colors hover:text-ek-lime-bright">Privacy Policy</a>
+        </li>
+        <li>
+          <a href="/safety-of-vulnerable-persons" class="transition-colors hover:text-ek-lime-bright">
+            Safety of Vulnerable Persons
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
 </footer>

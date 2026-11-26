@@ -1,0 +1,190 @@
+---
+import PolicyLayout from '@/components/policy/PolicyLayout.astro';
+import { fetchGlobal } from '@/lib/global';
+
+const global = await fetchGlobal();
+const email = global?.generalEmail ?? 'externalaffairs@empower.org.ki';
+---
+
+<PolicyLayout
+  title="Website Privacy Policy"
+  subtitle="How Empower Kiribati collects, manages, uses, and safeguards information obtained through our website, digital programs, and infrastructure."
+  description="How Empower Kiribati collects, uses, and safeguards personal information under the Kiribati Data Protection Act 2025, and how to make a privacy request."
+>
+  <h2>1. Overview &amp; Commitment</h2>
+  <p>
+    As a digital-first social impact organization, Empower Kiribati recognizes that data security is
+    not merely a technical requirement, but a fundamental pillar of our commitment to safeguarding
+    and human rights. We promote safe practices across the organization to model excellence in
+    digital safety, safeguard access to personal and organizational data, and protect the security
+    and privacy of all data subjects.
+  </p>
+  <p>
+    This Privacy Policy sets out how Empower Kiribati collects, manages, uses, and safeguards
+    information obtained through our website, digital programs, and infrastructure.
+  </p>
+  <div class="policy-table">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Policy overview element</th>
+          <th scope="col">Standards &amp; commitments</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Organization</th>
+          <td>Empower Kiribati (Te Kimatore CS Compound, Bikenibeu, South Tarawa)</td>
+        </tr>
+        <tr>
+          <th scope="row">Core Governing Law</th>
+          <td>Kiribati Data Protection Act 2025</td>
+        </tr>
+        <tr>
+          <th scope="row">Oversight Roles</th>
+          <td>Technology Steward &amp; Compliance Lead</td>
+        </tr>
+        <tr>
+          <th scope="row">Scope</th>
+          <td>All Partners, Contractors, Volunteers, and Program Participants</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>2. Information Collection &amp; Usage</h2>
+  <p>
+    Empower Kiribati adheres strictly to principles of purpose limitation and data minimization
+    across all operations.
+  </p>
+  <ul>
+    <li>
+      <strong>Purpose Limitation:</strong> Any identifiable participant information collected by the
+      organization is kept secure and used exclusively for the specific purpose for which it was
+      originally collected.
+    </li>
+    <li>
+      <strong>Data Minimization:</strong> Organizational roles are explicitly restricted to collecting
+      only the participant data strictly required to fulfill a given project's defined objective.
+    </li>
+    <li>
+      <strong>Transparency Exclusion:</strong> Personal identifiable participant data is strictly excluded
+      from standard organizational transparency practices to preserve individual privacy.
+    </li>
+  </ul>
+
+  <h2>3. Protection of Children &amp; Vulnerable Participants</h2>
+  <p>
+    Empower Kiribati maintains a dedicated framework to protect the welfare, rights, and privacy of
+    children, youth, women, and other vulnerable groups in all digital and physical environments.
+  </p>
+  <ul>
+    <li>
+      <strong>Data Collection Limits for Minors:</strong> Personal data for individuals under the age of
+      18 or those otherwise lacking legal capacity can only be collected for the specific purposes of
+      educational programs and for no other reason.
+    </li>
+    <li>
+      <strong>Encrypted Domain Storage:</strong> Notwithstanding standard operational transparency, all
+      sensitive records and personal data concerning vulnerable persons must be stored within a
+      dedicated Encrypted Domain.
+    </li>
+    <li>
+      <strong>Safeguarding &amp; International Alignment:</strong> All digital handling of participant
+      data must comply with international conventions, the
+      <a href="/safety-of-vulnerable-persons">Safeguard of Vulnerable Persons Policy</a>, and Kiribati
+      national child welfare and family protection legislation.
+    </li>
+  </ul>
+
+  <h2>4. Anonymization &amp; Public Reporting</h2>
+  <p>
+    To balance public accountability with individual privacy, Empower Kiribati enforces systematic
+    data anonymization.
+  </p>
+  <ul>
+    <li>
+      <strong>Public Impact Metrics:</strong> Any data compiled for public impact reporting, program
+      evaluation, or general communications must be rendered fully anonymous prior to publication.
+    </li>
+    <li>
+      <strong>Re-identification Safeguards:</strong> Anonymization processes are designed to guarantee
+      that no individual data subject can be re-identified from general metrics or shared reports.
+    </li>
+  </ul>
+
+  <h2>5. Data Security &amp; Cybersafety Standards</h2>
+  <p>
+    All partners, contractors, and volunteers performing accountabilities on behalf of Empower
+    Kiribati are subject to rigorous technical and operational security controls.
+  </p>
+  <ul>
+    <li>
+      <strong>Eligibility &amp; Access Control:</strong> Digital access is granted strictly on a
+      role-accountability basis. All role fillers must complete the organization's mandatory
+      Cybersafety Induction learning program prior to access authorization.
+    </li>
+    <li>
+      <strong>Authentication &amp; Password Hygiene:</strong> Multi-Factor Authentication (MFA) is
+      mandatory for all organizational accounts, including email, shared workspace platforms, and data
+      repositories. Password reuse across organizational systems is strictly forbidden, and all
+      credentials must be generated and stored using the organization's designated password manager.
+    </li>
+    <li>
+      <strong>Device Protection:</strong> Any physical device used to fulfill accountabilities on behalf
+      of the organization is required to run an approved virus protection software.
+    </li>
+    <li>
+      <strong>Third-Party Software Review:</strong> A mandatory security review must be conducted by the
+      Technology Steward for any proposed new software or digital tool to verify that the provider
+      meets organizational privacy standards.
+    </li>
+  </ul>
+
+  <h2>6. Incident Response &amp; Breach Notification</h2>
+  <p>
+    Empower Kiribati maintains active incident detection and swift escalation protocols to address
+    any potential security compromises.
+  </p>
+  <ul>
+    <li>
+      <strong>Internal Escalation Window:</strong> If a partner suspects a data breach, loses a device
+      containing organizational data, or receives a suspicious message, they must report the incident
+      directly to the Technology Steward within 2 to 4 hours rather than waiting for standard meeting
+      cycles.
+    </li>
+    <li>
+      <strong>Transparent Communication:</strong> In the event of a confirmed data leak or breach, the
+      organization prioritizes immediate transparency with affected individuals.
+    </li>
+    <li>
+      <strong>Legal Alignment:</strong> Incident mitigation and notification protocols operate in full
+      compliance with the Kiribati Data Protection Act 2025 and international data protection
+      standards.
+    </li>
+  </ul>
+
+  <h2>7. Data Subject Rights &amp; Inquiries</h2>
+  <p>
+    Data subjects maintain full rights regarding their personal data processed by Empower Kiribati in
+    accordance with the Data Protection Act 2025.
+  </p>
+  <ul>
+    <li>
+      <strong>Rights of Access &amp; Rectification:</strong> Data subjects have the right to request
+      access to, correction of, or deletion of their personal information maintained by the
+      organization.
+    </li>
+    <li>
+      <strong>Privacy Inquiries &amp; Escalations:</strong> For privacy requests, data access inquiries,
+      or to submit a security concern, data subjects and website visitors may contact:
+    </li>
+  </ul>
+  <address>
+    <strong>Technology Steward / Compliance Lead</strong><br />
+    Empower Kiribati (Digital Kiribati Inc)<br />
+    Te Kimatore CS Compound, Bikenibeu, South Tarawa<br />
+    Website: <a href="https://empower.org.ki">empower.org.ki</a><br />
+    Email: <a href={`mailto:${email}`}>{email}</a>
+  </address>
+</PolicyLayout>

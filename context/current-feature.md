@@ -1,6 +1,19 @@
 # Current Feature
 
-**Feature:** Partner strip — seamless loop, taller centred section, "Our partners" as a landing h2
+**Feature:** Footer policy links (Privacy Policy, Safety of Vulnerable Persons) replace the "Mauri from Kiribati" tagline
+
+## Status
+- ✅ Completed 2026-11-26 on branch `fix/footer-tagline`, merged ff to `main` and pushed. `astro check` clean (pre-existing Search error only); build against production Strapi passes; both pages in the sitemap; Playwright screenshots at 1440/390, no horizontal scroll.
+- Files: `frontend/src/components/empower/Footer.astro`, `frontend/src/components/policy/PolicyLayout.astro` (new), `frontend/src/pages/{privacy-policy,safety-of-vulnerable-persons}.astro` (new), this doc.
+
+## What it is
+- **Tagline removed:** the footer bottom bar no longer renders Global `footerTagline` (field stays in Strapi, unrendered). Its place holds the two policy links.
+- **Pages:** `/privacy-policy` ("Website Privacy Policy") and `/safety-of-vulnerable-persons` ("Policy for Safety of Vulnerable Persons"), copy from the user's two PDFs (2026-11-26). Prerendered, copy in code (`basic-page` is a single type used by About; a CMS policy type is the planned Phase-3 item). Shared `PolicyLayout`: PageHeader banner + `max-w-3xl` body, numbered h2s, bold lead-in bullets, overview tables as row-header tables (stack on phones, header row hidden), privacy contact as a mist `<address>` card.
+- **User decisions:** U.S. English kept as written; the staff name and personal email removed from the privacy contact (role + general email from Global `generalEmail` instead); `www.digitalkiribati.org` → `empower.org.ki`, with "Empower Kiribati (Digital Kiribati Inc)" naming the legal entity.
+- **Formatting fixes only:** PDF line-break joins repaired ("role-accountability", "non-discrimination"), the Google-Docs "Person" chip dropped; the privacy policy's mention of the Safeguard of Vulnerable Persons Policy links to the new page.
+---
+
+**Previous:** Partner strip — seamless loop, taller centred section, "Our partners" as a landing h2
 
 ## Status
 - ✅ Completed 2026-11-26 on branch `fix/partner-marquee-loop`, merged ff to `main` and pushed. Build against production Strapi passes; loop geometry measured in Playwright at 1440/390 (second set starts at exactly half the track width, 16/16 logos loaded). **CMS edit needed:** the live heading comes from the marquee block's `eyebrow` field ("Our funding and government partners"); change it to "Our partners" in the admin.
