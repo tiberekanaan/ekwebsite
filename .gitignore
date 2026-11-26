@@ -1,4 +1,6 @@
 .DS_Store
-.claude/
+.claude/*
+# AI Blueprint skills are shared; personal Claude Code settings stay local.
+!.claude/skills/
 .vercel
 .env*

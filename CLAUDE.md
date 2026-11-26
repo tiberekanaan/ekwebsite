@@ -64,3 +64,5 @@ When asked to implement a new feature, fix a bug, or modify the codebase, strict
 3. **Local Testing:** Wait for the user to test and verify the changes locally using their independently running development servers. Do not attempt to run or restart servers yourself.
 4. **Merge:** Once the user confirms the changes are working as expected, commit the changes, switch back to `main`, and merge the feature branch.
 5. **Auto-Deployment:** Push the `main` branch to GitHub (`git push origin main`). Acknowledge to the user that pushing to GitHub will automatically trigger the production deployments on Vercel and Strapi Cloud.
+
+@AGENTS.md
