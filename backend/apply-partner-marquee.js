@@ -7,8 +7,9 @@
  *     funder, consent true) with its logo from src/seed/assets/, uploaded once
  *     and looked up by file name. If an entry already exists, only its unset
  *     logo / role / consent are filled.
- *   - Volunteer Service Abroad: its logo is replaced with the cleaner, tightly
- *     cropped vsa-logo.png (user-supplied); skipped once that file is attached.
+ *   - Volunteer Service Abroad, New Zealand High Commission and the Ministry
+ *     for Women, Youth, Sports & Social Affairs: logos replaced with tightly
+ *     cropped user-supplied PNGs; each skipped once its file is attached.
  *   - "US Embassy Suva" (has the logo, linked to American Space Program) and
  *     "American Spaces": role was unset → set to funder (only while unset).
  *   - "U.S. Embassy Suva" (with full stops): an unused duplicate — no logo,
@@ -115,9 +116,19 @@ async function ensureNewPartner(headers, { name, file, alt }) {
   console.log(`Updated "${name}": ${Object.keys(patch).join(", ")}.`);
 }
 
-async function replaceVsaLogo(headers) {
-  const name = "Volunteer Service Abroad";
-  const file = "vsa-logo.png";
+// Existing partners whose uploaded logos carried wide margins (rendered tiny
+// in the strip), replaced with tightly cropped user-supplied versions.
+const LOGO_REPLACEMENTS = [
+  { name: "Volunteer Service Abroad", file: "vsa-logo.png", alt: "Volunteer Service Abroad, Te Tūao Tāwāhi" },
+  { name: "New Zealand High Commission", file: "nzhc-logo.png", alt: "New Zealand High Commission, Te Aka Aorere" },
+  {
+    name: "Ministry for Women, Youth, Sports & Social Affairs",
+    file: "mwyssa-logo.png",
+    alt: "Ministry of Women, Youth, Sport and Social Affairs, Republic of Kiribati",
+  },
+];
+
+async function replaceLogo(headers, { name, file, alt }) {
   const p = await findPartner(headers, name);
   if (!p) {
     console.log(`"${name}" not found — skipped.`);
@@ -127,7 +138,7 @@ async function replaceVsaLogo(headers) {
     console.log(`"${name}" already has ${file}.`);
     return;
   }
-  const logoId = await ensureLogo(headers, file, "Volunteer Service Abroad, Te Tūao Tāwāhi");
+  const logoId = await ensureLogo(headers, file, alt);
   await api(headers, "PUT", `/api/partners/${p.documentId}`, { data: { logo: logoId } });
   console.log(`Replaced "${name}" logo with ${file}.`);
 }
@@ -177,7 +188,7 @@ async function main() {
   const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
 
   for (const partner of NEW_PARTNERS) await ensureNewPartner(headers, partner);
-  await replaceVsaLogo(headers);
+  for (const r of LOGO_REPLACEMENTS) await replaceLogo(headers, r);
   await ensureRole(headers, "US Embassy Suva");
   await ensureRole(headers, "American Spaces");
   await removeDuplicateEmbassy(headers);

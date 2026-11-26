@@ -318,6 +318,8 @@
 
 ## History
 
+- 2026-11-26 — **NZ High Commission and MWYSSA logos replaced** with tightly cropped user-supplied PNGs (`nzhc-logo.png`, `mwyssa-logo.png`, exported at native resolution); `apply-partner-marquee.js` generalised to a `LOGO_REPLACEMENTS` list and re-run on production (only the two new swaps applied). Ministry of Education, American Spaces and US Embassy logos still carry wide margins. Branch `fix/partner-logos`.
+
 - 2026-11-26 — **Partner logo strip fixed**. It scrolls from 2 logos (was 6, so the 4 qualifying partners sat still), repeating the set to avoid gaps; speed 34 s per loop. Production data via `backend/apply-partner-marquee.js` (token from the user): Irish Aid and Oxfam created with cropped logos, VSA logo replaced, US Embassy Suva and American Spaces set to funder, unused duplicate "U.S. Embassy Suva" deleted. 9 partners in the strip. Branch `fix/partner-marquee`.
 
 - 2026-11-26 — **Less "AI design": eyebrows removed, new hero, trimmed sections**. Every `Eyebrow` (small caps + wave glyph) removed site-wide and the component deleted; `PageHeader` lost its `eyebrow` prop; sole section labels became plain serif headings. Hero: eyebrow, "Latest" pill and location chip removed, then restyled as a full-bleed photo under one even `ek-900/70` overlay (no fades), contrast measured against the real photo pixels (all AA). Work-with-us contact strip removed (footer covers it). Impact note removed with the section height kept. CMS fields kept, unrendered. Branch `feature/remove-eyebrows`.
