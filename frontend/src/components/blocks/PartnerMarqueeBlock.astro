@@ -37,12 +37,16 @@ const plates = partnerEntries
     return a.name.localeCompare(b.name);
   });
 
-// Below six plates the loop reads as broken rather than continuous — render
-// a static centred row instead.
-const MARQUEE_MIN = 6;
-const useMarquee = plates.length >= MARQUEE_MIN;
-// Track is duplicated so the -50% translate loops seamlessly; the second
-// copy is aria-hidden.
+// Two or more plates scroll. A short list is repeated within each set (at
+// least SET_MIN plates) so the moving strip never shows a gap; the whole set
+// is then duplicated so the -50% translate loops seamlessly. Only the first
+// occurrence of each partner is exposed to screen readers.
+const SET_MIN = 8;
+const useMarquee = plates.length >= 2;
+const reps = useMarquee ? Math.ceil(SET_MIN / plates.length) : 1;
+const setPlates = Array.from({ length: reps }, (_, r) =>
+  plates.map((p) => ({ ...p, repeat: r > 0 })),
+).flat();
 const trackSets = useMarquee ? [false, true] : [false];
 ---
 
@@ -79,10 +83,13 @@ const trackSets = useMarquee ? [false, true] : [false];
                 class="flex shrink-0 items-center gap-6 pr-6"
                 aria-hidden={isDuplicate || undefined}
               >
-                {plates.map((p) => {
+                {setPlates.map((p) => {
                   const logo = p.logo?.url ? absoluteUrl(p.logo.url) : null;
                   return (
-                    <div class="flex h-24 w-56 shrink-0 items-center justify-center px-4">
+                    <div
+                      class="flex h-24 w-56 shrink-0 items-center justify-center px-4"
+                      aria-hidden={(!isDuplicate && p.repeat) || undefined}
+                    >
                       {logo ? (
                         <img
                           src={logo}
@@ -118,7 +125,7 @@ const trackSets = useMarquee ? [false, true] : [false];
   }
 
   .animate-funder-marquee {
-    animation: funder-marquee 46s linear infinite;
+    animation: funder-marquee 34s linear infinite;
   }
 
   .animate-funder-marquee:hover {

@@ -1,6 +1,21 @@
 # Current Feature
 
-**Feature:** Remove eyebrow labels site-wide; drop the hero Latest pill and location chip
+**Feature:** Partner logo strip — make it move, add Irish Aid, show the US Embassy and American Spaces
+
+## Status
+- ✅ Completed 2026-11-26 on branch `fix/partner-marquee`, merged ff to `main` and pushed. `backend/apply-partner-marquee.js` **ran against production** (Irish Aid + Oxfam created, VSA logo replaced, US Embassy Suva + American Spaces → funder, duplicate "U.S. Embassy Suva" deleted); a second run was a no-op. Strip now shows 9 partners. Marquee speed 46 s → 34 s per loop (~18 px/s, user request). `astro check` clean (pre-existing Search error only); build passes. **The token was pasted in chat — user to delete it in Strapi Cloud admin.**
+- Files: `frontend/src/components/blocks/PartnerMarqueeBlock.astro`, `backend/apply-partner-marquee.js` (new), `backend/src/seed/assets/{irish-aid,oxfam,vsa}-logo.png` (new), this doc.
+- Follow-up: the Ministry of Education, NZ High Commission, MWYSSA and American Spaces logos render small because their uploaded files carry wide margins — re-upload cropped versions.
+
+## What it is
+- **Not moving:** only 4 partners qualified (funder/government + consent) and the strip only animated from 6. Now it scrolls from 2, repeating the set to at least 8 plates per loop copy so there is never a gap; only the first occurrence of each partner is exposed to screen readers.
+- **Missing logos (production data):** "US Embassy Suva" (logo, linked to American Space Program) and "American Spaces" had no role → set to funder (user decision). "U.S. Embassy Suva" was an unused duplicate (no logo, consent false, no links) → deleted (user decision), guarded so it is only deleted while still unused. Irish Aid had no entry → created (funder, consent) with the user's logo.
+- **Second batch (user-supplied):** Oxfam (no entry existed → created, funder + consent, assumed from the user sending the logo for the strip) and a clean Volunteer Service Abroad logo (replaces the padded one, which rendered tiny). Exported the same way: `oxfam-logo.png` 333×370, `vsa-logo.png` 512×141.
+- **Logo file:** the supplied `irish.svg` wraps a 476 px bitmap in a 75×75 frame with wide margins; exported as a trimmed 504×285 transparent PNG at native resolution (upscaling only blurred it).
+
+---
+
+**Previous:** Remove eyebrow labels site-wide; drop the hero Latest pill and location chip
 
 ## Status
 - ✅ Completed 2026-11-26 on branch `feature/remove-eyebrows`, reviewed by the user on the dev server, merged ff to `main` and pushed. `astro check` clean (pre-existing Search error only); build against production Strapi passes. No CMS change.
@@ -302,6 +317,8 @@
 **Previous:** Landing page content v3 — ✅ completed 2026-08-25, live on empower.org.ki (see History).
 
 ## History
+
+- 2026-11-26 — **Partner logo strip fixed**. It scrolls from 2 logos (was 6, so the 4 qualifying partners sat still), repeating the set to avoid gaps; speed 34 s per loop. Production data via `backend/apply-partner-marquee.js` (token from the user): Irish Aid and Oxfam created with cropped logos, VSA logo replaced, US Embassy Suva and American Spaces set to funder, unused duplicate "U.S. Embassy Suva" deleted. 9 partners in the strip. Branch `fix/partner-marquee`.
 
 - 2026-11-26 — **Less "AI design": eyebrows removed, new hero, trimmed sections**. Every `Eyebrow` (small caps + wave glyph) removed site-wide and the component deleted; `PageHeader` lost its `eyebrow` prop; sole section labels became plain serif headings. Hero: eyebrow, "Latest" pill and location chip removed, then restyled as a full-bleed photo under one even `ek-900/70` overlay (no fades), contrast measured against the real photo pixels (all AA). Work-with-us contact strip removed (footer covers it). Impact note removed with the section height kept. CMS fields kept, unrendered. Branch `feature/remove-eyebrows`.
 
